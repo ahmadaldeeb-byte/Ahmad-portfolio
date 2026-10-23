@@ -32,11 +32,15 @@ const GAME_COMPONENTS: Partial<Record<GameType, ComponentType<GameProps>>> = {
   wheel: dynamic(() => import("./wheel/WheelGame"), { ssr: false, loading: GameLoading }),
   race: dynamic(() => import("./race/RaceGame"), { ssr: false, loading: GameLoading }),
   balloons: dynamic(() => import("./balloons/BalloonsGame"), { ssr: false, loading: GameLoading }),
+  quiz: dynamic(() => import("./quiz/QuizGame"), { ssr: false, loading: GameLoading }),
+  teams: dynamic(() => import("./teams/TeamsGame"), { ssr: false, loading: GameLoading }),
 };
 
 const HOW_TO: Partial<Record<GameType, string[]>> = {
   wheel: ["اضغط «دوّر العجلة» لتختار العجلة سؤالًا أو اسمًا بعدل تام.", "يجيب الطالب أو الفريق عن السؤال الظاهر.", "تُزال الخانة المستخدمة إن كان هذا الخيار مفعّلًا."],
   race: ["تتناوب الفرق على الإجابة.", "كل إجابة صحيحة تدفع سيارة الفريق خطوة إلى الأمام.", "أول سيارة تعبر خط النهاية تفوز!"],
+  quiz: ["سؤال واحد في كل شاشة مع أربعة خيارات.", "كلما أجبت أسرع حصلت على نقاط إضافية.", "الإجابات الصحيحة المتتالية تشعل سلسلة الأبطال 🔥"],
+  teams: ["يتناوب الفريقان على البدء بالسؤال.", "إن أخطأ الفريق ينتقل السؤال للفريق الآخر ليسرق نصف النقاط.", "الفريق صاحب النقاط الأعلى في النهاية يفوز!"],
   balloons: ["اقرأ السؤال في أعلى الشاشة.", "افقع البالون الذي يحمل الإجابة الصحيحة باللمس أو بالفأرة.", "الإجابة من المحاولة الأولى تمنح النقاط كاملة."],
 };
 

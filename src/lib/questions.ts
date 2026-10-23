@@ -9,6 +9,7 @@ export interface PlayableQuestion {
   image?: string;
   choices: string[];
   correctIndex: number;
+  difficulty?: number;
 }
 
 const ARITH_RE = /^\s*([0-9٠-٩]+)\s*([+\-×x*÷/])\s*([0-9٠-٩]+)\s*(=\s*[?؟]?)?\s*$/;
@@ -55,7 +56,7 @@ export function toPlayable(q: Question): PlayableQuestion | null {
       const choices = q.choices.map((c) => c.trim());
       if (choices.length < 2 || choices.some((c) => !c)) return null;
       if (q.correctIndex < 0 || q.correctIndex >= choices.length) return null;
-      return { id: q.id, prompt: q.prompt, image: q.image, choices, correctIndex: q.correctIndex };
+      return { id: q.id, prompt: q.prompt, image: q.image, choices, correctIndex: q.correctIndex, difficulty: q.difficulty };
     }
     case "truefalse":
       return {
@@ -64,13 +65,14 @@ export function toPlayable(q: Question): PlayableQuestion | null {
         image: q.image,
         choices: ["صح", "خطأ"],
         correctIndex: q.correctIndex === 1 ? 1 : 0,
+        difficulty: q.difficulty,
       };
     case "arithmetic": {
       const value = evaluateArithmetic(q.prompt);
       if (value === null) return null;
       const choices = shuffle([value, ...numericDistractors(value)]).map(String);
       const prompt = /[=]/.test(q.prompt) ? q.prompt.replace(/=\s*[?؟]?\s*$/, "= ؟") : `${q.prompt.trim()} = ؟`;
-      return { id: q.id, prompt, image: q.image, choices, correctIndex: choices.indexOf(String(value)) };
+      return { id: q.id, prompt, image: q.image, choices, correctIndex: choices.indexOf(String(value)), difficulty: q.difficulty };
     }
     default:
       return null;

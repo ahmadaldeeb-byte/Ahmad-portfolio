@@ -14,12 +14,15 @@ export function QuestionPanel({
   onPick,
   ltr,
   compact,
+  disabled = [],
 }: {
   question: PlayableQuestion;
   picked: number | null;
   onPick: (index: number) => void;
   ltr?: boolean;
   compact?: boolean;
+  /** Choices that cannot be picked (e.g. already tried by the other team). */
+  disabled?: number[];
 }) {
   const revealed = picked !== null;
   return (
@@ -42,12 +45,13 @@ export function QuestionPanel({
         {question.choices.map((c, i) => {
           const isCorrect = i === question.correctIndex;
           const isPicked = i === picked;
+          const off = !revealed && disabled.includes(i);
           return (
             <motion.button
               key={`${question.id}-${i}`}
               type="button"
               data-testid="choice"
-              disabled={revealed}
+              disabled={revealed || off}
               onClick={() => onPick(i)}
               initial={{ opacity: 0, scale: 0.85 }}
               animate={
@@ -55,7 +59,7 @@ export function QuestionPanel({
                   ? { opacity: 1, scale: 1, x: [0, -14, 14, -10, 10, 0] }
                   : revealed && isCorrect
                     ? { opacity: 1, scale: [1, 1.07, 1] }
-                    : { opacity: revealed ? 0.55 : 1, scale: 1 }
+                    : { opacity: revealed || off ? 0.35 : 1, scale: 1 }
               }
               transition={{ delay: revealed ? 0 : i * 0.06, type: "spring", stiffness: 320, damping: 20 }}
               whileHover={revealed ? undefined : { y: -4 }}

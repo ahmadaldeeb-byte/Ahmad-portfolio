@@ -46,3 +46,19 @@ describe("scoring", () => {
     expect(raceLength(100, 2)).toBe(8);
   });
 });
+
+import { ropePosition, speedBonus } from "@/lib/scoring";
+
+describe("quiz & team battle helpers", () => {
+  it("gives a speed bonus of up to 50%", () => {
+    expect(speedBonus(10, 30, 30)).toBe(5);
+    expect(speedBonus(10, 15, 30)).toBe(3);
+    expect(speedBonus(10, 0, 30)).toBe(0);
+    expect(speedBonus(10, null, 0)).toBe(0);
+  });
+  it("moves the rope toward the leading team", () => {
+    expect(ropePosition(0, 0)).toBe(0);
+    expect(ropePosition(30, 10)).toBe(0.5);
+    expect(ropePosition(0, 20)).toBe(-1);
+  });
+});

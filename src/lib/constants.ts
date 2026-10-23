@@ -35,12 +35,12 @@ export const GAMES: GameMeta[] = [
   { type: "race", name: "سباق الأذكياء", description: "كل إجابة صحيحة تدفع سيارة فريقك نحو خط النهاية.", genre: "سباق فرق", dimension: "3D", ready: true, kinds: CHOICE_KINDS, minQuestions: 3, teamBased: true, accent: "#4361EE" },
   { type: "balloons", name: "بالونات المعرفة", description: "افقع البالون الذي يحمل الإجابة الصحيحة!", genre: "سرعة وملاحظة", dimension: "2D", ready: true, kinds: CHOICE_KINDS, minQuestions: 2, teamBased: false, accent: "#FF6B9A" },
   { type: "memory", name: "ذاكرة الأبطال", description: "اقلب البطاقات وطابق كل زوج مترابط.", genre: "ذاكرة", dimension: "2D", ready: false, kinds: ["match"], minQuestions: 1, teamBased: false, accent: "#7950F2" },
-  { type: "quiz", name: "من بطل المعرفة؟", description: "مسابقة اختيار من متعدد مع مؤقت وشريط تقدّم.", genre: "مسابقة", dimension: "2D", ready: false, kinds: CHOICE_KINDS, minQuestions: 3, teamBased: false, accent: "#40C057" },
+  { type: "quiz", name: "من بطل المعرفة؟", description: "مسابقة اختيار من متعدد مع مؤقت وشريط تقدّم.", genre: "مسابقة", dimension: "2D", ready: true, kinds: CHOICE_KINDS, minQuestions: 3, teamBased: false, accent: "#40C057" },
   { type: "words", name: "صانع الكلمات", description: "رتّب الحروف لتكوّن الكلمة الصحيحة.", genre: "لغة", dimension: "2D", ready: false, kinds: ["order"], minQuestions: 2, teamBased: false, accent: "#FF922B" },
   { type: "numbers", name: "أبطال الأرقام", description: "حلّ المسائل لتتقدّم في مغامرة الأرقام.", genre: "مغامرة", dimension: "2D", ready: false, kinds: ["arithmetic", "mcq"], minQuestions: 3, teamBased: false, accent: "#20A4C9" },
   { type: "puzzle", name: "أبطال الألغاز", description: "ركّب أجزاء الصورة التعليمية في مكانها.", genre: "ألغاز", dimension: "2D", ready: false, kinds: ["mcq"], minQuestions: 1, teamBased: false, accent: "#E64980" },
   { type: "space", name: "رحلة إلى النجوم", description: "سافر بمركبتك بين الكواكب بالإجابة عن الأسئلة.", genre: "مغامرة فضائية", dimension: "3D", ready: false, kinds: CHOICE_KINDS, minQuestions: 3, teamBased: false, accent: "#5C3FD9" },
-  { type: "teams", name: "معركة الأبطال", description: "منافسة مباشرة بين الفريق الأحمر والفريق الأزرق.", genre: "تحدي فرق", dimension: "2D", ready: false, kinds: CHOICE_KINDS, minQuestions: 4, teamBased: true, accent: "#FA5252" },
+  { type: "teams", name: "معركة الأبطال", description: "منافسة مباشرة بين الفريق الأحمر والفريق الأزرق.", genre: "تحدي فرق", dimension: "2D", ready: true, kinds: CHOICE_KINDS, minQuestions: 4, teamBased: true, accent: "#FA5252" },
 ];
 
 export const gameMeta = (t: GameType): GameMeta => GAMES.find((g) => g.type === t)!;

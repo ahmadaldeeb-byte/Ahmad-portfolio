@@ -64,3 +64,15 @@ export function starsFor(rate: number): 0 | 1 | 2 | 3 {
   if (rate >= 30) return 1;
   return 0;
 }
+
+/** Extra points for answering fast: up to +50% when answered immediately. */
+export function speedBonus(points: number, remaining: number | null, total: number) {
+  if (remaining === null || total <= 0) return 0;
+  return Math.round(points * 0.5 * Math.max(0, Math.min(1, remaining / total)));
+}
+
+/** Tug-of-war rope position in [-1, 1]: positive means the first team leads. */
+export function ropePosition(a: number, b: number) {
+  const total = a + b;
+  return total === 0 ? 0 : (a - b) / total;
+}
