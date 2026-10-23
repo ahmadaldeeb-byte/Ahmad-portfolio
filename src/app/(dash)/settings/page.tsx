@@ -57,8 +57,7 @@ export default function SettingsPage() {
   const doExport = async () => {
     try {
       const b = await exportBackup();
-      downloadJSON(`heroes-world-backup-${new Date().toISOString().slice(0, 10)}.json`, b);
-      toast("تم تصدير النسخة الاحتياطية");
+      if (await downloadJSON(`heroes-world-backup-${new Date().toISOString().slice(0, 10)}.json`, b)) toast("تم تصدير النسخة الاحتياطية");
     } catch {
       toast("تعذّر تصدير النسخة الاحتياطية", "error");
     }

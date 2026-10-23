@@ -59,9 +59,30 @@ export function cn(...classes: (string | false | null | undefined)[]) {
   return classes.filter(Boolean).join(" ");
 }
 
-/** Triggers a JSON download. Use ASCII file names: some browsers drop non-Latin names on blob downloads. */
-export function downloadJSON(filename: string, data: unknown) {
-  const blob = new Blob([JSON.stringify(data, null, 2)], { type: "application/json" });
+type ClaudeHost = { use?: (name: string) => Promise<{ save: (r: { filename: string; data: string }) => Promise<unknown> } | null> };
+
+/**
+ * Saves data as a JSON file. Inside the claude.ai artifact viewer, where plain
+ * download links are blocked, it goes through the viewer's `downloads`
+ * capability (the viewer confirms the save). Use ASCII file names: some
+ * browsers drop non-Latin names on blob downloads.
+ * Resolves true when the file was handed to the browser / viewer.
+ */
+export async function downloadJSON(filename: string, data: unknown): Promise<boolean> {
+  const text = JSON.stringify(data, null, 2);
+  const host = (window as unknown as { claude?: ClaudeHost }).claude;
+  if (host?.use) {
+    try {
+      const downloads = await host.use("downloads");
+      if (downloads) {
+        await downloads.save({ filename, data: text });
+        return true;
+      }
+    } catch {
+      return false; // declined or unavailable
+    }
+  }
+  const blob = new Blob([text], { type: "application/json" });
   const url = URL.createObjectURL(blob);
   const a = document.createElement("a");
   a.href = url;
@@ -70,6 +91,7 @@ export function downloadJSON(filename: string, data: unknown) {
   a.click();
   a.remove();
   setTimeout(() => URL.revokeObjectURL(url), 1000);
+  return true;
 }
 
 export function readFileAsText(file: File): Promise<string> {

@@ -12,6 +12,13 @@ npm run dev          # خادم التطوير على http://localhost:3000
 npm run build && npm start   # نسخة الإنتاج
 ```
 
+## نسخة ملف واحد (بدون خادم)
+
+```bash
+npm run build:standalone   # يُنتج dist-standalone/index.html يعمل وحده
+node scripts/make-artifact.mjs dist-standalone/index.html heroes-world.html   # نسخة للنشر على claude.ai
+```
+
 ## الاختبارات
 
 ```bash
