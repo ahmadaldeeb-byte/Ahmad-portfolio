@@ -1,0 +1,40 @@
+# Developer helper for the curriculum import workflow (docs/CURRICULUM_IMPORT.md):
+# downloads a textbook PDF from an official URL that the development
+# environment cannot reach, and keeps it as a run artifact for a few days.
+# Nothing is committed or published.
+name: Fetch textbook PDF
+
+on:
+  workflow_dispatch:
+    inputs:
+      url:
+        description: Full URL of the textbook PDF (e.g. on nccd.gov.jo)
+        required: true
+      name:
+        description: Short file name, e.g. jo-g1-math-s1
+        required: true
+
+permissions:
+  contents: read
+
+jobs:
+  fetch:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download
+        env:
+          URL: ${{ inputs.url }}
+          NAME: ${{ inputs.name }}
+        run: |
+          case "$NAME" in *[!a-zA-Z0-9._-]*|"") echo "bad name"; exit 1;; esac
+          curl -fSL --retry 4 --retry-delay 5 -A "Mozilla/5.0" -o "$NAME.pdf" "$URL"
+          sudo apt-get install -y -qq poppler-utils > /dev/null
+          pdfinfo "$NAME.pdf"
+          sha256sum "$NAME.pdf" | tee "$NAME.sha256"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: textbook-${{ inputs.name }}
+          path: |
+            ${{ inputs.name }}.pdf
+            ${{ inputs.name }}.sha256
+          retention-days: 5
