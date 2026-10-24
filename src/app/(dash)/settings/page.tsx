@@ -4,9 +4,11 @@ import { useEffect, useRef, useState } from "react";
 import { toast } from "@/components/Toast";
 import { Button, Card, PageHeader, Segmented } from "@/components/ui";
 import { hasArabicVoice, sound } from "@/lib/audio";
-import { exportBackup, importBackup, isBackup } from "@/lib/db";
-import { downloadJSON, formatNum, readFileAsText } from "@/lib/utils";
-import { useData } from "@/store/data";
+import type { RestoreMode } from "@/lib/backup";
+import { PLATFORM_LABELS, currentPlatform, desktop, type DesktopBridge } from "@/lib/platform";
+import { APP_VERSION } from "@/lib/version";
+import { formatNum, readFileAsText } from "@/lib/utils";
+import { exportTeacherBackup, restoreTeacherBackup } from "@/store/backup";
 import { useSettings } from "@/store/settings";
 
 function Toggle({ checked, onChange, label }: { checked: boolean; onChange: (v: boolean) => void; label: string }) {
@@ -41,8 +43,14 @@ function Row({ title, hint, children }: { title: string; hint?: string; children
 
 export default function SettingsPage() {
   const s = useSettings();
-  const refresh = useData((d) => d.refresh);
   const fileRef = useRef<HTMLInputElement>(null);
+  const [mode, setMode] = useState<RestoreMode>("merge");
+  const [platform, setPlatform] = useState<ReturnType<typeof currentPlatform>>("web");
+  const [bridge, setBridge] = useState<DesktopBridge | null>(null);
+  useEffect(() => {
+    setPlatform(currentPlatform());
+    setBridge(desktop());
+  }, []);
   const [voiceAvailable, setVoiceAvailable] = useState(false);
 
   useEffect(() => {
@@ -56,8 +64,7 @@ export default function SettingsPage() {
 
   const doExport = async () => {
     try {
-      const b = await exportBackup();
-      if (await downloadJSON(`heroes-world-backup-${new Date().toISOString().slice(0, 10)}.json`, b)) toast("تم تصدير النسخة الاحتياطية");
+      if (await exportTeacherBackup()) toast("تم تصدير النسخة الاحتياطية");
     } catch {
       toast("تعذّر تصدير النسخة الاحتياطية", "error");
     }
@@ -65,13 +72,10 @@ export default function SettingsPage() {
 
   const doImport = async (file: File) => {
     try {
-      const data = JSON.parse(await readFileAsText(file));
-      if (!isBackup(data)) throw new Error("bad");
-      const r = await importBackup(data);
-      await refresh();
-      toast(`تمت الاستعادة: ${r.games} لعبة و${r.questions} سؤالًا و${r.lessons} حصة`);
-    } catch {
-      toast("الملف غير صالح أو تالف", "error");
+      const r = await restoreTeacherBackup(await readFileAsText(file), mode);
+      toast(`تمت الاستعادة: ${r.games} لعبة و${r.questions} سؤالًا و${r.lessons} حصة${r.warnings.length ? ` — ${r.warnings.join(" ")}` : ""}`);
+    } catch (e) {
+      toast(e instanceof Error && /[\u0600-\u06FF]/.test(e.message) ? e.message : "الملف غير صالح أو تالف", "error");
     }
   };
 
@@ -141,10 +145,37 @@ export default function SettingsPage() {
         <h2 className="mb-2 text-2xl font-extrabold">البيانات والنسخ الاحتياطي</h2>
         <div className="mb-4 flex gap-3 rounded-2xl bg-hero-yellow/25 p-4">
           <AlertTriangle className="size-6 shrink-0 text-[#E67700]" />
-          <p>
-            تُحفظ الألعاب والأسئلة والنتائج <b>على هذا المتصفح فقط</b>. حذف بيانات المتصفح أو استخدام التصفح الخفي قد يؤدي إلى فقدانها.
-            صدّر نسخة احتياطية بانتظام واحتفظ بها في مكان آمن.
-          </p>
+          {platform === "web" ? (
+            <p>
+              تُحفظ الألعاب والأسئلة والنتائج <b>على هذا المتصفح فقط</b>. حذف بيانات المتصفح أو استخدام التصفح الخفي قد يؤدي إلى فقدانها.
+              صدّر نسخة احتياطية بانتظام واحتفظ بها في مكان آمن.
+            </p>
+          ) : (
+            <p>
+              تُحفظ بياناتك في المجلد أدناه، ويحفظ التطبيق نسخة احتياطية تلقائية بعد كل تغيير.
+              {platform === "portable" && " انسخ هذا المجلد مع البرنامج عند نقل الذاكرة (USB)."} صدّر نسخة احتياطية أيضًا واحتفظ بها في مكان آخر.
+            </p>
+          )}
+        </div>
+        <p className="mb-3 text-sm text-hero-muted" data-testid="platform-info">
+          {PLATFORM_LABELS[platform]} • الإصدار {APP_VERSION}
+          {bridge && (
+            <>
+              {" • "}مجلد البيانات: <span dir="ltr" className="font-mono">{bridge.dataDir}</span>
+              {!bridge.writable && <b className="text-hero-red"> — لا يمكن الكتابة في هذا المجلد! انقل البرنامج إلى مكان قابل للكتابة.</b>}
+            </>
+          )}
+        </p>
+        <div className="mb-4 flex flex-wrap items-center gap-3">
+          <span className="font-bold">عند الاستعادة:</span>
+          <Segmented
+            value={mode}
+            onChange={setMode}
+            options={[
+              { value: "merge", label: "دمج مع بياناتي (لا يحذف شيئًا)" },
+              { value: "replace", label: "استبدال بياناتي (تُحفظ نسخة أمان أولًا)" },
+            ]}
+          />
         </div>
         <div className="flex flex-wrap gap-3">
           <Button icon={<Download className="size-5" />} onClick={doExport}>
@@ -153,6 +184,11 @@ export default function SettingsPage() {
           <Button variant="secondary" icon={<Upload className="size-5" />} onClick={() => fileRef.current?.click()}>
             استعادة من نسخة احتياطية
           </Button>
+          {bridge && (
+            <Button variant="ghost" onClick={() => void bridge.openDataDir()}>
+              فتح مجلد البيانات
+            </Button>
+          )}
           <input
             ref={fileRef}
             type="file"

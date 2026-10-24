@@ -27,7 +27,8 @@ export default defineConfig({
     { name: "phone", use: { ...devices["Desktop Chrome"], viewport: { width: 390, height: 844 }, hasTouch: true }, grep: /@screens/ },
   ],
   webServer: {
-    command: "npx next start -p 3100",
+    // The static web release (`npm run build` → out/), served like a production static host.
+    command: "node scripts/serve-static.mjs out 3100",
     url: "http://localhost:3100",
     reuseExistingServer: true,
     timeout: 120_000,

@@ -1,5 +1,6 @@
 import { beforeEach, describe, expect, it } from "vitest";
-import { exportBackup, gamesRepo, importBackup, isBackup, questionsRepo, resetDBConnection, resultsRepo } from "@/lib/db";
+import { gamesRepo, questionsRepo, resetDBConnection, resultsRepo } from "@/lib/db";
+import { collectBackupData, makeBackup, parseBackup, restoreBackup } from "@/lib/backup";
 import { gameToFile, parseGameFile, parseQuestionsFile, questionsToFile } from "@/lib/transfer";
 import { builtinGames, seedQuestions } from "@/content/seed";
 import { useData } from "@/store/data";
@@ -33,12 +34,11 @@ describe("IndexedDB repositories", () => {
     await questionsRepo.putMany(seedQuestions().slice(0, 5));
     await gamesRepo.put({ ...builtinGames()[1], id: "g2", builtin: false });
     await resultsRepo.add({ id: "r1", gameId: "g2", gameTitle: "x", type: "race", grade: 1, subject: "math", startedAt: 1, durationMs: 1000, correct: 3, wrong: 1, score: 30 });
-    const backup = JSON.parse(JSON.stringify(await exportBackup()));
-    expect(isBackup(backup)).toBe(true);
+    const backup = JSON.parse(JSON.stringify(makeBackup(await collectBackupData(), "web")));
     await wipe();
     expect(await gamesRepo.all()).toHaveLength(0);
-    const r = await importBackup(backup);
-    expect(r).toEqual({ games: 1, questions: 5, results: 1, lessons: 0 });
+    const r = await restoreBackup(parseBackup(backup));
+    expect(r).toMatchObject({ games: 1, questions: 5, results: 1, lessons: 0 });
     expect((await gamesRepo.all())[0].id).toBe("g2");
     expect(await questionsRepo.count()).toBe(5);
   });

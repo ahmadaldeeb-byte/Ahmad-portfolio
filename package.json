@@ -1,15 +1,16 @@
 {
   "name": "heroes-world",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "private": true,
   "scripts": {
     "dev": "next dev -p 3000",
-    "build": "next build",
-    "start": "next start -p 3000",
+    "build": "next build && node scripts/build-sw.mjs out",
+    "start": "node scripts/serve-static.mjs out 3000",
     "lint": "tsc --noEmit",
     "test": "vitest run",
     "test:e2e": "playwright test",
-    "build:standalone": "vite build -c vite.standalone.config.mts"
+    "build:standalone": "vite build -c vite.standalone.config.mts",
+    "serve:web": "node scripts/serve-static.mjs out 3100"
   },
   "dependencies": {
     "@fontsource/cairo": "^5.3.0",

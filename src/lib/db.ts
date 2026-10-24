@@ -114,35 +114,5 @@ export const metaRepo = {
   },
 };
 
-export interface Backup {
-  app: "heroes-world";
-  version: 1;
-  exportedAt: number;
-  games: GameConfig[];
-  questions: Question[];
-  results: GameResult[];
-  lessons?: LessonPlan[];
-}
-
-export async function exportBackup(): Promise<Backup> {
-  const [games, questions, results, lessons] = await Promise.all([gamesRepo.all(), questionsRepo.all(), resultsRepo.all(), lessonsRepo.all()]);
-  return { app: "heroes-world", version: 1, exportedAt: Date.now(), games, questions, results, lessons };
-}
-
-export function isBackup(x: unknown): x is Backup {
-  const b = x as Backup;
-  return !!b && b.app === "heroes-world" && Array.isArray(b.games) && Array.isArray(b.questions);
-}
-
-/** Restores a backup by merging records (same id → overwritten). */
-export async function importBackup(b: Backup) {
-  const db = await getDB();
-  const tx = db.transaction(["games", "questions", "results", "lessons"], "readwrite");
-  const ops: Promise<unknown>[] = [];
-  for (const g of b.games) ops.push(tx.objectStore("games").put(g));
-  for (const q of b.questions) ops.push(tx.objectStore("questions").put(q));
-  for (const r of b.results ?? []) ops.push(tx.objectStore("results").put(r));
-  for (const l of b.lessons ?? []) ops.push(tx.objectStore("lessons").put(l));
-  await Promise.all([...ops, tx.done]);
-  return { games: b.games.length, questions: b.questions.length, results: b.results?.length ?? 0, lessons: b.lessons?.length ?? 0 };
-}
+/** Version 1 backup helpers, kept for existing callers; new code uses `./backup`. */
+export type { Backup } from "./backup";

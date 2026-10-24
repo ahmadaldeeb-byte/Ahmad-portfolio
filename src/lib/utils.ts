@@ -1,3 +1,4 @@
+import { desktop } from "./platform";
 export function uid(prefix = ""): string {
   const rnd =
     typeof crypto !== "undefined" && "randomUUID" in crypto
@@ -62,7 +63,7 @@ export function cn(...classes: (string | false | null | undefined)[]) {
 type ClaudeHost = { use?: (name: string) => Promise<{ save: (r: { filename: string; data: string }) => Promise<unknown> } | null> };
 
 /**
- * Saves data as a JSON file. Inside the claude.ai artifact viewer, where plain
+ * Saves data as a JSON file. In the Windows app it opens the "Save as" dialog. Inside the claude.ai artifact viewer, where plain
  * download links are blocked, it goes through the viewer's `downloads`
  * capability (the viewer confirms the save). Use ASCII file names: some
  * browsers drop non-Latin names on blob downloads.
@@ -70,6 +71,9 @@ type ClaudeHost = { use?: (name: string) => Promise<{ save: (r: { filename: stri
  */
 export async function downloadJSON(filename: string, data: unknown): Promise<boolean> {
   const text = JSON.stringify(data, null, 2);
+  // Windows app: the native "Save as" dialog (the teacher picks the folder, e.g. the USB stick).
+  const bridge = desktop();
+  if (bridge) return bridge.saveFile(filename, text);
   const host = (window as unknown as { claude?: ClaudeHost }).claude;
   if (host?.use) {
     try {
