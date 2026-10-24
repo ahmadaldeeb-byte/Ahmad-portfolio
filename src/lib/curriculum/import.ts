@@ -10,9 +10,16 @@ import type { CurriculumBook, CurriculumLesson } from "@/content/curriculum/type
 import { GAMES, gameMetaFor } from "../constants";
 import { isMathGame } from "../math/meta";
 import { MATH_DEFAULTS } from "../math/common";
+import { TRAIN_DEFAULTS, type TrainSettings } from "../train";
 import { validateGame } from "../questions";
 import type { GameConfig, GameType, Question } from "../types";
 import type { CurriculumFile, CurriculumFileGame, CurriculumFileLesson, Issue } from "./schema";
+
+const TRAIN_LEVELS: Record<1 | 2 | 3, Partial<TrainSettings>> = {
+  1: { min: 0, max: 20 },
+  2: { min: 0, max: 99, difficulty: "medium" },
+  3: { min: 0, max: 99, difficulty: "advanced" },
+};
 
 export interface ImportPlan {
   book: CurriculumBook;
@@ -91,6 +98,8 @@ export function planImport(file: CurriculumFile, now = Date.now()): ImportPlan {
         if (meta.subjects && !meta.subjects.includes(c.subject) && !meta.bank) continue;
         const settings = defaultSettings(g.template);
         if (isMathGame(g.template)) settings.math = { ...MATH_DEFAULTS, level: g.level ?? 1, count: g.count ?? MATH_DEFAULTS.count };
+        // Number train: level 1 = numbers 0–20, level 2 = 0–99, level 3 = 0–99 with harder stations.
+        if (g.template === "train") settings.train = { ...TRAIN_DEFAULTS, ...TRAIN_LEVELS[g.level ?? 1], count: g.count ?? TRAIN_DEFAULTS.count };
         const own = asPlayed.generated ? [] : lessonQs.filter((q) => asPlayed.kinds.includes(q.kind));
         const game: GameConfig = {
           id: `${importId}__${slug(l.id)}__${g.template}`,

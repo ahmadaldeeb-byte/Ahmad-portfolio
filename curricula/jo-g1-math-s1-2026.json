@@ -1,0 +1,2332 @@
+{
+  "app": "heroes-world",
+  "kind": "curriculum",
+  "version": 1,
+  "curriculum": {
+    "id": "jo-g1-math-s1-2026",
+    "country": "الأردن",
+    "title": "الرياضيات — الصف الأول — الفصل الدراسي الأول",
+    "grade": 1,
+    "subject": "math",
+    "semester": 1,
+    "textbook": {
+      "title": "الرياضيات، الصف الأول، كتاب الطالب، الفصل الدراسي الأول",
+      "publisher": "المركز الوطني لتطوير المناهج",
+      "isbn": "978-9923-41-344-9",
+      "pages": 103,
+      "sha256": "875b5dedd1cdd9121ade6794f7af4e2cd5b1a3f77b59cbfc533b86f1fe29d55c"
+    },
+    "generatedBy": "Claude Code from the textbook PDF (textbook-to-curriculum); lessons only (unit projects, games and end-of-unit tests not included)",
+    "generatedAt": "2026-10-24",
+    "units": [
+      {
+        "id": "u0",
+        "number": 0,
+        "title": "الْوَحْدَةُ التَّمْهيدِيَّةُ: الْأَعْدادُ حَتّى 10",
+        "semester": 1,
+        "pages": [
+          7,
+          23
+        ],
+        "lessons": [
+          {
+            "id": "u0-l1",
+            "number": 1,
+            "title": "الْمَوْقِعُ وَالِاتِّجاهُ",
+            "pages": [
+              8,
+              9
+            ],
+            "games": [
+              {
+                "template": "quiz"
+              },
+              {
+                "template": "wheel"
+              }
+            ],
+            "questions": [
+              {
+                "id": "u0-l1-t01",
+                "origin": "textbook",
+                "page": 9,
+                "kind": "mcq",
+                "prompt": "الأرنب على سطح الطاولة. ما موقعه بالنسبة إلى الطاولة؟",
+                "correctIndex": 0,
+                "difficulty": 1,
+                "choices": [
+                  "فوق",
+                  "تحت",
+                  "أمام",
+                  "خلف"
+                ]
+              },
+              {
+                "id": "u0-l1-t02",
+                "origin": "textbook",
+                "page": 9,
+                "kind": "mcq",
+                "prompt": "الصوص يقف تحت الطاولة. ما موقعه بالنسبة إلى الطاولة؟",
+                "correctIndex": 0,
+                "difficulty": 1,
+                "choices": [
+                  "تحت",
+                  "فوق",
+                  "يمين",
+                  "يسار"
+                ]
+              },
+              {
+                "id": "u0-l1-t03",
+                "origin": "textbook",
+                "page": 8,
+                "kind": "mcq",
+                "prompt": "القرد يجلس على غصن الشجرة في أعلاها. ما موقعه بالنسبة إلى الشجرة؟",
+                "correctIndex": 0,
+                "difficulty": 1,
+                "choices": [
+                  "فوق",
+                  "تحت",
+                  "خلف"
+                ]
+              },
+              {
+                "id": "u0-l1-g01",
+                "origin": "generated",
+                "kind": "mcq",
+                "prompt": "ما عكس «فوق»؟",
+                "correctIndex": 0,
+                "difficulty": 1,
+                "choices": [
+                  "تحت",
+                  "أمام",
+                  "يمين"
+                ]
+              },
+              {
+                "id": "u0-l1-g02",
+                "origin": "generated",
+                "kind": "mcq",
+                "prompt": "ما عكس «أمام»؟",
+                "correctIndex": 0,
+                "difficulty": 1,
+                "choices": [
+                  "خلف",
+                  "فوق",
+                  "يسار"
+                ]
+              },
+              {
+                "id": "u0-l1-g03",
+                "origin": "generated",
+                "kind": "mcq",
+                "prompt": "ما عكس «يمين»؟",
+                "correctIndex": 0,
+                "difficulty": 1,
+                "choices": [
+                  "يسار",
+                  "تحت",
+                  "خلف"
+                ]
+              },
+              {
+                "id": "u0-l1-g04",
+                "origin": "generated",
+                "kind": "truefalse",
+                "prompt": "إذا وقفتُ وراء صديقي، فأنا خلفه.",
+                "correctIndex": 0,
+                "difficulty": 1
+              },
+              {
+                "id": "u0-l1-g05",
+                "origin": "generated",
+                "kind": "truefalse",
+                "prompt": "الطائر الذي يطير فوق البيت يكون تحته.",
+                "correctIndex": 1,
+                "difficulty": 1
+              }
+            ]
+          },
+          {
+            "id": "u0-l2",
+            "number": 2,
+            "title": "الْأَعْدادُ: 1, 2, 3",
+            "pages": [
+              10,
+              11
+            ],
+            "games": [
+              {
+                "template": "island",
+                "level": 1,
+                "count": 6
+              },
+              {
+                "template": "quiz"
+              }
+            ],
+            "questions": [
+              {
+                "id": "u0-l2-t01",
+                "origin": "textbook",
+                "page": 11,
+                "kind": "mcq",
+                "prompt": "🕊️🕊️🕊️ كم حمامة؟",
+                "correctIndex": 0,
+                "difficulty": 1,
+                "choices": [
+                  "3",
+                  "2",
+                  "1"
+                ]
+              },
+              {
+                "id": "u0-l2-t02",
+                "origin": "textbook",
+                "page": 11,
+                "kind": "mcq",
+                "prompt": "🐦 كم عصفورًا؟",
+                "correctIndex": 0,
+                "difficulty": 1,
+                "choices": [
+                  "1",
+                  "2",
+                  "3"
+                ]
+              },
+              {
+                "id": "u0-l2-t03",
+                "origin": "textbook",
+                "page": 11,
+                "kind": "mcq",
+                "prompt": "🐥🐥 كم صوصًا؟",
+                "correctIndex": 0,
+                "difficulty": 1,
+                "choices": [
+                  "2",
+                  "1",
+                  "3"
+                ]
+              },
+              {
+                "id": "u0-l2-t04",
+                "origin": "textbook",
+                "page": 11,
+                "kind": "mcq",
+                "prompt": "🦆🦆🦆 كم بطة؟",
+                "correctIndex": 0,
+                "difficulty": 1,
+                "choices": [
+                  "3",
+                  "1",
+                  "2"
+                ]
+              },
+              {
+                "id": "u0-l2-t05",
+                "origin": "textbook",
+                "page": 10,
+                "kind": "mcq",
+                "prompt": "🐚🐚 كم صدفة؟",
+                "correctIndex": 0,
+                "difficulty": 1,
+                "choices": [
+                  "2",
+                  "3",
+                  "1"
+                ]
+              },
+              {
+                "id": "u0-l2-g01",
+                "origin": "generated",
+                "kind": "mcq",
+                "prompt": "⭐ كم نجمة؟",
+                "correctIndex": 0,
+                "difficulty": 1,
+                "choices": [
+                  "1",
+                  "3",
+                  "2"
+                ]
+              },
+              {
+                "id": "u0-l2-g02",
+                "origin": "generated",
+                "kind": "mcq",
+                "prompt": "ما العدد «ثلاثة»؟",
+                "correctIndex": 0,
+                "difficulty": 1,
+                "choices": [
+                  "3",
+                  "2",
+                  "1"
+                ]
+              },
+              {
+                "id": "u0-l2-g03",
+                "origin": "generated",
+                "kind": "truefalse",
+                "prompt": "🍎🍎 هنا تفاحتان.",
+                "correctIndex": 0,
+                "difficulty": 1
+              }
+            ]
+          },
+          {
+            "id": "u0-l3",
+            "number": 3,
+            "title": "الْعَدَدانِ: 4, 5",
+            "pages": [
+              12,
+              13
+            ],
+            "games": [
+              {
+                "template": "island",
+                "level": 1,
+                "count": 6
+              },
+              {
+                "template": "balloons"
+              }
+            ],
+            "questions": [
+              {
+                "id": "u0-l3-t01",
+                "origin": "textbook",
+                "page": 13,
+                "kind": "mcq",
+                "prompt": "🍓🍓🍓🍓 كم فراولة؟",
+                "correctIndex": 0,
+                "difficulty": 1,
+                "choices": [
+                  "4",
+                  "5",
+                  "3"
+                ]
+              },
+              {
+                "id": "u0-l3-t02",
+                "origin": "textbook",
+                "page": 13,
+                "kind": "mcq",
+                "prompt": "🍍🍍🍍🍍🍍 كم أناناسة؟",
+                "correctIndex": 0,
+                "difficulty": 1,
+                "choices": [
+                  "5",
+                  "4",
+                  "3"
+                ]
+              },
+              {
+                "id": "u0-l3-t03",
+                "origin": "textbook",
+                "page": 13,
+                "kind": "mcq",
+                "prompt": "🍇🍇🍇🍇 كم عنقود عنب؟",
+                "correctIndex": 0,
+                "difficulty": 1,
+                "choices": [
+                  "4",
+                  "5",
+                  "2"
+                ]
+              },
+              {
+                "id": "u0-l3-t04",
+                "origin": "textbook",
+                "page": 12,
+                "kind": "mcq",
+                "prompt": "🚗🚗🚗🚗 كم سيارة؟",
+                "correctIndex": 0,
+                "difficulty": 1,
+                "choices": [
+                  "4",
+                  "5",
+                  "3"
+                ]
+              },
+              {
+                "id": "u0-l3-t05",
+                "origin": "textbook",
+                "page": 12,
+                "kind": "mcq",
+                "prompt": "🧸🧸🧸🧸🧸 كم دمية؟",
+                "correctIndex": 0,
+                "difficulty": 1,
+                "choices": [
+                  "5",
+                  "4",
+                  "3"
+                ]
+              },
+              {
+                "id": "u0-l3-g01",
+                "origin": "generated",
+                "kind": "mcq",
+                "prompt": "ما العدد «خمسة»؟",
+                "correctIndex": 0,
+                "difficulty": 1,
+                "choices": [
+                  "5",
+                  "4",
+                  "3"
+                ]
+              },
+              {
+                "id": "u0-l3-g02",
+                "origin": "generated",
+                "kind": "mcq",
+                "prompt": "ما العدد «أربعة»؟",
+                "correctIndex": 0,
+                "difficulty": 1,
+                "choices": [
+                  "4",
+                  "5",
+                  "2"
+                ]
+              },
+              {
+                "id": "u0-l3-g03",
+                "origin": "generated",
+                "kind": "truefalse",
+                "prompt": "✋ في يدي الواحدة 5 أصابع.",
+                "correctIndex": 0,
+                "difficulty": 1
+              }
+            ]
+          },
+          {
+            "id": "u0-l4",
+            "number": 4,
+            "title": "الْعَدَدُ صِفْرٌ",
+            "pages": [
+              14,
+              15
+            ],
+            "games": [
+              {
+                "template": "quiz"
+              },
+              {
+                "template": "balloons"
+              }
+            ],
+            "questions": [
+              {
+                "id": "u0-l4-t01",
+                "origin": "textbook",
+                "page": 14,
+                "kind": "mcq",
+                "prompt": "سلة لا يوجد فيها أي تفاحة. كم تفاحة في السلة؟",
+                "correctIndex": 0,
+                "difficulty": 1,
+                "choices": [
+                  "0",
+                  "1",
+                  "2"
+                ]
+              },
+              {
+                "id": "u0-l4-t02",
+                "origin": "textbook",
+                "page": 14,
+                "kind": "mcq",
+                "prompt": "قفص لا يوجد فيه عصفور. كم عصفورًا في القفص؟",
+                "correctIndex": 0,
+                "difficulty": 1,
+                "choices": [
+                  "0",
+                  "1",
+                  "3"
+                ]
+              },
+              {
+                "id": "u0-l4-t03",
+                "origin": "textbook",
+                "page": 15,
+                "kind": "mcq",
+                "prompt": "وعاء فارغ ليس فيه برتقال. كم حبة برتقال فيه؟",
+                "correctIndex": 0,
+                "difficulty": 1,
+                "choices": [
+                  "0",
+                  "2",
+                  "1"
+                ]
+              },
+              {
+                "id": "u0-l4-t04",
+                "origin": "textbook",
+                "page": 15,
+                "kind": "mcq",
+                "prompt": "حوض فيه سمكة واحدة 🐠. كم سمكة في الحوض؟",
+                "correctIndex": 0,
+                "difficulty": 1,
+                "choices": [
+                  "1",
+                  "0",
+                  "2"
+                ]
+              },
+              {
+                "id": "u0-l4-t05",
+                "origin": "textbook",
+                "page": 15,
+                "kind": "mcq",
+                "prompt": "حوض لا يوجد فيه سمك. كم سمكة في الحوض؟",
+                "correctIndex": 0,
+                "difficulty": 1,
+                "choices": [
+                  "0",
+                  "1",
+                  "2"
+                ]
+              },
+              {
+                "id": "u0-l4-g01",
+                "origin": "generated",
+                "kind": "mcq",
+                "prompt": "ما عدد الأسود في بيتنا؟",
+                "correctIndex": 0,
+                "difficulty": 1,
+                "choices": [
+                  "0",
+                  "1",
+                  "2"
+                ]
+              },
+              {
+                "id": "u0-l4-g02",
+                "origin": "generated",
+                "kind": "truefalse",
+                "prompt": "عندما لا يوجد شيء نقول: العدد صفر.",
+                "correctIndex": 0,
+                "difficulty": 1
+              },
+              {
+                "id": "u0-l4-g03",
+                "origin": "generated",
+                "kind": "mcq",
+                "prompt": "في وعاء كرتان ⚽⚽، أخذتُ الكرتين. كم كرة بقيت؟",
+                "correctIndex": 0,
+                "difficulty": 1,
+                "choices": [
+                  "0",
+                  "1",
+                  "2"
+                ]
+              }
+            ]
+          },
+          {
+            "id": "u0-l5",
+            "number": 5,
+            "title": "الْأَعْدادُ: 6, 7, 8",
+            "pages": [
+              16,
+              17
+            ],
+            "games": [
+              {
+                "template": "island",
+                "level": 1,
+                "count": 6
+              },
+              {
+                "template": "quiz"
+              }
+            ],
+            "questions": [
+              {
+                "id": "u0-l5-t01",
+                "origin": "textbook",
+                "page": 17,
+                "kind": "mcq",
+                "prompt": "🍏🍏🍏🍏🍏🍏🍏 كم تفاحة؟",
+                "correctIndex": 0,
+                "difficulty": 1,
+                "choices": [
+                  "7",
+                  "6",
+                  "8"
+                ]
+              },
+              {
+                "id": "u0-l5-t02",
+                "origin": "textbook",
+                "page": 17,
+                "kind": "mcq",
+                "prompt": "🍌🍌🍌🍌🍌🍌🍌🍌 كم موزة؟",
+                "correctIndex": 0,
+                "difficulty": 1,
+                "choices": [
+                  "8",
+                  "7",
+                  "6"
+                ]
+              },
+              {
+                "id": "u0-l5-t03",
+                "origin": "textbook",
+                "page": 17,
+                "kind": "mcq",
+                "prompt": "🍒🍒🍒🍒🍒🍒 كم حبة كرز؟",
+                "correctIndex": 0,
+                "difficulty": 1,
+                "choices": [
+                  "6",
+                  "7",
+                  "8"
+                ]
+              },
+              {
+                "id": "u0-l5-t04",
+                "origin": "textbook",
+                "page": 16,
+                "kind": "mcq",
+                "prompt": "⭐⭐⭐⭐⭐⭐⭐ كم نجمة؟",
+                "correctIndex": 0,
+                "difficulty": 1,
+                "choices": [
+                  "7",
+                  "8",
+                  "6"
+                ]
+              },
+              {
+                "id": "u0-l5-t05",
+                "origin": "textbook",
+                "page": 16,
+                "kind": "mcq",
+                "prompt": "🌟🌟🌟🌟🌟🌟 كم نجمة؟",
+                "correctIndex": 0,
+                "difficulty": 1,
+                "choices": [
+                  "6",
+                  "8",
+                  "7"
+                ]
+              },
+              {
+                "id": "u0-l5-g01",
+                "origin": "generated",
+                "kind": "mcq",
+                "prompt": "ما العدد «ثمانية»؟",
+                "correctIndex": 0,
+                "difficulty": 1,
+                "choices": [
+                  "8",
+                  "6",
+                  "7"
+                ]
+              },
+              {
+                "id": "u0-l5-g02",
+                "origin": "generated",
+                "kind": "mcq",
+                "prompt": "ما العدد «سبعة»؟",
+                "correctIndex": 0,
+                "difficulty": 1,
+                "choices": [
+                  "7",
+                  "6",
+                  "8"
+                ]
+              },
+              {
+                "id": "u0-l5-g03",
+                "origin": "generated",
+                "kind": "truefalse",
+                "prompt": "🚗🚗🚗🚗🚗🚗🚗🚗 هنا 6 سيارات.",
+                "correctIndex": 1,
+                "difficulty": 1
+              }
+            ]
+          },
+          {
+            "id": "u0-l6",
+            "number": 6,
+            "title": "الْعَدَدانِ: 9, 10",
+            "pages": [
+              18,
+              19
+            ],
+            "games": [
+              {
+                "template": "island",
+                "level": 1,
+                "count": 6
+              },
+              {
+                "template": "balloons"
+              }
+            ],
+            "questions": [
+              {
+                "id": "u0-l6-t01",
+                "origin": "textbook",
+                "page": 18,
+                "kind": "mcq",
+                "prompt": "كم عدد أصابع يديّ الاثنتين؟",
+                "correctIndex": 0,
+                "difficulty": 1,
+                "choices": [
+                  "10",
+                  "9",
+                  "8"
+                ]
+              },
+              {
+                "id": "u0-l6-t02",
+                "origin": "textbook",
+                "page": 19,
+                "kind": "mcq",
+                "prompt": "🎾🎾🎾🎾🎾🎾🎾🎾🎾🎾 كم كرة؟",
+                "correctIndex": 0,
+                "difficulty": 1,
+                "choices": [
+                  "10",
+                  "9",
+                  "8"
+                ]
+              },
+              {
+                "id": "u0-l6-t03",
+                "origin": "textbook",
+                "page": 19,
+                "kind": "mcq",
+                "prompt": "🏀🏀🏀🏀🏀🏀🏀🏀🏀 كم كرة؟",
+                "correctIndex": 0,
+                "difficulty": 1,
+                "choices": [
+                  "9",
+                  "10",
+                  "8"
+                ]
+              },
+              {
+                "id": "u0-l6-t04",
+                "origin": "textbook",
+                "page": 19,
+                "kind": "mcq",
+                "prompt": "⚽⚽⚽⚽⚽⚽⚽⚽⚽⚽ كم كرة؟",
+                "correctIndex": 0,
+                "difficulty": 1,
+                "choices": [
+                  "10",
+                  "9",
+                  "7"
+                ]
+              },
+              {
+                "id": "u0-l6-t05",
+                "origin": "textbook",
+                "page": 19,
+                "kind": "mcq",
+                "prompt": "3، 4، 5، 6، 7، ؟ — ما العدد المفقود بعد 7؟",
+                "correctIndex": 0,
+                "difficulty": 1,
+                "choices": [
+                  "8",
+                  "9",
+                  "6"
+                ]
+              },
+              {
+                "id": "u0-l6-t06",
+                "origin": "textbook",
+                "page": 19,
+                "kind": "mcq",
+                "prompt": "7، 8، ؟، 10 — ما العدد المفقود؟",
+                "correctIndex": 0,
+                "difficulty": 1,
+                "choices": [
+                  "9",
+                  "6",
+                  "11"
+                ]
+              },
+              {
+                "id": "u0-l6-g01",
+                "origin": "generated",
+                "kind": "mcq",
+                "prompt": "ما العدد «تسعة»؟",
+                "correctIndex": 0,
+                "difficulty": 1,
+                "choices": [
+                  "9",
+                  "10",
+                  "6"
+                ]
+              },
+              {
+                "id": "u0-l6-g02",
+                "origin": "generated",
+                "kind": "mcq",
+                "prompt": "ما العدد «عشرة»؟",
+                "correctIndex": 0,
+                "difficulty": 1,
+                "choices": [
+                  "10",
+                  "9",
+                  "1"
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "u1",
+        "number": 1,
+        "title": "الْأَعْدادُ ضِمْنَ مَنْزِلَتَيْنِ",
+        "semester": 1,
+        "pages": [
+          25,
+          41
+        ],
+        "lessons": [
+          {
+            "id": "u1-l1",
+            "number": 1,
+            "title": "الْعَشَراتُ",
+            "pages": [
+              26,
+              27
+            ],
+            "games": [
+              {
+                "template": "factory",
+                "level": 1,
+                "count": 6
+              },
+              {
+                "template": "quiz"
+              }
+            ],
+            "questions": [
+              {
+                "id": "u1-l1-t01",
+                "origin": "textbook",
+                "page": 26,
+                "kind": "mcq",
+                "prompt": "كم عشرة في 70 مكعبًا؟",
+                "correctIndex": 0,
+                "difficulty": 1,
+                "choices": [
+                  "7",
+                  "70",
+                  "10"
+                ]
+              },
+              {
+                "id": "u1-l1-t02",
+                "origin": "textbook",
+                "page": 26,
+                "kind": "mcq",
+                "prompt": "4 عشرات = ؟",
+                "correctIndex": 0,
+                "difficulty": 1,
+                "choices": [
+                  "40",
+                  "4",
+                  "14"
+                ]
+              },
+              {
+                "id": "u1-l1-t03",
+                "origin": "textbook",
+                "page": 26,
+                "kind": "mcq",
+                "prompt": "1 عشرة = كم واحدًا؟",
+                "correctIndex": 0,
+                "difficulty": 1,
+                "choices": [
+                  "10",
+                  "1",
+                  "100"
+                ]
+              },
+              {
+                "id": "u1-l1-t04",
+                "origin": "textbook",
+                "page": 27,
+                "kind": "mcq",
+                "prompt": "مع عليّ 4 عُلَب من أقلام التلوين، في كل علبة 10 أقلام. كم قلم تلوين مع عليّ؟",
+                "correctIndex": 0,
+                "difficulty": 1,
+                "choices": [
+                  "40",
+                  "14",
+                  "4"
+                ]
+              },
+              {
+                "id": "u1-l1-t05",
+                "origin": "textbook",
+                "page": 27,
+                "kind": "mcq",
+                "prompt": "30 مكعبًا = كم عشرة؟",
+                "correctIndex": 0,
+                "difficulty": 1,
+                "choices": [
+                  "3",
+                  "30",
+                  "13"
+                ]
+              },
+              {
+                "id": "u1-l1-t06",
+                "origin": "textbook",
+                "page": 27,
+                "kind": "mcq",
+                "prompt": "60 مكعبًا = كم عشرة؟",
+                "correctIndex": 0,
+                "difficulty": 1,
+                "choices": [
+                  "6",
+                  "60",
+                  "16"
+                ]
+              },
+              {
+                "id": "u1-l1-g01",
+                "origin": "generated",
+                "kind": "mcq",
+                "prompt": "9 عشرات = ؟",
+                "correctIndex": 0,
+                "difficulty": 1,
+                "choices": [
+                  "90",
+                  "9",
+                  "19"
+                ]
+              },
+              {
+                "id": "u1-l1-g02",
+                "origin": "generated",
+                "kind": "truefalse",
+                "prompt": "الأعداد 10، 20، 50 كلها عشرات كاملة.",
+                "correctIndex": 0,
+                "difficulty": 1
+              }
+            ]
+          },
+          {
+            "id": "u1-l2",
+            "number": 2,
+            "title": "الْآحادُ وَالْعَشَراتُ",
+            "pages": [
+              28,
+              29
+            ],
+            "games": [
+              {
+                "template": "factory",
+                "level": 2,
+                "count": 6
+              },
+              {
+                "template": "quiz"
+              }
+            ],
+            "questions": [
+              {
+                "id": "u1-l2-t01",
+                "origin": "textbook",
+                "page": 28,
+                "kind": "mcq",
+                "prompt": "15 نجمة: كم عشرة فيها؟",
+                "correctIndex": 0,
+                "difficulty": 1,
+                "choices": [
+                  "1",
+                  "5",
+                  "15"
+                ]
+              },
+              {
+                "id": "u1-l2-t02",
+                "origin": "textbook",
+                "page": 28,
+                "kind": "mcq",
+                "prompt": "15 نجمة: بعد أخذ عشرة، كم يبقى؟",
+                "correctIndex": 0,
+                "difficulty": 1,
+                "choices": [
+                  "5",
+                  "1",
+                  "10"
+                ]
+              },
+              {
+                "id": "u1-l2-t03",
+                "origin": "textbook",
+                "page": 28,
+                "kind": "mcq",
+                "prompt": "3 عشرات و8 آحاد = ؟",
+                "correctIndex": 0,
+                "difficulty": 1,
+                "choices": [
+                  "38",
+                  "83",
+                  "11"
+                ]
+              },
+              {
+                "id": "u1-l2-t04",
+                "origin": "textbook",
+                "page": 29,
+                "kind": "mcq",
+                "prompt": "ما العدد الذي عشراته 6 وآحاده 8؟",
+                "correctIndex": 0,
+                "difficulty": 1,
+                "choices": [
+                  "68",
+                  "86",
+                  "14"
+                ]
+              },
+              {
+                "id": "u1-l2-g01",
+                "origin": "generated",
+                "kind": "mcq",
+                "prompt": "كم آحادًا في العدد 47؟",
+                "correctIndex": 0,
+                "difficulty": 1,
+                "choices": [
+                  "7",
+                  "4",
+                  "47"
+                ]
+              },
+              {
+                "id": "u1-l2-g02",
+                "origin": "generated",
+                "kind": "mcq",
+                "prompt": "كم عشرة في العدد 47؟",
+                "correctIndex": 0,
+                "difficulty": 1,
+                "choices": [
+                  "4",
+                  "7",
+                  "40"
+                ]
+              },
+              {
+                "id": "u1-l2-g03",
+                "origin": "generated",
+                "kind": "mcq",
+                "prompt": "5 عشرات و2 آحاد = ؟",
+                "correctIndex": 0,
+                "difficulty": 1,
+                "choices": [
+                  "52",
+                  "25",
+                  "7"
+                ]
+              },
+              {
+                "id": "u1-l2-g04",
+                "origin": "generated",
+                "kind": "truefalse",
+                "prompt": "العدد 91 فيه 9 عشرات وآحاد واحد.",
+                "correctIndex": 0,
+                "difficulty": 1
+              }
+            ]
+          },
+          {
+            "id": "u1-l3",
+            "number": 3,
+            "title": "تَمْثيلُ الْأَعْدادِ ضِمْنَ مَنْزِلَتَيْنِ",
+            "pages": [
+              30,
+              31
+            ],
+            "games": [
+              {
+                "template": "factory",
+                "level": 2,
+                "count": 6
+              },
+              {
+                "template": "balloons"
+              }
+            ],
+            "questions": [
+              {
+                "id": "u1-l3-t01",
+                "origin": "textbook",
+                "page": 30,
+                "kind": "mcq",
+                "prompt": "لتمثيل العدد 36: كم عشرة نحتاج؟",
+                "correctIndex": 0,
+                "difficulty": 1,
+                "choices": [
+                  "3",
+                  "6",
+                  "36"
+                ]
+              },
+              {
+                "id": "u1-l3-t02",
+                "origin": "textbook",
+                "page": 30,
+                "kind": "mcq",
+                "prompt": "لتمثيل العدد 36: كم آحادًا نحتاج؟",
+                "correctIndex": 0,
+                "difficulty": 1,
+                "choices": [
+                  "6",
+                  "3",
+                  "9"
+                ]
+              },
+              {
+                "id": "u1-l3-t03",
+                "origin": "textbook",
+                "page": 30,
+                "kind": "mcq",
+                "prompt": "في العدد 73، الرقم 7 يمثّل عدد...",
+                "correctIndex": 0,
+                "difficulty": 1,
+                "choices": [
+                  "العشرات",
+                  "الآحاد"
+                ]
+              },
+              {
+                "id": "u1-l3-t04",
+                "origin": "textbook",
+                "page": 30,
+                "kind": "mcq",
+                "prompt": "لتمثيل العدد 49 نستعمل:",
+                "correctIndex": 0,
+                "difficulty": 1,
+                "choices": [
+                  "4 عشرات و9 آحاد",
+                  "9 عشرات و4 آحاد",
+                  "49 عشرة"
+                ]
+              },
+              {
+                "id": "u1-l3-t05",
+                "origin": "textbook",
+                "page": 31,
+                "kind": "mcq",
+                "prompt": "العدد 52: عشرات 5 و آحاد ؟",
+                "correctIndex": 0,
+                "difficulty": 1,
+                "choices": [
+                  "2",
+                  "5",
+                  "7"
+                ]
+              },
+              {
+                "id": "u1-l3-t06",
+                "origin": "textbook",
+                "page": 31,
+                "kind": "mcq",
+                "prompt": "العدد 31: كم عشرة؟",
+                "correctIndex": 0,
+                "difficulty": 1,
+                "choices": [
+                  "3",
+                  "1",
+                  "31"
+                ]
+              },
+              {
+                "id": "u1-l3-t07",
+                "origin": "textbook",
+                "page": 31,
+                "kind": "mcq",
+                "prompt": "العدد 44: كم آحادًا؟",
+                "correctIndex": 0,
+                "difficulty": 1,
+                "choices": [
+                  "4",
+                  "8",
+                  "40"
+                ]
+              },
+              {
+                "id": "u1-l3-g01",
+                "origin": "generated",
+                "kind": "mcq",
+                "prompt": "أيّ عدد نمثّله بـ 2 عشرات و7 آحاد؟",
+                "correctIndex": 0,
+                "difficulty": 1,
+                "choices": [
+                  "27",
+                  "72",
+                  "9"
+                ]
+              }
+            ]
+          },
+          {
+            "id": "u1-l4",
+            "number": 4,
+            "title": "الْقيمَةُ الْمَنْزِلِيَّةُ",
+            "pages": [
+              32,
+              33
+            ],
+            "games": [
+              {
+                "template": "factory",
+                "level": 3,
+                "count": 6
+              },
+              {
+                "template": "quiz"
+              }
+            ],
+            "questions": [
+              {
+                "id": "u1-l4-t01",
+                "origin": "textbook",
+                "page": 33,
+                "kind": "mcq",
+                "prompt": "ما القيمة المنزلية للرقم 6 في العدد 46؟",
+                "correctIndex": 0,
+                "difficulty": 1,
+                "choices": [
+                  "6",
+                  "60"
+                ]
+              },
+              {
+                "id": "u1-l4-t02",
+                "origin": "textbook",
+                "page": 33,
+                "kind": "mcq",
+                "prompt": "في العدد 33، ما القيمة المنزلية للرقم 3 الموجود في منزلة العشرات؟",
+                "correctIndex": 0,
+                "difficulty": 1,
+                "choices": [
+                  "30",
+                  "3"
+                ]
+              },
+              {
+                "id": "u1-l4-t03",
+                "origin": "textbook",
+                "page": 33,
+                "kind": "mcq",
+                "prompt": "ما القيمة المنزلية للرقم 9 في العدد 96؟",
+                "correctIndex": 0,
+                "difficulty": 1,
+                "choices": [
+                  "90",
+                  "9"
+                ]
+              },
+              {
+                "id": "u1-l4-t04",
+                "origin": "textbook",
+                "page": 33,
+                "kind": "mcq",
+                "prompt": "ما القيمة المنزلية للرقم 2 في العدد 82؟",
+                "correctIndex": 0,
+                "difficulty": 1,
+                "choices": [
+                  "2",
+                  "20"
+                ]
+              },
+              {
+                "id": "u1-l4-t05",
+                "origin": "textbook",
+                "page": 33,
+                "kind": "mcq",
+                "prompt": "92 = ؟ + 2",
+                "correctIndex": 0,
+                "difficulty": 1,
+                "choices": [
+                  "90",
+                  "9",
+                  "92"
+                ]
+              },
+              {
+                "id": "u1-l4-t06",
+                "origin": "textbook",
+                "page": 33,
+                "kind": "mcq",
+                "prompt": "87 = 80 + ؟",
+                "correctIndex": 0,
+                "difficulty": 1,
+                "choices": [
+                  "7",
+                  "8",
+                  "70"
+                ]
+              },
+              {
+                "id": "u1-l4-t07",
+                "origin": "textbook",
+                "page": 32,
+                "kind": "mcq",
+                "prompt": "الصورة التحليلية للعدد 42 هي:",
+                "correctIndex": 0,
+                "difficulty": 1,
+                "choices": [
+                  "40 + 2",
+                  "4 + 2",
+                  "20 + 4"
+                ]
+              },
+              {
+                "id": "u1-l4-g01",
+                "origin": "generated",
+                "kind": "mcq",
+                "prompt": "ما القيمة المنزلية للرقم 5 في العدد 25؟",
+                "correctIndex": 0,
+                "difficulty": 1,
+                "choices": [
+                  "5",
+                  "50"
+                ]
+              }
+            ]
+          },
+          {
+            "id": "u1-l5",
+            "number": 5,
+            "title": "قِراءَةُ الْأَعْدادِ وَكِتابَتُها",
+            "pages": [
+              34,
+              35
+            ],
+            "games": [
+              {
+                "template": "memory"
+              },
+              {
+                "template": "quiz"
+              }
+            ],
+            "questions": [
+              {
+                "id": "u1-l5-t01",
+                "origin": "textbook",
+                "page": 35,
+                "kind": "mcq",
+                "prompt": "ثلاثة وخمسون = ؟",
+                "correctIndex": 0,
+                "difficulty": 1,
+                "choices": [
+                  "53",
+                  "35",
+                  "50"
+                ]
+              },
+              {
+                "id": "u1-l5-t02",
+                "origin": "textbook",
+                "page": 35,
+                "kind": "mcq",
+                "prompt": "ثمانية وأربعون = ؟",
+                "correctIndex": 0,
+                "difficulty": 1,
+                "choices": [
+                  "48",
+                  "84",
+                  "40"
+                ]
+              },
+              {
+                "id": "u1-l5-t03",
+                "origin": "textbook",
+                "page": 35,
+                "kind": "mcq",
+                "prompt": "تسعة وسبعون = ؟",
+                "correctIndex": 0,
+                "difficulty": 1,
+                "choices": [
+                  "79",
+                  "97",
+                  "70"
+                ]
+              },
+              {
+                "id": "u1-l5-t04",
+                "origin": "textbook",
+                "page": 35,
+                "kind": "mcq",
+                "prompt": "تسعة وعشرون = ؟",
+                "correctIndex": 0,
+                "difficulty": 1,
+                "choices": [
+                  "29",
+                  "92",
+                  "20"
+                ]
+              },
+              {
+                "id": "u1-l5-t05",
+                "origin": "textbook",
+                "page": 35,
+                "kind": "mcq",
+                "prompt": "قالت علياء: العدد الذي فيه 5 عشرات و8 آحاد يُقرأ «خمسة وثمانون». ما القراءة الصحيحة؟",
+                "correctIndex": 0,
+                "difficulty": 1,
+                "choices": [
+                  "ثمانية وخمسون",
+                  "خمسة وثمانون",
+                  "ثمانية وخمسة"
+                ]
+              },
+              {
+                "id": "u1-l5-t06",
+                "origin": "textbook",
+                "page": 34,
+                "kind": "match",
+                "prompt": "طابق كل عدد مع طريقة قراءته",
+                "difficulty": 1,
+                "pairs": [
+                  {
+                    "a": "21",
+                    "b": "واحد وعشرون"
+                  },
+                  {
+                    "a": "45",
+                    "b": "خمسة وأربعون"
+                  },
+                  {
+                    "a": "77",
+                    "b": "سبعة وسبعون"
+                  },
+                  {
+                    "a": "94",
+                    "b": "أربعة وتسعون"
+                  }
+                ]
+              },
+              {
+                "id": "u1-l5-g01",
+                "origin": "generated",
+                "kind": "match",
+                "prompt": "طابق كل عدد مع طريقة قراءته",
+                "difficulty": 1,
+                "pairs": [
+                  {
+                    "a": "32",
+                    "b": "اثنان وثلاثون"
+                  },
+                  {
+                    "a": "56",
+                    "b": "ستة وخمسون"
+                  },
+                  {
+                    "a": "81",
+                    "b": "واحد وثمانون"
+                  }
+                ]
+              },
+              {
+                "id": "u1-l5-g02",
+                "origin": "generated",
+                "kind": "mcq",
+                "prompt": "كيف نقرأ العدد 64؟",
+                "correctIndex": 0,
+                "difficulty": 1,
+                "choices": [
+                  "أربعة وستون",
+                  "ستة وأربعون",
+                  "ستة وأربعة"
+                ]
+              }
+            ]
+          },
+          {
+            "id": "u1-l6",
+            "number": 6,
+            "title": "الْأَعْدادُ الزَّوْجِيَّةُ وَالْأَعْدادُ الْفَرْدِيَّةُ",
+            "pages": [
+              36,
+              37
+            ],
+            "games": [
+              {
+                "template": "quiz"
+              },
+              {
+                "template": "wheel"
+              }
+            ],
+            "questions": [
+              {
+                "id": "u1-l6-t01",
+                "origin": "textbook",
+                "page": 36,
+                "kind": "mcq",
+                "prompt": "9 حبات كرز. هل يمكن وضعها كلها في أزواج؟",
+                "correctIndex": 0,
+                "difficulty": 1,
+                "choices": [
+                  "لا",
+                  "نعم"
+                ]
+              },
+              {
+                "id": "u1-l6-t02",
+                "origin": "textbook",
+                "page": 36,
+                "kind": "mcq",
+                "prompt": "هل العدد 6 زوجي أم فردي؟",
+                "correctIndex": 0,
+                "difficulty": 1,
+                "choices": [
+                  "زوجي",
+                  "فردي"
+                ]
+              },
+              {
+                "id": "u1-l6-t03",
+                "origin": "textbook",
+                "page": 37,
+                "kind": "mcq",
+                "prompt": "هل العدد 7 زوجي أم فردي؟",
+                "correctIndex": 1,
+                "difficulty": 1,
+                "choices": [
+                  "زوجي",
+                  "فردي"
+                ]
+              },
+              {
+                "id": "u1-l6-t04",
+                "origin": "textbook",
+                "page": 37,
+                "kind": "mcq",
+                "prompt": "هل العدد 8 زوجي أم فردي؟",
+                "correctIndex": 0,
+                "difficulty": 1,
+                "choices": [
+                  "زوجي",
+                  "فردي"
+                ]
+              },
+              {
+                "id": "u1-l6-t05",
+                "origin": "textbook",
+                "page": 37,
+                "kind": "mcq",
+                "prompt": "هل العدد 11 زوجي أم فردي؟",
+                "correctIndex": 1,
+                "difficulty": 1,
+                "choices": [
+                  "زوجي",
+                  "فردي"
+                ]
+              },
+              {
+                "id": "u1-l6-t06",
+                "origin": "textbook",
+                "page": 37,
+                "kind": "mcq",
+                "prompt": "هل العدد 10 زوجي أم فردي؟",
+                "correctIndex": 0,
+                "difficulty": 1,
+                "choices": [
+                  "زوجي",
+                  "فردي"
+                ]
+              },
+              {
+                "id": "u1-l6-t07",
+                "origin": "textbook",
+                "page": 37,
+                "kind": "mcq",
+                "prompt": "هل العدد 12 زوجي أم فردي؟",
+                "correctIndex": 0,
+                "difficulty": 1,
+                "choices": [
+                  "زوجي",
+                  "فردي"
+                ]
+              },
+              {
+                "id": "u1-l6-g01",
+                "origin": "generated",
+                "kind": "truefalse",
+                "prompt": "العدد 3 عدد فردي، لأن مكعبًا واحدًا يبقى دون زوج.",
+                "correctIndex": 0,
+                "difficulty": 1
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "u2",
+        "number": 2,
+        "title": "مُقارَنَةُ الْأَعْدادِ وَتَرْتيبُها",
+        "semester": 1,
+        "pages": [
+          43,
+          57
+        ],
+        "lessons": [
+          {
+            "id": "u2-l1",
+            "number": 1,
+            "title": "الْعَدُّ تَصاعُدِيًّا وَتَنازُلِيًّا",
+            "pages": [
+              44,
+              45
+            ],
+            "games": [
+              {
+                "template": "train",
+                "level": 2
+              },
+              {
+                "template": "quiz"
+              }
+            ],
+            "questions": [
+              {
+                "id": "u2-l1-t01",
+                "origin": "textbook",
+                "page": 44,
+                "kind": "mcq",
+                "prompt": "أعدّ تصاعديًّا: 5، 6، 7، 8، 9، ؟",
+                "correctIndex": 0,
+                "difficulty": 1,
+                "choices": [
+                  "10",
+                  "4",
+                  "11"
+                ]
+              },
+              {
+                "id": "u2-l1-t02",
+                "origin": "textbook",
+                "page": 44,
+                "kind": "mcq",
+                "prompt": "أعدّ تنازليًّا: 40، 39، 38، 37، ؟",
+                "correctIndex": 0,
+                "difficulty": 1,
+                "choices": [
+                  "36",
+                  "38",
+                  "35"
+                ]
+              },
+              {
+                "id": "u2-l1-t03",
+                "origin": "textbook",
+                "page": 45,
+                "kind": "mcq",
+                "prompt": "40، 41، 42، ؟",
+                "correctIndex": 0,
+                "difficulty": 1,
+                "choices": [
+                  "43",
+                  "41",
+                  "44"
+                ]
+              },
+              {
+                "id": "u2-l1-t04",
+                "origin": "textbook",
+                "page": 45,
+                "kind": "mcq",
+                "prompt": "80، 79، 78، ؟",
+                "correctIndex": 0,
+                "difficulty": 1,
+                "choices": [
+                  "77",
+                  "79",
+                  "76"
+                ]
+              },
+              {
+                "id": "u2-l1-t05",
+                "origin": "textbook",
+                "page": 45,
+                "kind": "mcq",
+                "prompt": "صفحات كتاب أحمد: 20، 21، 22، 23، ؟، ...، 28، 29. ما رقم الصفحة المفقودة بعد 23؟",
+                "correctIndex": 0,
+                "difficulty": 1,
+                "choices": [
+                  "24",
+                  "25",
+                  "22"
+                ]
+              },
+              {
+                "id": "u2-l1-t06",
+                "origin": "textbook",
+                "page": 45,
+                "kind": "mcq",
+                "prompt": "أعدّ تنازليًّا من 19 إلى 8. ما العدد الذي يأتي بعد 19؟",
+                "correctIndex": 0,
+                "difficulty": 1,
+                "choices": [
+                  "18",
+                  "20",
+                  "17"
+                ]
+              },
+              {
+                "id": "u2-l1-g01",
+                "origin": "generated",
+                "kind": "truefalse",
+                "prompt": "العدّ التصاعدي يعني أن الأعداد تزيد: 31، 32، 33.",
+                "correctIndex": 0,
+                "difficulty": 1
+              },
+              {
+                "id": "u2-l1-g02",
+                "origin": "generated",
+                "kind": "mcq",
+                "prompt": "أيّ ترتيب هو عدّ تنازلي؟",
+                "correctIndex": 0,
+                "difficulty": 1,
+                "choices": [
+                  "65، 64، 63",
+                  "63، 64، 65",
+                  "64، 66، 65"
+                ]
+              }
+            ]
+          },
+          {
+            "id": "u2-l2",
+            "number": 2,
+            "title": "الْعَدُّ الْقَفْزِيُّ",
+            "pages": [
+              46,
+              47
+            ],
+            "games": [
+              {
+                "template": "quiz"
+              },
+              {
+                "template": "balloons"
+              }
+            ],
+            "questions": [
+              {
+                "id": "u2-l2-t01",
+                "origin": "textbook",
+                "page": 46,
+                "kind": "mcq",
+                "prompt": "يقفز الضفدع اثنينات: 2، 4، 6، 8، ؟",
+                "correctIndex": 0,
+                "difficulty": 1,
+                "choices": [
+                  "10",
+                  "9",
+                  "12"
+                ]
+              },
+              {
+                "id": "u2-l2-t02",
+                "origin": "textbook",
+                "page": 46,
+                "kind": "mcq",
+                "prompt": "أعدّ قفزيًّا خمسات: 0، 5، 10، ؟",
+                "correctIndex": 0,
+                "difficulty": 1,
+                "choices": [
+                  "15",
+                  "11",
+                  "20"
+                ]
+              },
+              {
+                "id": "u2-l2-t03",
+                "origin": "textbook",
+                "page": 46,
+                "kind": "mcq",
+                "prompt": "أعدّ قفزيًّا عشرات: 0، 10، ؟",
+                "correctIndex": 0,
+                "difficulty": 1,
+                "choices": [
+                  "20",
+                  "11",
+                  "30"
+                ]
+              },
+              {
+                "id": "u2-l2-t04",
+                "origin": "textbook",
+                "page": 47,
+                "kind": "mcq",
+                "prompt": "26، 28، 30، ؟",
+                "correctIndex": 0,
+                "difficulty": 1,
+                "choices": [
+                  "32",
+                  "31",
+                  "34"
+                ]
+              },
+              {
+                "id": "u2-l2-t05",
+                "origin": "textbook",
+                "page": 47,
+                "kind": "mcq",
+                "prompt": "20، 25، 30، ؟",
+                "correctIndex": 0,
+                "difficulty": 1,
+                "choices": [
+                  "35",
+                  "31",
+                  "40"
+                ]
+              },
+              {
+                "id": "u2-l2-t06",
+                "origin": "textbook",
+                "page": 47,
+                "kind": "mcq",
+                "prompt": "91، 81، 71، ؟",
+                "correctIndex": 0,
+                "difficulty": 1,
+                "choices": [
+                  "61",
+                  "70",
+                  "51"
+                ]
+              },
+              {
+                "id": "u2-l2-t07",
+                "origin": "textbook",
+                "page": 47,
+                "kind": "mcq",
+                "prompt": "أعدّ قفزيًّا خمسات من 5 إلى 25. ما العدد بعد 15؟",
+                "correctIndex": 0,
+                "difficulty": 1,
+                "choices": [
+                  "20",
+                  "16",
+                  "25"
+                ]
+              },
+              {
+                "id": "u2-l2-g01",
+                "origin": "generated",
+                "kind": "mcq",
+                "prompt": "أعدّ قفزيًّا عشرات: 30، 40، 50، ؟",
+                "correctIndex": 0,
+                "difficulty": 1,
+                "choices": [
+                  "60",
+                  "51",
+                  "55"
+                ]
+              }
+            ]
+          },
+          {
+            "id": "u2-l3",
+            "number": 3,
+            "title": "الْعَدَدُ السّابِقُ وَالْعَدَدُ التّالي",
+            "pages": [
+              48,
+              49
+            ],
+            "games": [
+              {
+                "template": "train",
+                "level": 2
+              },
+              {
+                "template": "quiz"
+              }
+            ],
+            "questions": [
+              {
+                "id": "u2-l3-t01",
+                "origin": "textbook",
+                "page": 48,
+                "kind": "mcq",
+                "prompt": "14، 15، ؟، 17، 18 — ما العدد المفقود؟",
+                "correctIndex": 0,
+                "difficulty": 1,
+                "choices": [
+                  "16",
+                  "19",
+                  "13"
+                ]
+              },
+              {
+                "id": "u2-l3-t02",
+                "origin": "textbook",
+                "page": 48,
+                "kind": "mcq",
+                "prompt": "ما العدد التالي للعدد 19؟",
+                "correctIndex": 0,
+                "difficulty": 1,
+                "choices": [
+                  "20",
+                  "18",
+                  "21"
+                ]
+              },
+              {
+                "id": "u2-l3-t03",
+                "origin": "textbook",
+                "page": 49,
+                "kind": "mcq",
+                "prompt": "ما العدد السابق للعدد 23؟",
+                "correctIndex": 0,
+                "difficulty": 1,
+                "choices": [
+                  "22",
+                  "24",
+                  "21"
+                ]
+              },
+              {
+                "id": "u2-l3-t04",
+                "origin": "textbook",
+                "page": 49,
+                "kind": "mcq",
+                "prompt": "ما العدد السابق للعدد 37؟",
+                "correctIndex": 0,
+                "difficulty": 1,
+                "choices": [
+                  "36",
+                  "38",
+                  "35"
+                ]
+              },
+              {
+                "id": "u2-l3-t05",
+                "origin": "textbook",
+                "page": 49,
+                "kind": "mcq",
+                "prompt": "ما العدد التالي للعدد 69؟",
+                "correctIndex": 0,
+                "difficulty": 1,
+                "choices": [
+                  "70",
+                  "68",
+                  "60"
+                ]
+              },
+              {
+                "id": "u2-l3-t06",
+                "origin": "textbook",
+                "page": 49,
+                "kind": "mcq",
+                "prompt": "ما العدد التالي للعدد 73؟",
+                "correctIndex": 0,
+                "difficulty": 1,
+                "choices": [
+                  "74",
+                  "72",
+                  "75"
+                ]
+              },
+              {
+                "id": "u2-l3-t07",
+                "origin": "textbook",
+                "page": 49,
+                "kind": "mcq",
+                "prompt": "ما العدد الواقع بين 41 و43؟",
+                "correctIndex": 0,
+                "difficulty": 1,
+                "choices": [
+                  "42",
+                  "44",
+                  "40"
+                ]
+              },
+              {
+                "id": "u2-l3-t08",
+                "origin": "textbook",
+                "page": 49,
+                "kind": "mcq",
+                "prompt": "ما العدد الواقع بين 58 و60؟",
+                "correctIndex": 0,
+                "difficulty": 1,
+                "choices": [
+                  "59",
+                  "61",
+                  "57"
+                ]
+              },
+              {
+                "id": "u2-l3-t09",
+                "origin": "textbook",
+                "page": 49,
+                "kind": "mcq",
+                "prompt": "قال رامي: العدد السابق للعدد 90 هو 91. ما الصواب؟",
+                "correctIndex": 0,
+                "difficulty": 1,
+                "choices": [
+                  "89",
+                  "91",
+                  "80"
+                ]
+              }
+            ]
+          },
+          {
+            "id": "u2-l4",
+            "number": 4,
+            "title": "مُقارَنَةُ الْأَعْدادِ",
+            "pages": [
+              50,
+              51
+            ],
+            "questions": [
+              {
+                "id": "u2-l4-t01",
+                "origin": "textbook",
+                "page": 50,
+                "kind": "mcq",
+                "prompt": "مع علا 75 خرزة، ومع حنين 85 خرزة. أيّهما تملك عددًا أكبر من الخرزات؟",
+                "choices": [
+                  "حنين",
+                  "علا"
+                ],
+                "correctIndex": 0,
+                "difficulty": 1
+              },
+              {
+                "id": "u2-l4-t02",
+                "origin": "textbook",
+                "page": 50,
+                "kind": "mcq",
+                "prompt": "36 ؟ 42",
+                "choices": [
+                  "<",
+                  ">",
+                  "="
+                ],
+                "correctIndex": 0,
+                "difficulty": 1
+              },
+              {
+                "id": "u2-l4-t03",
+                "origin": "textbook",
+                "page": 51,
+                "kind": "mcq",
+                "prompt": "36 ؟ 15",
+                "choices": [
+                  "<",
+                  ">",
+                  "="
+                ],
+                "correctIndex": 1,
+                "difficulty": 1
+              },
+              {
+                "id": "u2-l4-t04",
+                "origin": "textbook",
+                "page": 51,
+                "kind": "mcq",
+                "prompt": "42 ؟ 36",
+                "choices": [
+                  "<",
+                  ">",
+                  "="
+                ],
+                "correctIndex": 1,
+                "difficulty": 1
+              },
+              {
+                "id": "u2-l4-t05",
+                "origin": "textbook",
+                "page": 51,
+                "kind": "mcq",
+                "prompt": "45 ؟ 56",
+                "choices": [
+                  "<",
+                  ">",
+                  "="
+                ],
+                "correctIndex": 0,
+                "difficulty": 1
+              },
+              {
+                "id": "u2-l4-t06",
+                "origin": "textbook",
+                "page": 51,
+                "kind": "mcq",
+                "prompt": "96 ؟ 69",
+                "choices": [
+                  "<",
+                  ">",
+                  "="
+                ],
+                "correctIndex": 1,
+                "difficulty": 2
+              },
+              {
+                "id": "u2-l4-t07",
+                "origin": "textbook",
+                "page": 51,
+                "kind": "mcq",
+                "prompt": "21 ؟ 33",
+                "choices": [
+                  "<",
+                  ">",
+                  "="
+                ],
+                "correctIndex": 0,
+                "difficulty": 1
+              },
+              {
+                "id": "u2-l4-t08",
+                "origin": "textbook",
+                "page": 51,
+                "kind": "mcq",
+                "prompt": "81 ؟ 81",
+                "choices": [
+                  "<",
+                  ">",
+                  "="
+                ],
+                "correctIndex": 2,
+                "difficulty": 1
+              },
+              {
+                "id": "u2-l4-t09",
+                "origin": "textbook",
+                "page": 51,
+                "kind": "mcq",
+                "prompt": "أيّ بالون يحمل عددًا أكبر من 59؟",
+                "choices": [
+                  "74",
+                  "58",
+                  "46",
+                  "26"
+                ],
+                "correctIndex": 0,
+                "difficulty": 1
+              },
+              {
+                "id": "u2-l4-t10",
+                "origin": "textbook",
+                "page": 51,
+                "kind": "mcq",
+                "prompt": "أيّ بالون يحمل عددًا أصغر من 59؟",
+                "choices": [
+                  "58",
+                  "90",
+                  "74"
+                ],
+                "correctIndex": 0,
+                "difficulty": 1
+              },
+              {
+                "id": "u2-l4-g01",
+                "origin": "generated",
+                "page": 50,
+                "kind": "truefalse",
+                "prompt": "العدد 67 أكبر من العدد 76.",
+                "correctIndex": 1,
+                "difficulty": 2
+              },
+              {
+                "id": "u2-l4-g02",
+                "origin": "generated",
+                "page": 50,
+                "kind": "mcq",
+                "prompt": "أيّ العددين أصغر: 48 أم 84؟",
+                "choices": [
+                  "48",
+                  "84"
+                ],
+                "correctIndex": 0,
+                "difficulty": 2
+              },
+              {
+                "id": "u2-l4-g03",
+                "origin": "generated",
+                "page": 50,
+                "kind": "mcq",
+                "prompt": "العشرات متساوية في العددين 53 و57. أيّهما أكبر؟",
+                "choices": [
+                  "57",
+                  "53"
+                ],
+                "correctIndex": 0,
+                "difficulty": 2
+              },
+              {
+                "id": "u2-l4-g04",
+                "origin": "generated",
+                "page": 50,
+                "kind": "mcq",
+                "prompt": "70 ؟ 70",
+                "choices": [
+                  "<",
+                  ">",
+                  "="
+                ],
+                "correctIndex": 2,
+                "difficulty": 1
+              },
+              {
+                "id": "u2-l4-g05",
+                "origin": "generated",
+                "page": 50,
+                "kind": "truefalse",
+                "prompt": "العدد 19 أصغر من العدد 91.",
+                "correctIndex": 0,
+                "difficulty": 1
+              }
+            ],
+            "games": [
+              {
+                "template": "quiz"
+              },
+              {
+                "template": "balloons"
+              },
+              {
+                "template": "race"
+              }
+            ]
+          },
+          {
+            "id": "u2-l5",
+            "number": 5,
+            "title": "تَرْتيبُ الْأَعْدادِ",
+            "pages": [
+              52,
+              53
+            ],
+            "games": [
+              {
+                "template": "quiz"
+              },
+              {
+                "template": "race"
+              }
+            ],
+            "questions": [
+              {
+                "id": "u2-l5-t01",
+                "origin": "textbook",
+                "page": 52,
+                "kind": "mcq",
+                "prompt": "أيّ قميص يحمل العدد الأكبر: 51 أم 36 أم 28؟",
+                "correctIndex": 0,
+                "difficulty": 1,
+                "choices": [
+                  "51",
+                  "36",
+                  "28"
+                ]
+              },
+              {
+                "id": "u2-l5-t02",
+                "origin": "textbook",
+                "page": 52,
+                "kind": "mcq",
+                "prompt": "رتّب الأعداد 35، 26، 29 تصاعديًّا (من الأصغر إلى الأكبر):",
+                "correctIndex": 0,
+                "difficulty": 1,
+                "choices": [
+                  "26، 29، 35",
+                  "35، 29، 26",
+                  "29، 26، 35"
+                ]
+              },
+              {
+                "id": "u2-l5-t03",
+                "origin": "textbook",
+                "page": 52,
+                "kind": "mcq",
+                "prompt": "رتّب الأعداد 35، 26، 29 تنازليًّا (من الأكبر إلى الأصغر):",
+                "correctIndex": 0,
+                "difficulty": 1,
+                "choices": [
+                  "35، 29، 26",
+                  "26، 29، 35",
+                  "35، 26، 29"
+                ]
+              },
+              {
+                "id": "u2-l5-t04",
+                "origin": "textbook",
+                "page": 53,
+                "kind": "mcq",
+                "prompt": "رتّب الأعداد 95، 68، 74 تصاعديًّا:",
+                "correctIndex": 0,
+                "difficulty": 1,
+                "choices": [
+                  "68، 74، 95",
+                  "95، 74، 68",
+                  "74، 68، 95"
+                ]
+              },
+              {
+                "id": "u2-l5-t05",
+                "origin": "textbook",
+                "page": 53,
+                "kind": "mcq",
+                "prompt": "رتّب الأعداد 41، 48، 52 تنازليًّا:",
+                "correctIndex": 0,
+                "difficulty": 1,
+                "choices": [
+                  "52، 48، 41",
+                  "41، 48، 52",
+                  "48، 52، 41"
+                ]
+              },
+              {
+                "id": "u2-l5-t06",
+                "origin": "textbook",
+                "page": 53,
+                "kind": "mcq",
+                "prompt": "قالت لمياء: عند ترتيب الأعداد أقارن العشرات فقط. ما الصواب؟",
+                "correctIndex": 0,
+                "difficulty": 1,
+                "choices": [
+                  "أقارن العشرات، وإذا تساوت أقارن الآحاد",
+                  "أقارن الآحاد فقط",
+                  "لا أقارن شيئًا"
+                ]
+              },
+              {
+                "id": "u2-l5-g01",
+                "origin": "generated",
+                "kind": "mcq",
+                "prompt": "ما أصغر عدد بين: 63، 36، 60؟",
+                "correctIndex": 0,
+                "difficulty": 1,
+                "choices": [
+                  "36",
+                  "60",
+                  "63"
+                ]
+              },
+              {
+                "id": "u2-l5-g02",
+                "origin": "generated",
+                "kind": "mcq",
+                "prompt": "ما أكبر عدد بين: 47، 74، 70؟",
+                "correctIndex": 0,
+                "difficulty": 1,
+                "choices": [
+                  "74",
+                  "70",
+                  "47"
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  }
+}

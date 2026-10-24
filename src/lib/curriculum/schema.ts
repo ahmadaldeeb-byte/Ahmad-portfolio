@@ -36,7 +36,7 @@ export interface CurriculumFileGame {
   /** An existing game template (game type), e.g. "quiz", "rocket", "memory". */
   template: GameType;
   title?: string;
-  /** Math games that generate their own tasks: level 1–3 and number of tasks. */
+  /** Math games that generate their own tasks: level 1–3 and number of tasks (number train: 1 = 0–20, 2 = 0–99, 3 = 0–99 harder). */
   level?: 1 | 2 | 3;
   count?: number;
 }

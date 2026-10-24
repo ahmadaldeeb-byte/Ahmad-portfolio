@@ -76,7 +76,7 @@ Output: one file `curricula/<id>.json` in the format of `src/lib/curriculum/sche
 | words | arabic, english | order |
 | numbers | math | arithmetic, mcq, truefalse |
 | island, crocodile, rocket, appleBasket, factory, pirates, shapes, pizza, market, clock, measure | math: generate their own tasks (set `level`); other subjects: play mcq / truefalse | — |
-| train, raceAdd | math only (generated tasks) | — |
+| train, raceAdd | math only (generated tasks; train `level` 1 = numbers 0–20, 2 = 0–99, 3 = 0–99 harder) | — |
 
 Math skills → template:
 - counting → island

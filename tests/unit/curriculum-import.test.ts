@@ -120,6 +120,9 @@ describe("import plan", () => {
     const plan = planImport(validateCurriculumFile(f).file!);
     expect(plan.games.map((g) => g.type)).toEqual(["rocket", "train"]);
     expect(plan.games[0].settings.math?.level).toBe(2);
+    expect(plan.games[1].settings.train).toMatchObject({ min: 0, max: 20 });
+    f.curriculum.units[0].lessons[0].games = [{ template: "train", level: 2 }];
+    expect(planImport(validateCurriculumFile(f).file!).games[0].settings.train).toMatchObject({ min: 0, max: 99 });
   });
 
   it("detects the same book by hash or by its titles", () => {

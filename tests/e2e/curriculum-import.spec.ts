@@ -149,3 +149,40 @@ test.describe("first real textbook lesson: Grade 1 math, unit 2, lesson 4 «مق
     await expect(page.getByText("لعبة المعلم الموجودة")).toBeVisible();
   });
 });
+
+test("full Grade 1 math book (semester 1): replaces the first test import, 17 lessons with playable games", async ({ page }) => {
+  const TEST = path.join(__dirname, "../../curricula/grade1-math-comparing-numbers.json");
+  const FULL = path.join(__dirname, "../../curricula/jo-g1-math-s1-2026.json");
+  await freshStart(page);
+  await page.getByRole("link", { name: "📚 استيراد منهج" }).first().click();
+  await expect(page.getByRole("heading", { name: "📚 استيراد منهج" })).toBeVisible();
+  await page.getByTestId("curriculum-input").setInputFiles(TEST);
+  await page.getByRole("button", { name: "استيراد", exact: true }).click();
+  await expect(page.getByText(/تم استيراد المنهج/)).toBeVisible();
+
+  // Same book: refused until the test import is removed.
+  await page.getByTestId("curriculum-input").setInputFiles(FULL);
+  await expect(page.getByTestId("import-summary")).toContainText("144 سؤالًا (104 من الكتاب، 40 مولّدة) • 35 لعبة");
+  await expect(page.getByTestId("import-duplicate")).toBeVisible();
+  await page.getByRole("button", { name: "إلغاء", exact: true }).click();
+  await page.getByRole("button", { name: "حذف المنهج المستورد" }).click();
+  await page.getByRole("button", { name: "حذف", exact: true }).click();
+  await page.getByTestId("curriculum-input").setInputFiles(FULL);
+  await page.getByRole("button", { name: "استيراد", exact: true }).click();
+  await expect(page.getByText(/تم استيراد المنهج: 17 درسًا و144 سؤالًا و35 لعبة/)).toBeVisible();
+
+  // Grade 1 math now offers the built-in index and the imported book.
+  await page.getByRole("link", { name: "عرض في المنهاج" }).click();
+  await page.getByText("الْأَعْدادُ ضِمْنَ مَنْزِلَتَيْنِ").click();
+  await page.getByRole("button", { name: "الْعَشَراتُ", exact: true }).click();
+  const lesson = page.locator("[data-testid='lesson-imp_jo-g1-math-s1-2026__u1-l1']");
+  await expect(lesson.getByRole("link", { name: "العب الآن" })).toHaveCount(2);
+  // The factory game (generated tasks) and the number train (numbers up to 99) start.
+  const href = (await lesson.getByRole("link", { name: "العب الآن" }).first().getAttribute("href"))!;
+  await page.goto(href);
+  await page.getByRole("button", { name: "ابدأ اللعب" }).click();
+  await expect(page.getByTestId("factory")).toBeVisible({ timeout: 15_000 });
+  await page.goto("/play/?id=imp_jo-g1-math-s1-2026__u2-l3__train");
+  await page.getByRole("button", { name: "ابدأ اللعب" }).click();
+  await expect(page.getByTestId("classroom")).toBeVisible();
+});
