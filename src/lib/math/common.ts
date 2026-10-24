@@ -1,6 +1,8 @@
 import { randomInt, shuffle } from "../utils";
 
 export type MathLevel = 1 | 2 | 3;
+/** Grade the tasks are generated for (the game's grade). */
+export type MathGrade = 1 | 2 | 3;
 
 export interface MathSettings {
   level: MathLevel;
@@ -17,7 +19,7 @@ export const pick = <T,>(list: readonly T[]) => list[randomInt(list.length)];
 /** Four distinct numeric choices around the answer, all inside [min, max]. */
 export function numberChoices(answer: number, min: number, max: number, count = 4): number[] {
   const set = new Set([answer]);
-  for (const d of shuffle([1, -1, 2, -2, 10, -10, 3, -3, 5, -5])) {
+  for (const d of shuffle([1, -1, 2, -2, 10, -10, 3, -3, 5, -5, ...(max > 200 ? [100, -100] : [])])) {
     const v = answer + d;
     if (v >= min && v <= max) set.add(v);
     if (set.size >= count) break;

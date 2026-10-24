@@ -20,7 +20,7 @@ import {
 import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { defaultSettings } from "@/content/seed";
-import { DEFAULT_TEAM_NAMES, DIFFICULTY_LABELS, GAMES, GRADES, KIND_LABELS, SUBJECTS, TEAM_COLORS, gameMeta } from "@/lib/constants";
+import { DEFAULT_TEAM_NAMES, DIFFICULTY_LABELS, GAMES, GRADES, KIND_LABELS, SUBJECTS, TEAM_COLORS, gameMetaFor } from "@/lib/constants";
 import { blankQuestion, validateGame, validateQuestion } from "@/lib/questions";
 import type { Difficulty, GameConfig, GameType, Question } from "@/lib/types";
 import { cn, uid } from "@/lib/utils";
@@ -106,7 +106,7 @@ export function CreateWizard() {
     return () => clearTimeout(t);
   }, [game, persist, saveGame]);
 
-  const meta = game ? gameMeta(game.type) : null;
+  const meta = game ? gameMetaFor(game.type, game.subject) : null;
   const issues = useMemo(() => (game ? validateGame(game) : []), [game]);
 
   if (!ready || !game || !meta) return <Loading />;
@@ -134,7 +134,7 @@ export function CreateWizard() {
     const oldDefaultTitle = `${meta.name} — ${game.lesson}`;
     update({
       type: t,
-      title: !game.title || game.title === oldDefaultTitle ? `${gameMeta(t).name} — ${game.lesson}` : game.title,
+      title: !game.title || game.title === oldDefaultTitle ? `${gameMetaFor(t, game.subject).name} — ${game.lesson}` : game.title,
       settings: { ...defaults, ...game.settings, train: game.settings.train ?? defaults.train, math: game.settings.math ?? defaults.math, timePerQuestion: game.settings.timePerQuestion || defaults.timePerQuestion },
     });
   };
@@ -255,7 +255,7 @@ export function CreateWizard() {
           {step === 3 && (
             <StepCard title="اختر نوع اللعبة">
               <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
-                {GAMES.map((g) => (
+                {GAMES.map((base) => gameMetaFor(base.type, game.subject)).map((g) => (
                   <button
                     key={g.type}
                     type="button"
@@ -282,10 +282,10 @@ export function CreateWizard() {
             </StepCard>
           )}
 
-          {step === 4 && isMathGame(game.type) && (
+          {step === 4 && isMathGame(game.type) && meta.generated && (
             <StepCard title={`إعدادات «${meta.name}»`}>
               <p className="mb-4 text-hero-muted">تُولَّد مهام هذه اللعبة تلقائيًا وبصورة صحيحة حسب المستوى الذي تختاره.</p>
-              <MathSettingsForm type={game.type} value={game.settings.math ?? MATH_DEFAULTS} onChange={(math) => updateSettings({ math })} />
+              <MathSettingsForm type={game.type} grade={game.grade} value={game.settings.math ?? MATH_DEFAULTS} onChange={(math) => updateSettings({ math })} />
             </StepCard>
           )}
 
@@ -322,6 +322,15 @@ export function CreateWizard() {
               <p className="mb-4 text-hero-muted">
                 لعبة «{meta.name}» تقبل: {meta.kinds.map((k) => KIND_LABELS[k]).join("، ")}. اكتب السؤال، أضف الإجابات، وحدّد الإجابة الصحيحة.
               </p>
+              {isMathGame(game.type) && (
+                <Field label="طريقة اللعب" group>
+                  <Segmented
+                    value={(game.settings.math ?? MATH_DEFAULTS).learning ? 1 : 0}
+                    onChange={(v) => updateSettings({ math: { ...(game.settings.math ?? MATH_DEFAULTS), learning: v === 1 } })}
+                    options={[{ value: 1, label: "تعليمي: محاولات بلا خصم" }, { value: 0, label: "اختبار: محاولة واحدة" }]}
+                  />
+                </Field>
+              )}
               {game.type === "wheel" && game.settings.wheelMode === "names" && (
                 <p className="mb-4 rounded-2xl bg-hero-yellow/25 p-3">العجلة مضبوطة على «أسماء الطلاب»؛ الأسئلة هنا اختيارية. يمكنك تعديل ذلك في خطوة «الوقت والنقاط».</p>
               )}
@@ -618,7 +627,7 @@ function BankPicker({
   game: GameConfig;
   onPick: (qs: Question[]) => void;
 }) {
-  const meta = gameMeta(game.type);
+  const meta = gameMetaFor(game.type, game.subject);
   const [selected, setSelected] = useState<Set<string>>(new Set());
   const [onlyThis, setOnlyThis] = useState(true);
   const [query, setQuery] = useState("");

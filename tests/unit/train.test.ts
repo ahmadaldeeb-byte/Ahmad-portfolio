@@ -48,7 +48,7 @@ describe("number train generator", () => {
           if (validateTrainSettings(s).length) continue;
           for (let r = 0; r < 20; r++) check(s);
         }
-  });
+  }, 30_000); // ~1,000 generated rounds: slow containers need more than the default 5 s
   it("matches the lesson examples", () => {
     const qs = generateTrainQuestions({ ...base, mode: "prev", difficulty: "easy", count: 30 });
     const q = qs.find((x) => x.target === 7)!;

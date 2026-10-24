@@ -1,5 +1,5 @@
 import type { Difficulty, GameConfig, GameType, Grade, Question, Subject } from "@/lib/types";
-import { DEFAULT_TEAM_NAMES, GAMES, TEAM_COLORS, gradeLabel, subjectLabel } from "@/lib/constants";
+import { DEFAULT_TEAM_NAMES, GAMES, TEAM_COLORS, gameMetaFor, gradeLabel, subjectLabel } from "@/lib/constants";
 import { TRAIN_DEFAULTS, type TrainSettings } from "@/lib/train";
 import { BOOKS } from "./curriculum";
 import { MATH_DEFAULTS } from "@/lib/math/common";
@@ -53,6 +53,59 @@ function arith(ctx: Ctx, lesson: string, expr: string, difficulty: Difficulty = 
 
 function order(ctx: Ctx, lesson: string, prompt: string, answer: string, difficulty: Difficulty = 1): Question {
   return { ...base(ctx, lesson, difficulty), kind: "order", prompt, answer, choices: [], correctIndex: 0 };
+}
+
+function match(ctx: Ctx, lesson: string, prompt: string, pairs: [string, string][], difficulty: Difficulty = 1): Question {
+  return { ...base(ctx, lesson, difficulty), kind: "match", prompt, pairs: pairs.map(([a, b]) => ({ a, b })), choices: [], correctIndex: 0 };
+}
+
+/** Matching pairs (memory game) and letter / word ordering (word maker) for every grade. */
+function pairsAndOrdering(): Question[] {
+  const c = (grade: Grade, subject: Subject): Ctx => ({ grade, subject });
+  const [ar1, ma1, sc1, en1] = (["arabic", "math", "science", "english"] as Subject[]).map((s) => c(1, s));
+  const [ar2, ma2, sc2, en2] = (["arabic", "math", "science", "english"] as Subject[]).map((s) => c(2, s));
+  const [ar3, ma3, sc3, en3] = (["arabic", "math", "science", "english"] as Subject[]).map((s) => c(3, s));
+  return [
+    match(ar1, "الحروف", "طابق كل كلمة مع حرفها الأول", [["بَطّة", "ب"], ["شَمْس", "ش"], ["قَلَم", "ق"], ["وَرْدة", "و"]]),
+    match(ar1, "الحركات", "طابق كل حرف مع حركته", [["بَ", "الفتحة"], ["بُ", "الضمة"], ["بِ", "الكسرة"], ["بْ", "السكون"]]),
+    order(ar1, "تكوين الكلمات", "رتّب الحروف لتكوّن كلمة", "وَلَد"),
+    match(ma1, "الأعداد", "طابق كل عدد مع اسمه", [["3", "ثلاثة"], ["5", "خمسة"], ["7", "سبعة"], ["10", "عشرة"]]),
+    match(ma1, "الجمع", "طابق كل عملية مع ناتجها", [["2 + 2", "4"], ["3 + 3", "6"], ["5 + 4", "9"], ["6 + 2", "8"]]),
+    match(sc1, "الحيوانات", "طابق كل حيوان مع مكان عيشه", [["السمكة", "الماء"], ["العصفور", "العش"], ["الأرنب", "الجحر"], ["النحلة", "الخلية"]]),
+    match(sc1, "الحواس", "طابق كل حاسة مع عضوها", [["النظر", "العين"], ["السمع", "الأذن"], ["الشم", "الأنف"], ["التذوق", "اللسان"]]),
+    match(en1, "Simple Words", "طابق الكلمة الإنجليزية مع معناها", [["cat", "قطة"], ["dog", "كلب"], ["sun", "شمس"], ["apple", "تفاحة"]]),
+    match(en1, "Colors", "طابق اللون مع اسمه بالعربية", [["red", "أحمر"], ["blue", "أزرق"], ["green", "أخضر"], ["yellow", "أصفر"]]),
+    order(en1, "Letters", "Order the letters to make a word", "cat"),
+    order(en1, "Letters", "Order the letters to make a word", "sun"),
+    order(en1, "Letters", "Order the letters to make a word", "dog"),
+
+    match(ar2, "المفردات", "طابق كل كلمة مع عكسها", [["كبير", "صغير"], ["طويل", "قصير"], ["ساخن", "بارد"], ["سعيد", "حزين"]]),
+    match(ar2, "المفردات", "طابق المفرد مع جمعه", [["قلم", "أقلام"], ["كتاب", "كتب"], ["ولد", "أولاد"], ["بيت", "بيوت"]]),
+    order(ar2, "تكوين الكلمات", "رتّب الحروف لتكوّن كلمة", "حَديقة", 2),
+    order(ar2, "تكوين الجمل", "رتّب الكلمات لتكوّن جملة", "ذهب الولد إلى المدرسة", 2),
+    match(ma2, "الضرب", "طابق كل عملية ضرب مع ناتجها", [["5 × 2", "10"], ["3 × 2", "6"], ["4 × 5", "20"], ["10 × 3", "30"]]),
+    match(ma2, "الأعداد", "طابق كل عدد مع اسمه", [["100", "مئة"], ["50", "خمسون"], ["20", "عشرون"], ["70", "سبعون"]]),
+    match(sc2, "الحيوانات", "طابق كل حيوان مع غذائه", [["الأسد", "اللحم"], ["البقرة", "العشب"], ["القرد", "الموز"], ["الأرنب", "الجزر"]]),
+    match(sc2, "النباتات", "طابق كل جزء من النبات مع وظيفته", [["الجذر", "يمتص الماء"], ["الورقة", "تصنع الغذاء"], ["الزهرة", "تكوّن البذور"], ["الساق", "تحمل النبتة"]]),
+    match(en2, "Vocabulary", "طابق الكلمة الإنجليزية مع معناها", [["book", "كتاب"], ["pen", "قلم"], ["bag", "حقيبة"], ["desk", "طاولة"]]),
+    match(en2, "Numbers", "طابق الكلمة مع العدد", [["six", "6"], ["eight", "8"], ["ten", "10"], ["twelve", "12"]]),
+    order(en2, "Vocabulary", "Order the letters to make a word", "book"),
+    order(en2, "Vocabulary", "Order the letters to make a word", "green"),
+    order(en2, "Sentence Building", "Order the words to make a sentence", "I like apples", 2),
+
+    match(ar3, "المفردات", "طابق كل كلمة مع مرادفها", [["البيت", "المنزل"], ["السعيد", "المسرور"], ["الشجاع", "الجريء"], ["الذكي", "الفطن"]]),
+    match(ar3, "الأفعال", "طابق الفعل الماضي مع المضارع", [["كتب", "يكتب"], ["قرأ", "يقرأ"], ["لعب", "يلعب"], ["رسم", "يرسم"]]),
+    order(ar3, "تكوين الجمل", "رتّب الكلمات لتكوّن جملة", "تشرق الشمس في الصباح", 2),
+    order(ar3, "تكوين الجمل", "رتّب الكلمات لتكوّن جملة", "يحب الطفل قراءة القصص", 2),
+    match(ma3, "الضرب", "طابق كل عملية ضرب مع ناتجها", [["7 × 6", "42"], ["8 × 4", "32"], ["9 × 3", "27"], ["6 × 6", "36"]]),
+    match(ma3, "القسمة", "طابق كل عملية قسمة مع ناتجها", [["20 ÷ 4", "5"], ["18 ÷ 2", "9"], ["21 ÷ 3", "7"], ["16 ÷ 2", "8"]]),
+    match(sc3, "المادة", "طابق كل مادة مع حالتها", [["الثلج", "صلب"], ["الحليب", "سائل"], ["بخار الماء", "غاز"]]),
+    match(sc3, "الفضاء", "طابق كل جرم مع وصفه", [["الشمس", "نجم"], ["القمر", "تابع للأرض"], ["الأرض", "كوكب نعيش عليه"], ["المريخ", "الكوكب الأحمر"]]),
+    match(en3, "Jobs", "طابق المهنة مع معناها", [["teacher", "معلم"], ["doctor", "طبيب"], ["farmer", "مزارع"], ["pilot", "طيار"]]),
+    match(en3, "Days", "طابق اليوم مع اسمه بالعربية", [["Monday", "الاثنين"], ["Friday", "الجمعة"], ["Sunday", "الأحد"], ["Tuesday", "الثلاثاء"]]),
+    order(en3, "Vocabulary", "Order the letters to make a word", "teacher", 2),
+    order(en3, "Sentence Building", "Order the words to make a sentence", "We play in the park", 2),
+  ];
 }
 
 function grade1(): Question[] {
@@ -234,12 +287,22 @@ function grade3(): Question[] {
 }
 
 let cache: Question[] | null = null;
+let v1Count = 0;
+/** Version of the sample bank; bump when new sample questions are appended. */
+export const SEED_VERSION = 2;
 export function seedQuestions(): Question[] {
   if (!cache) {
     counter = 0;
-    cache = [...grade1(), ...grade2(), ...grade3()];
+    const v1 = [...grade1(), ...grade2(), ...grade3()];
+    v1Count = v1.length;
+    cache = [...v1, ...pairsAndOrdering()];
   }
   return cache;
+}
+/** Sample questions added after `version` (so existing banks get them without restoring deleted ones). */
+export function seedQuestionsSince(version: number): Question[] {
+  const all = seedQuestions();
+  return version >= 2 ? [] : all.slice(v1Count);
 }
 
 export function defaultSettings(type: GameType) {
@@ -265,7 +328,8 @@ export function builtinGames(): GameConfig[] {
   const out: GameConfig[] = [];
   for (const grade of [1, 2, 3] as Grade[]) {
     for (const subject of ["arabic", "math", "science", "english"] as Subject[]) {
-      for (const meta of GAMES.filter((g) => g.ready && (!g.subjects || g.subjects.includes(subject)) && (!g.grades || g.grades.includes(grade)))) {
+      for (const base of GAMES.filter((g) => g.ready && (!g.subjects || g.subjects.includes(subject)) && (!g.grades || g.grades.includes(grade)))) {
+        const meta = gameMetaFor(base.type, subject);
         const questions = meta.generated ? [] : qs.filter((q) => q.grade === grade && q.subject === subject && meta.kinds.includes(q.kind));
         const settings = defaultSettings(meta.type);
         if (meta.type === "train") settings.train = { ...TRAIN_DEFAULTS, ...TRAIN_RANGES[grade] };

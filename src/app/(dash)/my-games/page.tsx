@@ -7,7 +7,7 @@ import { GameArt } from "@/components/GameArt";
 import { customizeHref, playHref, questionCount } from "@/components/GameCard";
 import { toast } from "@/components/Toast";
 import { Badge, Button, ConfirmDialog, EmptyState, IconButton, Loading, PageHeader, inputClass } from "@/components/ui";
-import { gameMeta, gradeLabel, subjectLabel } from "@/lib/constants";
+import { gameMetaFor, gradeLabel, subjectLabel } from "@/lib/constants";
 import { gameToFile, parseGameFile } from "@/lib/transfer";
 import type { GameConfig } from "@/lib/types";
 import { downloadJSON, readFileAsText } from "@/lib/utils";
@@ -21,7 +21,7 @@ export default function MyGamesPage() {
 
   const list = useMemo(() => {
     const q = query.trim();
-    return q ? games.filter((g) => g.title.includes(q) || g.lesson.includes(q) || gameMeta(g.type).name.includes(q)) : games;
+    return q ? games.filter((g) => g.title.includes(q) || g.lesson.includes(q) || gameMetaFor(g.type, g.subject).name.includes(q)) : games;
   }, [games, query]);
 
   const importGame = async (file: File) => {
@@ -89,7 +89,7 @@ export default function MyGamesPage() {
                 <div className="min-w-48 flex-1">
                   <h3 className="text-xl font-extrabold">{g.title}</h3>
                   <p className="text-hero-muted">
-                    {gameMeta(g.type).name} • {gradeLabel(g.grade)} • {subjectLabel(g.subject)} • {questionCount(g)} سؤالًا
+                    {gameMetaFor(g.type, g.subject).name} • {gradeLabel(g.grade)} • {subjectLabel(g.subject)} • {questionCount(g)} سؤالًا
                   </p>
                   <Badge color="#868E96" className="mt-1">آخر تعديل: {new Date(g.updatedAt).toLocaleDateString("ar")}</Badge>
                 </div>

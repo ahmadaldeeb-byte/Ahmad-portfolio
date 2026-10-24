@@ -1,6 +1,6 @@
 "use client";
 import { create } from "zustand";
-import { builtinGames, seedQuestions } from "@/content/seed";
+import { SEED_VERSION, builtinGames, seedQuestions, seedQuestionsSince } from "@/content/seed";
 import { gamesRepo, lessonsRepo, metaRepo, questionsRepo, resultsRepo } from "@/lib/db";
 import type { LessonPlan } from "@/lib/lessons/types";
 import type { GameConfig, GameResult, Question } from "@/lib/types";
@@ -51,6 +51,13 @@ export const useData = create<DataState>()((set, get) => ({
         if (!(await metaRepo.get<boolean>("seeded"))) {
           await questionsRepo.putMany(seedQuestions());
           await metaRepo.set("seeded", true);
+          await metaRepo.set("seed-version", SEED_VERSION);
+        } else {
+          const version = (await metaRepo.get<number>("seed-version")) ?? 1;
+          if (version < SEED_VERSION) {
+            await questionsRepo.putMany(seedQuestionsSince(version));
+            await metaRepo.set("seed-version", SEED_VERSION);
+          }
         }
         const [games, questions, results, lessons, titleOverrides] = await Promise.all([
           gamesRepo.all(),

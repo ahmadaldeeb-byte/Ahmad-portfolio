@@ -18,12 +18,30 @@ export default function MeasureGame({ game, paused, onFinish }: GameProps) {
       onFinish={onFinish}
       tasks={tasks}
       prompt={(t) =>
-        t.kind === "units" ? "كم مشبكًا طول القلم؟" : t.kind === "length" ? `اختر القلم ${MEASURE_WORDS.length[t.ask]}` : t.kind === "mass" ? `أيّهما ${MEASURE_WORDS.mass[t.ask]}؟ ضعهما على الميزان` : `أيّ وعاء ${MEASURE_WORDS.capacity[t.ask]}؟`
+        t.kind === "units" ? "كم مشبكًا طول القلم؟"
+        : t.kind === "ruler" ? "كم سنتيمترًا طول هذا الشيء؟"
+        : t.kind === "unit" || t.kind === "convert" ? (t.kind === "convert" ? <span dir="rtl">أكمل: {t.text}</span> : t.text)
+        : t.kind === "length" ? `اختر القلم ${MEASURE_WORDS.length[t.ask]}` : t.kind === "mass" ? `أيّهما ${MEASURE_WORDS.mass[t.ask]}؟ ضعهما على الميزان` : `أيّ وعاء ${MEASURE_WORDS.capacity[t.ask]}؟`
       }
       skill={(t) => t.kind}
-      hint={(t) => (t.kind === "mass" ? "كفّة الميزان تنزل نحو الشيء الأثقل." : t.kind === "capacity" ? "عُدّ الأكواب التي يملؤها كل وعاء." : t.kind === "units" ? "عُدّ المشابك من أول القلم إلى آخره." : "قارن أطراف الأقلام وهي تبدأ من الخط نفسه.")}
+      hint={(t) =>
+        t.kind === "mass" ? "كفّة الميزان تنزل نحو الشيء الأثقل."
+        : t.kind === "capacity" ? "عُدّ الأكواب التي يملؤها كل وعاء."
+        : t.kind === "units" ? "عُدّ المشابك من أول القلم إلى آخره."
+        : t.kind === "ruler" ? "ابدأ من الصفر، واقرأ الرقم عند نهاية الشيء."
+        : t.kind === "unit" ? "الأشياء الصغيرة نقيسها بالسنتيمتر أو الغرام أو المللتر، والكبيرة بالمتر أو الكيلوغرام أو اللتر."
+        : t.kind === "convert" ? "المتر = ١٠٠ سنتيمتر، والكيلوغرام = ١٠٠٠ غرام، واللتر = ١٠٠٠ مللتر."
+        : "قارن أطراف الأقلام وهي تبدأ من الخط نفسه."
+      }
     >
-      {(t, api) => (t.kind === "length" ? <Lengths t={t} api={api} /> : t.kind === "mass" ? <Balance t={t} api={api} /> : t.kind === "capacity" ? <Capacity t={t} api={api} /> : <Units t={t} api={api} />)}
+      {(t, api) =>
+        t.kind === "length" ? <Lengths t={t} api={api} />
+        : t.kind === "mass" ? <Balance t={t} api={api} />
+        : t.kind === "capacity" ? <Capacity t={t} api={api} />
+        : t.kind === "ruler" ? <Ruler t={t} api={api} />
+        : t.kind === "unit" || t.kind === "convert" ? <TextChoice t={t} api={api} />
+        : <Units t={t} api={api} />
+      }
     </MathShell>
   );
 }
@@ -129,6 +147,44 @@ function Units({ t, api }: { t: MeasureTask; api: MathApi }) {
         <div className="flex">{Array.from({ length: len }, (_, k) => <span key={k} className="w-11 text-center text-3xl" aria-hidden>📎</span>)}</div>
       </div>
       <Choices options={choices} answer={len} api={api} className="w-full max-w-3xl" />
+    </div>
+  );
+}
+
+/** Grades 2–3: read a length in centimetres off a ruler that starts at zero. */
+function Ruler({ t, api }: { t: MeasureTask; api: MathApi }) {
+  const len = t.values[0];
+  const cm = 30; // px per cm on screen
+  const choices = useMemo(() => numberChoices(len, 1, 20), [len]);
+  return (
+    <div className="flex size-full flex-col items-center justify-center gap-4 overflow-x-auto p-4" data-testid="measure-ruler" data-length={len}>
+      <div className="flex flex-col items-start" dir="ltr">
+        <div className="flex h-12 items-center justify-end rounded-r-full bg-gradient-to-r from-[#FFD43B] to-[#FAB005] pe-1 text-2xl" style={{ width: len * cm, marginLeft: 10 }} aria-label="الشيء المقيس">
+          <span aria-hidden>{t.items[0]}</span>
+        </div>
+        <svg width={16 * cm + 20} height="56" className="rounded-lg bg-[#FFF3BF]" role="img" aria-label="مسطرة بالسنتيمتر">
+          {Array.from({ length: 16 }, (_, k) => (
+            <g key={k}>
+              <line x1={10 + k * cm} y1="0" x2={10 + k * cm} y2="22" stroke="#25304B" strokeWidth="2" />
+              {k < 15 && <line x1={10 + k * cm + cm / 2} y1="0" x2={10 + k * cm + cm / 2} y2="12" stroke="#25304B" strokeWidth="1" />}
+              <text x={10 + k * cm} y="44" textAnchor="middle" fontSize="15" fontWeight="800" fontFamily="Cairo, sans-serif">{api.fmt(k)}</text>
+            </g>
+          ))}
+        </svg>
+        <span className="mt-1 text-sm text-hero-muted">سم</span>
+      </div>
+      <Choices options={choices} answer={len} api={api} className="w-full max-w-3xl" render={(v) => `${api.fmt(v)} سم`} />
+    </div>
+  );
+}
+
+/** Grades 2–3: choose the right unit, or complete a conversion. */
+function TextChoice({ t, api }: { t: MeasureTask; api: MathApi }) {
+  return (
+    <div className="flex size-full flex-col items-center justify-center gap-5 p-4" data-testid={`measure-${t.kind}`}>
+      {t.items[0] && <span className="text-[7rem] leading-none" aria-hidden>{t.items[0]}</span>}
+      {t.kind === "convert" && <span className="rounded-3xl bg-white px-6 py-3 font-display text-4xl font-extrabold shadow-soft">{t.text!.replace(/\d+/g, (d) => api.fmt(d))}</span>}
+      <Choices options={t.choices!} answer={t.answer!} api={api} className="w-full max-w-4xl" render={(c) => (t.kind === "convert" ? api.fmt(c) : c)} />
     </div>
   );
 }

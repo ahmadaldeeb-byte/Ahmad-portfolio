@@ -27,7 +27,7 @@ export default function LibraryPage() {
 
   return (
     <div>
-      <PageHeader title="مكتبة الألعاب" subtitle="عشر ألعاب تعليمية؛ ثلاث منها جاهزة للعب الآن، والبقية قيد التطوير." />
+      <PageHeader title="مكتبة الألعاب" subtitle={`${GAMES.filter((g) => g.ready).length} لعبة تعليمية جاهزة لكل الصفوف والمواد. ألعاب الرياضيات تولّد مهامها، وفي المواد الأخرى تلعب أسئلة بنك الأسئلة.`} />
       <div className="mb-6 flex flex-col gap-3 rounded-3xl bg-white p-4 shadow-soft">
         <div className="relative">
           <Search className="absolute start-4 top-1/2 size-5 -translate-y-1/2 text-hero-muted" />
@@ -54,7 +54,7 @@ export default function LibraryPage() {
           ))}
         </div>
       )}
-      {type === "all" && (
+      {type === "all" && GAMES.some((g) => !g.ready) && (
         <>
           <h2 className="mb-4 mt-12 text-2xl font-extrabold">ألعاب قادمة</h2>
           <div className="grid gap-6 sm:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4">

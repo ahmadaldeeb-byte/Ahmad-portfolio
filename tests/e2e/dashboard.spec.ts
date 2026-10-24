@@ -11,9 +11,9 @@ test.describe("dashboard", () => {
     await page.getByRole("button", { name: /العلوم/ }).click();
     await expect(page).toHaveURL(/grade=2&subject=science/);
     await expect(page.getByRole("heading", { name: /ألعاب العلوم — الصف الثاني/ })).toBeVisible();
-    await expect(page.getByRole("link", { name: "العب الآن" })).toHaveCount(5);
-    await expect(page.getByRole("link", { name: "تخصيص اللعبة" })).toHaveCount(5);
-    await expect(page.getByText("قيد التطوير")).toHaveCount(5);
+    await expect(page.getByRole("link", { name: "العب الآن" })).toHaveCount(19);
+    await expect(page.getByRole("link", { name: "تخصيص اللعبة" })).toHaveCount(19);
+    await expect(page.getByText("قيد التطوير")).toHaveCount(0);
     // Browser back returns to subjects
     await page.goBack();
     await expect(page.getByRole("heading", { name: /الصف الثاني: اختر المادة/ })).toBeVisible();

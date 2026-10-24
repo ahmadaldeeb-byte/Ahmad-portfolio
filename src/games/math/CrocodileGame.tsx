@@ -17,7 +17,7 @@ export default function CrocodileGame({ game, paused, onFinish }: GameProps) {
       tasks={tasks}
       prompt={(t) => (t.mode === "group" ? (t.ask === "bigger" ? "أين المجموعة الأكبر؟" : "أين المجموعة الأصغر؟") : "اختر الرمز المناسب: > أو < أو =")}
       skill={(t) => (t.mode === "group" ? "compare-visual" : "compare-symbol")}
-      hint={(t) => (t.mode === "group" ? "عُدّ الأسماك في كل مجموعة ثم قارن." : "التمساح يفتح فمه نحو العدد الأكبر. إذا تساوى العددان نختار =.")}
+      hint={(t) => (t.mode === "group" ? "عُدّ الأسماك في كل مجموعة ثم قارن." : t.mode === "expr" ? "احسب ناتج الجمع أولًا، ثم قارن العددين." : t.a >= 100 || t.b >= 100 ? "قارن المنزلة الكبرى أولًا (الآلاف ثم المئات ثم العشرات ثم الآحاد)." : "التمساح يفتح فمه نحو العدد الأكبر. إذا تساوى العددان نختار =.")}
     >
       {(t, api) => <CrocTaskView t={t} api={api} />}
     </MathShell>
@@ -25,7 +25,7 @@ export default function CrocodileGame({ game, paused, onFinish }: GameProps) {
 }
 
 /** Cartoon crocodile; `face` = which side its open mouth points to. */
-function Crocodile({ face, open }: { face: "left" | "right" | "none"; open: boolean }) {
+export function Crocodile({ face, open }: { face: "left" | "right" | "none"; open: boolean }) {
   return (
     <motion.svg viewBox="0 0 200 120" className="w-40 md:w-56" animate={{ scaleX: face === "left" ? -1 : 1 }} transition={{ type: "spring", stiffness: 200, damping: 14 }} aria-label="التمساح الجائع" role="img">
       <ellipse cx="80" cy="80" rx="62" ry="26" fill="#2F9E44" />
@@ -49,17 +49,17 @@ function Crocodile({ face, open }: { face: "left" | "right" | "none"; open: bool
   );
 }
 
-function Group({ n, fmt, showNumber, onPick, state, disabled, side }: { n: number; fmt: (v: number) => string; showNumber: boolean; onPick?: () => void; state: "correct" | "wrong" | null; disabled: boolean; side: string }) {
+function Group({ n, fmt, showNumber, onPick, state, disabled, side, terms }: { n: number; fmt: (v: number) => string; showNumber: boolean; onPick?: () => void; state: "correct" | "wrong" | null; disabled: boolean; side: string; terms?: number[] }) {
   const content = (
     <>
-      {n <= 10 && (
+      {n <= 10 && !terms && (
         <div className="grid grid-cols-3 gap-1 text-4xl md:text-5xl" aria-hidden>
           {Array.from({ length: n }, (_, i) => (
             <motion.span key={i} animate={{ x: [0, 4, 0] }} transition={{ duration: 1.6 + (i % 3) * 0.3, repeat: Infinity }}>🐟</motion.span>
           ))}
         </div>
       )}
-      {showNumber && <span className="font-display text-6xl font-extrabold md:text-7xl">{fmt(n)}</span>}
+      {showNumber && <span className={cn("font-display font-extrabold", terms || n >= 1000 ? "text-4xl md:text-6xl" : "text-6xl md:text-7xl")}>{terms ? terms.map(fmt).join(" + ") : fmt(n)}</span>}
     </>
   );
   const cls = cn(
@@ -101,7 +101,7 @@ function CrocTaskView({ t, api }: { t: CrocTask; api: MathApi }) {
   return (
     <div className="flex size-full flex-col items-center justify-center gap-6 p-4" dir="ltr" data-testid="crocodile">
       <div className="flex flex-wrap items-center justify-center gap-4 md:gap-8">
-        <Group n={t.a} fmt={fmt} side="a" showNumber={t.mode !== "group"} disabled={api.locked || done} onPick={t.mode === "group" ? () => pickGroup("a") : undefined} state={picked === "a" ? "correct" : wrong === "a" ? "wrong" : null} />
+        <Group n={t.a} terms={t.aTerms} fmt={fmt} side="a" showNumber={t.mode !== "group"} disabled={api.locked || done} onPick={t.mode === "group" ? () => pickGroup("a") : undefined} state={picked === "a" ? "correct" : wrong === "a" ? "wrong" : null} />
         <div className="flex flex-col items-center">
           <Crocodile face={face} open={done} />
           {t.mode !== "group" && (
@@ -110,7 +110,7 @@ function CrocTaskView({ t, api }: { t: CrocTask; api: MathApi }) {
             </span>
           )}
         </div>
-        <Group n={t.b} fmt={fmt} side="b" showNumber={t.mode !== "group"} disabled={api.locked || done} onPick={t.mode === "group" ? () => pickGroup("b") : undefined} state={picked === "b" ? "correct" : wrong === "b" ? "wrong" : null} />
+        <Group n={t.b} terms={t.bTerms} fmt={fmt} side="b" showNumber={t.mode !== "group"} disabled={api.locked || done} onPick={t.mode === "group" ? () => pickGroup("b") : undefined} state={picked === "b" ? "correct" : wrong === "b" ? "wrong" : null} />
       </div>
       {t.mode !== "group" && (
         <div className="grid grid-cols-3 gap-4">

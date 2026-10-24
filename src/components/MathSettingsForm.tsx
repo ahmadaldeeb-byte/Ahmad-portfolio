@@ -1,11 +1,12 @@
 "use client";
 import { useState } from "react";
 import type { MathSettings } from "@/lib/math/common";
+import type { Grade } from "@/lib/types";
 import { MATH_GAME_INFO, type MathGameType } from "@/lib/math/meta";
 import { Field, Segmented, inputClass } from "./ui";
 
-/** Teacher settings shared by the Grade 1 math games. */
-export function MathSettingsForm({ type, value, onChange }: { type: MathGameType; value: MathSettings; onChange: (v: MathSettings) => void }) {
+/** Teacher settings shared by the math games (levels depend on the grade). */
+export function MathSettingsForm({ type, grade, value, onChange }: { type: MathGameType; grade: Grade; value: MathSettings; onChange: (v: MathSettings) => void }) {
   const info = MATH_GAME_INFO[type];
   const set = (patch: Partial<MathSettings>) => onChange({ ...value, ...patch });
   const presets = [5, 8, 10, 15];
@@ -13,7 +14,7 @@ export function MathSettingsForm({ type, value, onChange }: { type: MathGameType
   return (
     <div className="flex flex-col gap-5">
       <Field label="المستوى" group>
-        <Segmented value={value.level} onChange={(level) => set({ level })} options={info.levels.map((label, i) => ({ value: (i + 1) as 1 | 2 | 3, label }))} />
+        <Segmented value={value.level} onChange={(level) => set({ level })} options={info.levels[grade].map((label, i) => ({ value: (i + 1) as 1 | 2 | 3, label }))} />
       </Field>
       {type !== "raceAdd" && (
         <Field label="عدد المهام" group>

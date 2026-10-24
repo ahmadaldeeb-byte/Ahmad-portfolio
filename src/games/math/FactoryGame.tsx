@@ -4,7 +4,7 @@ import { Minus } from "lucide-react";
 import { useState } from "react";
 import { Button } from "@/components/ui";
 import { sound } from "@/lib/audio";
-import { factoryTasks, type FactoryTask } from "@/lib/math/games";
+import { PLACE_NAMES, factoryTasks, type FactoryTask } from "@/lib/math/games";
 import type { GameProps } from "../types";
 import { Choices, MathShell, type MathApi } from "./MathShell";
 import { useMathTasks } from "./useMath";
@@ -17,9 +17,13 @@ export default function FactoryGame({ game, paused, onFinish }: GameProps) {
       paused={paused}
       onFinish={onFinish}
       tasks={tasks}
-      prompt={(t, fmt) => (t.mode === "build" ? `ابنِ العدد ${fmt(t.target)} بالحزم والمكعبات` : "ما العدد المبني في المصنع؟")}
+      prompt={(t, fmt) => (t.mode === "build" ? `ابنِ العدد ${fmt(t.target)} ${t.places.length > 2 ? "بقطع المنازل" : "بالحزم والمكعبات"}` : "ما العدد المبني في المصنع؟")}
       skill={(t) => (t.mode === "build" ? "place-value-build" : "place-value-read")}
-      hint={(t) => (t.mode === "build" ? `العدد ${t.target}: الرقم الأيسر يخبرك بعدد العشرات، والأيمن بعدد الآحاد.` : "عُدّ الحزم عشرات (١٠، ٢٠، ٣٠...) ثم أضف المكعبات.")}
+      hint={(t) =>
+        t.places.length > 2
+          ? "كل رقم في العدد يخبرك بعدد قطع منزلته: من اليسار الآلاف ثم المئات ثم العشرات ثم الآحاد."
+          : t.mode === "build" ? `العدد ${t.target}: الرقم الأيسر يخبرك بعدد العشرات، والأيمن بعدد الآحاد.` : "عُدّ الحزم عشرات (١٠، ٢٠، ٣٠...) ثم أضف المكعبات."
+      }
     >
       {(t, api) => <FactoryTaskView t={t} api={api} />}
     </MathShell>
@@ -36,60 +40,99 @@ function Rod({ onClick, label }: { onClick?: () => void; label: string }) {
 function Cube({ onClick, label }: { onClick?: () => void; label: string }) {
   return <motion.button type="button" aria-label={label} onClick={onClick} initial={{ scale: 0 }} animate={{ scale: 1 }} className="size-6 cursor-pointer rounded-md border-2 border-[#E67700] bg-[#FFD43B] md:size-7" data-testid="factory-cube" />;
 }
+/** A hundred: a 10 × 10 flat. */
+function Flat({ onClick, label }: { onClick?: () => void; label: string }) {
+  return (
+    <motion.button type="button" aria-label={label} onClick={onClick} initial={{ y: -40, opacity: 0 }} animate={{ y: 0, opacity: 1 }} className="size-16 cursor-pointer rounded-md border-2 border-[#2B8A3E] md:size-20" style={{ background: "repeating-linear-gradient(0deg,#69DB7C 0 5px,#2B8A3E 5px 6px),#69DB7C", backgroundBlendMode: "multiply" }} data-testid="factory-flat">
+      <span className="block size-full" style={{ background: "repeating-linear-gradient(90deg,transparent 0 5px,#2B8A3E 5px 6px)" }} />
+    </motion.button>
+  );
+}
+/** A thousand: a big cube (ten flats). */
+function Block({ onClick, label }: { onClick?: () => void; label: string }) {
+  return (
+    <motion.button type="button" aria-label={label} onClick={onClick} initial={{ scale: 0 }} animate={{ scale: 1 }} className="relative size-20 cursor-pointer md:size-24" data-testid="factory-block">
+      <svg viewBox="0 0 100 100" className="size-full" aria-hidden>
+        <polygon points="10,30 70,30 70,90 10,90" fill="#B197FC" stroke="#5F3DC4" strokeWidth="3" />
+        <polygon points="10,30 30,10 90,10 70,30" fill="#D0BFFF" stroke="#5F3DC4" strokeWidth="3" />
+        <polygon points="70,30 90,10 90,70 70,90" fill="#9775FA" stroke="#5F3DC4" strokeWidth="3" />
+        <text x="40" y="66" textAnchor="middle" fontSize="18" fontWeight="800" fill="#25304B">1000</text>
+      </svg>
+    </motion.button>
+  );
+}
+
+const PIECE: Record<number, { name: string; color: string; Piece: typeof Rod; machine: string }> = {
+  1000: { name: "ألف", color: "#5F3DC4", Piece: Block, machine: "+ ١٠٠٠" },
+  100: { name: "مئة", color: "#2B8A3E", Piece: Flat, machine: "+ ١٠٠" },
+  10: { name: "عشرة", color: "#1864AB", Piece: Rod, machine: "+ ١٠" },
+  1: { name: "واحد", color: "#E67700", Piece: Cube, machine: "+ ١" },
+};
+const digitsOf = (n: number, places: number[]) => places.map((p, k) => (k === 0 ? Math.floor(n / p) : Math.floor((n % places[k - 1]) / p)));
 
 function FactoryTaskView({ t, api }: { t: FactoryTask; api: MathApi }) {
   const build = t.mode === "build";
-  const [tens, setTens] = useState(build ? 0 : Math.floor(t.target / 10));
-  const [ones, setOnes] = useState(build ? 0 : t.target % 10);
+  const places = t.places;
+  const [counts, setCounts] = useState(() => (build ? places.map(() => 0) : digitsOf(t.target, places)));
   const [spin, setSpin] = useState(0);
-  const add = (kind: "t" | "o") => {
+  const change = (k: number, d: number) => setCounts((c) => c.map((x, j) => (j === k ? Math.max(0, Math.min(j === 0 ? 9 : 19, x + d)) : x)));
+  const add = (k: number) => {
     if (api.locked) return;
     sound.play("click");
     setSpin((s) => s + 1);
-    if (kind === "t") setTens((x) => Math.min(9, x + 1));
-    else setOnes((x) => Math.min(19, x + 1));
+    change(k, 1);
   };
-  const value = tens * 10 + ones;
+  const value = counts.reduce((sum, c, k) => sum + c * places[k], 0);
+  const want = digitsOf(t.target, places);
+  const tidy = (k: number) => (places[k] === 10 ? "tens" : places[k] === 1 ? "ones" : String(places[k]));
   return (
     <div className="flex size-full flex-col items-center gap-4 p-3" data-testid="factory">
       <div className="flex flex-wrap items-center justify-center gap-4">
-        {build && (
-          <>
-            <Machine label="آلة الحزم: أضف عشرة" spin={spin} onClick={() => add("t")} disabled={api.locked}>
-              <span className="flex gap-0.5">{[0, 1, 2].map((k) => <span key={k} className="h-12 w-3 rounded bg-[#4DABF7]" />)}</span> + ١٠
+        {build &&
+          places.map((p, k) => (
+            <Machine key={p} label={`آلة ${PIECE[p].name}: أضف ${PIECE[p].name}`} spin={spin} onClick={() => add(k)} disabled={api.locked}>
+              <span className="size-6 rounded" style={{ background: PIECE[p].color }} /> {PIECE[p].machine}
             </Machine>
-            <Machine label="آلة المكعبات: أضف واحدًا" spin={spin} onClick={() => add("o")} disabled={api.locked}>
-              <span className="size-6 rounded bg-[#FFD43B]" /> + ١
-            </Machine>
-          </>
-        )}
+          ))}
         {build && <span className="font-display text-7xl font-extrabold text-hero-blue" dir="ltr" data-testid="factory-target">{api.fmt(t.target)}</span>}
       </div>
-      <div className="flex min-h-64 w-full max-w-4xl flex-wrap items-end justify-center gap-6 rounded-[2rem] bg-[#E9ECEF] p-4 shadow-inner" dir="ltr" aria-label="صينية المصنع">
-        <div className="flex items-end gap-2">{Array.from({ length: tens }, (_, i) => <Rod key={i} label="حزمة عشرة (اضغط للإزالة)" onClick={build ? () => setTens((x) => x - 1) : undefined} />)}</div>
-        <div className="grid grid-cols-5 gap-1.5">{Array.from({ length: ones }, (_, i) => <Cube key={i} label="مكعب واحد (اضغط للإزالة)" onClick={build ? () => setOnes((x) => x - 1) : undefined} />)}</div>
-        {tens + ones === 0 && <p className="self-center text-hero-muted">الصينية فارغة. استخدم الآلات!</p>}
+      <div className="flex min-h-64 w-full max-w-5xl flex-wrap items-end justify-center gap-6 rounded-[2rem] bg-[#E9ECEF] p-4 shadow-inner" dir="ltr" aria-label="صينية المصنع">
+        {places.map((p, k) => {
+          const { Piece } = PIECE[p];
+          return (
+            <div key={p} className={p === 1 ? "grid grid-cols-5 gap-1.5" : "flex flex-wrap items-end gap-2"}>
+              {Array.from({ length: counts[k] }, (_, i) => <Piece key={i} label={`${PIECE[p].name} (اضغط للإزالة)`} onClick={build ? () => change(k, -1) : undefined} />)}
+            </div>
+          );
+        })}
+        {value === 0 && <p className="self-center text-hero-muted">الصينية فارغة. استخدم الآلات!</p>}
       </div>
-      {/* Place-value table: tens on the left, ones on the right, as numbers are written. */}
+      {/* Place-value table: the largest place on the left, as numbers are written. */}
       <table className="font-display text-2xl" dir="ltr">
-        <thead><tr><th className="rounded-tl-xl bg-[#1864AB] px-6 py-1 text-white">عشرات</th><th className="rounded-tr-xl bg-[#E67700] px-6 py-1 text-white">آحاد</th></tr></thead>
-        <tbody><tr className="bg-white text-center font-extrabold"><td className="py-2" data-testid="factory-tens">{build || api.revealed ? api.fmt(tens) : "؟"}</td><td data-testid="factory-ones">{build || api.revealed ? api.fmt(ones) : "؟"}</td></tr></tbody>
+        <thead>
+          <tr>{places.map((p, k) => <th key={p} className={`px-5 py-1 text-white ${k === 0 ? "rounded-tl-xl" : ""} ${k === places.length - 1 ? "rounded-tr-xl" : ""}`} style={{ background: PIECE[p].color }}>{PLACE_NAMES[p]}</th>)}</tr>
+        </thead>
+        <tbody>
+          <tr className="bg-white text-center font-extrabold">
+            {places.map((p, k) => <td key={p} className="py-2" data-testid={`factory-${tidy(k)}`}>{build || api.revealed ? api.fmt(counts[k]) : "؟"}</td>)}
+          </tr>
+        </tbody>
       </table>
       {build ? (
         <div className="flex items-center gap-3">
           <span className="font-display text-2xl font-bold">المبني: {api.fmt(value)}</span>
           <Button size="lg" variant="success" disabled={api.locked} onClick={() => {
-            const ok = tens === Math.floor(t.target / 10) && ones === t.target % 10;
-            api.submit(ok, ok ? undefined : value === t.target ? "استبدل كل ١٠ مكعبات بحزمة واحدة!" : undefined);
+            const ok = counts.every((c, k) => c === want[k]);
+            api.submit(ok, ok ? undefined : value === t.target ? "استبدل كل ١٠ قطع صغيرة بقطعة واحدة من المنزلة الأكبر!" : undefined);
           }}>
             تحقق
           </Button>
-          <Button variant="ghost" size="sm" icon={<Minus className="size-5" />} onClick={() => { setTens(0); setOnes(0); }}>تفريغ</Button>
+          <Button variant="ghost" size="sm" icon={<Minus className="size-5" />} onClick={() => setCounts(places.map(() => 0))}>تفريغ</Button>
         </div>
       ) : (
         <Choices options={t.choices} answer={t.target} api={api} className="w-full max-w-2xl" />
       )}
-      {api.revealed && build && <p className="font-bold text-hero-red">الصحيح: {api.fmt(Math.floor(t.target / 10))} عشرات و{api.fmt(t.target % 10)} آحاد</p>}
+      {api.revealed && build && <p className="font-bold text-hero-red">الصحيح: {places.map((p, k) => `${api.fmt(want[k])} ${PLACE_NAMES[p]}`).join(" و")}</p>}
     </div>
   );
 }

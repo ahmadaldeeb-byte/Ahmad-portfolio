@@ -18,13 +18,31 @@ export default function IslandGame({ game, paused, onFinish }: GameProps) {
       paused={paused}
       onFinish={onFinish}
       tasks={tasks}
-      prompt={(t, fmt) => `اجمع ${countPhrase(t.target, FRUITS[t.fruit], (n) => fmt(n))} (${numberWord(t.target)})`}
-      skill={() => "count"}
-      hint={(t) => `عُدّ وأنت تضع كل ثمرة: واحد، اثنان، ثلاثة... حتى تصل إلى ${numberWord(t.target)}.`}
+      prompt={(t, fmt) => islandPrompt(t, fmt)}
+      skill={(t) => t.op?.kind ?? "count"}
+      hint={(t) => islandHint(t)}
     >
       {(t, api) => <IslandTaskView t={t} api={api} />}
     </MathShell>
   );
+}
+
+const groupsWord = (n: number, fmt: (n: number) => string) => (n === 2 ? "مجموعتين" : `${fmt(n)} مجموعات`);
+const basketsWord = (n: number, fmt: (n: number) => string) => (n === 2 ? "سلتين" : `${fmt(n)} سلال`);
+
+function islandPrompt(t: IslandTask, fmt: (n: number | string) => string) {
+  const f = (n: number) => fmt(n);
+  const fruit = FRUITS[t.fruit];
+  if (!t.op) return `اجمع ${countPhrase(t.target, fruit, f)} (${numberWord(t.target)})`;
+  const { kind, a, b } = t.op;
+  if (kind === "groups") return `اجمع ${groupsWord(a, f)}، في كل مجموعة ${countPhrase(b, fruit, f)}`;
+  if (kind === "times") return <>اجمع عدد الثمار: <span dir="ltr">{fmt(a)} × {fmt(b)}</span></>;
+  return `وزّعنا ${countPhrase(a, fruit, f)} على ${basketsWord(b, f)} بالتساوي. اجمع ما في سلة واحدة`;
+}
+function islandHint(t: IslandTask) {
+  if (!t.op) return `عُدّ وأنت تضع كل ثمرة: واحد، اثنان، ثلاثة... حتى تصل إلى ${numberWord(t.target)}.`;
+  if (t.op.kind === "share") return `كم مرة يدخل العدد ${t.op.b} في ${t.op.a}؟ وزّع الثمار واحدة لكل سلة حتى تنتهي.`;
+  return `اجمع المجموعات واحدة بعد واحدة: ${Array.from({ length: t.op.a }, (_, k) => (k + 1) * t.op!.b).join("، ")}.`;
 }
 
 /** Grid spots inside the island (6 × 4, slightly staggered) so fruits never overlap. */
@@ -37,6 +55,12 @@ const SPOTS = Array.from({ length: 24 }, (_, k) => {
 function spot(i: number, seed: number) {
   const order = SPOTS.map((_, k) => k).sort((a, b) => ((a * 7 + seed * 13) % 24) - ((b * 7 + seed * 13) % 24));
   return SPOTS[order[i % 24]];
+}
+
+function chunks<T>(list: T[], size: number): T[][] {
+  const out: T[][] = [];
+  for (let k = 0; k < list.length; k += size) out.push(list.slice(k, k + size));
+  return out;
 }
 
 function IslandTaskView({ t, api }: { t: IslandTask; api: MathApi }) {
@@ -89,12 +113,17 @@ function IslandTaskView({ t, api }: { t: IslandTask; api: MathApi }) {
       <div className="flex flex-col items-center gap-3 lg:w-80">
         <div data-slot={0} className="flex min-h-48 w-full flex-col items-center rounded-[2rem] border-4 border-dashed border-[#B07D3B] bg-[#FFF4E6] p-3" data-testid="island-basket">
           <span className="text-5xl" aria-hidden>🧺</span>
-          <div className="flex flex-wrap justify-center gap-1">
-            {basket.map((i) => (
+          <div className={t.op && t.op.kind !== "share" ? "flex flex-wrap justify-center gap-x-4 gap-y-1" : "flex flex-wrap justify-center gap-1"}>
+            {chunks(basket, t.op && t.op.kind !== "share" ? t.op.b : basket.length || 1).map((group, g) => (
+              // Grades 2–3: fruits sit in groups of the asked size so the class can skip-count.
+              <span key={g} className="flex flex-wrap justify-center gap-1" data-testid="island-group">
+            {group.map((i) => (
               // Pops into the basket (no shared fly-in: on touch screens the tap's trailing click would hit it and send it back).
               <motion.button key={i} type="button" initial={{ scale: 0, y: -20 }} animate={{ scale: 1, y: 0 }} aria-label={`أعد ${fruit.one}`} onClick={() => toggle(i)} className="cursor-pointer text-4xl">
                 {fruit.emoji}
               </motion.button>
+            ))}
+              </span>
             ))}
           </div>
         </div>

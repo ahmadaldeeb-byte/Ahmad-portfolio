@@ -8,8 +8,8 @@ import { useCallback, useEffect, useMemo, useRef, useState, type ComponentType }
 import { HeroKid, RobotBuddy } from "@/components/Characters";
 import { Button, Loading } from "@/components/ui";
 import { sound } from "@/lib/audio";
-import { gameMeta, gradeLabel, subjectLabel } from "@/lib/constants";
-import { MATH_GAME_INFO } from "@/lib/math/meta";
+import { gameMetaFor, gradeLabel, subjectLabel } from "@/lib/constants";
+import { isMathGame, mathHowTo } from "@/lib/math/meta";
 import { preparePlayable, validateGame } from "@/lib/questions";
 import type { GameType } from "@/lib/types";
 import { uid } from "@/lib/utils";
@@ -48,15 +48,26 @@ const GAME_COMPONENTS: Partial<Record<GameType, ComponentType<GameProps>>> = {
   market: dynamic(() => import("./math/MarketGame"), { ssr: false, loading: GameLoading }),
   clock: dynamic(() => import("./math/ClockGame"), { ssr: false, loading: GameLoading }),
   measure: dynamic(() => import("./math/MeasureGame"), { ssr: false, loading: GameLoading }),
+  memory: dynamic(() => import("./memory/MemoryGame"), { ssr: false, loading: GameLoading }),
+  words: dynamic(() => import("./words/WordsGame"), { ssr: false, loading: GameLoading }),
+  numbers: dynamic(() => import("./numbers/NumbersGame"), { ssr: false, loading: GameLoading }),
+  puzzle: dynamic(() => import("./puzzle/PuzzleGame"), { ssr: false, loading: GameLoading }),
+  space: dynamic(() => import("./space/SpaceGame"), { ssr: false, loading: GameLoading }),
 };
+/** Math game worlds playing question-bank questions in the other subjects. */
+const BankWorldGame = dynamic(() => import("./math/BankWorldGame"), { ssr: false, loading: GameLoading });
 
 const HOW_TO: Partial<Record<GameType, string[]>> = {
-  ...Object.fromEntries(Object.entries(MATH_GAME_INFO).map(([k, v]) => [k, v.howTo])),
   wheel: ["اضغط «دوّر العجلة» لتختار العجلة سؤالًا أو اسمًا بعدل تام.", "يجيب الطالب أو الفريق عن السؤال الظاهر.", "تُزال الخانة المستخدمة إن كان هذا الخيار مفعّلًا."],
   race: ["الفريق الأحمر على يمين الشاشة والفريق الأزرق على يسارها، ويلعبان في الوقت نفسه.", "لكل فريق أسئلته؛ كل إجابة صحيحة تدفع سيارته إلى الأمام، والخطأ لا يحرّكها.", "أول سيارة تعبر خط النهاية تفوز، وإن انتهى الوقت يفوز الأكثر تقدمًا."],
   train: ["في كل محطة عربة فارغة تنتظر عددها.", "اضغط على العدد الصحيح أو اسحبه إلى العربة.", "اضغط «تلميح» لترى خط الأعداد، ولا تُخصم نقاط عند الخطأ في الوضع التعليمي."],
   quiz: ["سؤال واحد في كل شاشة مع أربعة خيارات.", "كلما أجبت أسرع حصلت على نقاط إضافية.", "الإجابات الصحيحة المتتالية تشعل سلسلة الأبطال 🔥"],
   teams: ["يتناوب الفريقان على البدء بالسؤال.", "إن أخطأ الفريق ينتقل السؤال للفريق الآخر ليسرق نصف النقاط.", "الفريق صاحب النقاط الأعلى في النهاية يفوز!"],
+  memory: ["اضغط على بطاقتين لتقلبهما.", "إذا كانتا زوجًا مترابطًا تبقيان مكشوفتين، وإلا تنقلبان من جديد.", "تذكّر أماكن البطاقات وطابق كل الأزواج!"],
+  words: ["اقرأ المطلوب: كلمة أو جملة.", "اضغط على الحروف أو الكلمات بالترتيب الصحيح.", "اضغط «تحقق»، أو «تراجع» لإزالة آخر قطعة."],
+  numbers: ["حلّ المسألة واختر الإجابة الصحيحة.", "كل إجابة صحيحة تقفز بالبطل حجرًا إلى الأمام.", "اجمع الكنوز وأوصل البطل إلى القلعة!"],
+  puzzle: ["أجب عن السؤال لتربح قطعة من الصورة.", "اضغط على المكان الصحيح للقطعة في اللوحة.", "أكمل الصورة كلها!"],
+  space: ["كل إجابة صحيحة تطير بالمركبة إلى الكوكب التالي.", "اختر الإجابة من الأزرار.", "أوصل المركبة إلى النجمة الذهبية في النهاية!"],
   balloons: ["اقرأ السؤال في أعلى الشاشة.", "افقع البالون الذي يحمل الإجابة الصحيحة باللمس أو بالفأرة.", "الإجابة من المحاولة الأولى تمنح النقاط كاملة."],
 };
 
@@ -164,8 +175,10 @@ export function PlayScreen() {
     );
   }
 
-  const meta = gameMeta(game.type);
-  const GameComponent = GAME_COMPONENTS[game.type];
+  const meta = gameMetaFor(game.type, game.subject);
+  const bankWorld = isMathGame(game.type) && !meta.generated;
+  const GameComponent = bankWorld ? BankWorldGame : GAME_COMPONENTS[game.type];
+  const howTo = bankWorld ? meta.bank!.howTo : isMathGame(game.type) ? mathHowTo(game.type, game.grade) : HOW_TO[game.type] ?? [];
 
   if (!meta.ready || !GameComponent || issues.length > 0) {
     return (
@@ -217,7 +230,7 @@ export function PlayScreen() {
             <h2 className="font-display text-4xl font-extrabold md:text-6xl">{meta.name}</h2>
             <p className="text-xl text-hero-muted md:text-2xl">{game.lesson}</p>
             <ol className="flex max-w-2xl flex-col gap-2 rounded-3xl bg-white p-5 text-start text-lg shadow-soft md:text-xl">
-              {(HOW_TO[game.type] ?? []).map((t, i) => (
+              {howTo.map((t, i) => (
                 <li key={i} className="flex gap-3">
                   <span className="grid size-8 shrink-0 place-items-center rounded-full bg-hero-yellow font-display font-bold">{i + 1}</span>
                   {t}

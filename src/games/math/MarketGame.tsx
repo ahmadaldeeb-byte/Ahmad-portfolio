@@ -40,11 +40,25 @@ export default function MarketGame({ game, paused, onFinish }: GameProps) {
       paused={paused}
       onFinish={onFinish}
       tasks={tasks}
-      prompt={(t, fmt) => (t.kind === "pay" ? `اشترِ ${t.product.name} وادفع ثمنه: ${priceLabel(t.price, (n) => fmt(n))}` : `كم قطعة من فئة «${coinOf(t.small).name}» تساوي «${coinOf(t.big).name}»؟`)}
-      skill={(t) => (t.kind === "pay" ? "money-pay" : "money-equal")}
-      hint={(t) => (t.kind === "pay" ? "ابدأ بالقطع الكبيرة، ثم أكمل بالقطع الصغيرة حتى يساوي المجموع السعر." : "الدينار = ١٠٠ قرش، نصف الدينار = ٥٠ قرشًا، ربع الدينار = ٢٥ قرشًا.")}
+      prompt={(t, fmt) => {
+        const money = (n: number) => priceLabel(n, (v) => fmt(v));
+        if (t.kind === "pay") return `اشترِ ${t.product.name} وادفع ثمنه: ${money(t.price)}`;
+        if (t.kind === "change") return `اشتريت ${t.product.name} بـ${money(t.price)} ودفعت ${money(t.paid)}. كم الباقي؟`;
+        if (t.kind === "sum") return `اشتريت ${t.products[0].name} و${t.products[1].name}. كم تدفع؟`;
+        return `كم قطعة من فئة «${coinOf(t.small).name}» تساوي «${coinOf(t.big).name}»؟`;
+      }}
+      skill={(t) => `money-${t.kind}`}
+      hint={(t) =>
+        t.kind === "pay"
+          ? "ابدأ بالقطع الكبيرة، ثم أكمل بالقطع الصغيرة حتى يساوي المجموع السعر."
+          : t.kind === "change"
+            ? "الباقي = المبلغ المدفوع − السعر. الدينار = ١٠٠ قرش."
+            : t.kind === "sum"
+              ? "اجمع السعرين. إذا زاد المجموع على ١٠٠ قرش فهو دينار وقروش."
+              : "الدينار = ١٠٠ قرش، نصف الدينار = ٥٠ قرشًا، ربع الدينار = ٢٥ قرشًا."
+      }
     >
-      {(t, api) => (t.kind === "pay" ? <Pay t={t} api={api} /> : <EqualCoins t={t} api={api} />)}
+      {(t, api) => (t.kind === "pay" ? <Pay t={t} api={api} /> : t.kind === "equal" ? <EqualCoins t={t} api={api} /> : <MoneyAnswer t={t} api={api} />)}
     </MathShell>
   );
 }
@@ -83,6 +97,32 @@ function Pay({ t, api }: { t: Extract<MarketTask, { kind: "pay" }>; api: MathApi
           </Button>
         </div>
       </div>
+    </div>
+  );
+}
+
+/** Change and total-price tasks: the goods, their prices, and money answers to choose from. */
+function MoneyAnswer({ t, api }: { t: Extract<MarketTask, { kind: "change" | "sum" }>; api: MathApi }) {
+  const money = (n: number) => priceLabel(n, (v) => api.fmt(v));
+  const goods = t.kind === "change" ? [{ product: t.product, price: t.price }] : t.products.map((product, k) => ({ product, price: t.prices[k] }));
+  return (
+    <div className="flex size-full flex-col items-center justify-center gap-5 p-4" data-testid={`market-${t.kind}`}>
+      <div className="flex flex-wrap items-center justify-center gap-4">
+        {goods.map((g, k) => (
+          <div key={k} className="flex flex-col items-center gap-1 rounded-[2rem] bg-white p-4 shadow-soft">
+            <span className="text-7xl leading-none" aria-hidden>{g.product.emoji}</span>
+            <span className="font-display text-xl font-bold">{g.product.name}</span>
+            <span className="rounded-full bg-hero-yellow px-4 py-1 font-display text-xl font-extrabold">🏷️ {money(g.price)}</span>
+          </div>
+        ))}
+        {t.kind === "change" && (
+          <div className="flex flex-col items-center gap-1">
+            <span className="font-bold">دفعت:</span>
+            <div className="flex gap-1">{Array.from({ length: t.paid / 100 }, (_, k) => <CoinIcon key={k} coin={coinOf(100)} size={80} />)}</div>
+          </div>
+        )}
+      </div>
+      <Choices options={t.choices} answer={t.answer} api={api} className="w-full max-w-4xl" render={(c) => <span className="text-2xl md:text-3xl">{money(c)}</span>} />
     </div>
   );
 }

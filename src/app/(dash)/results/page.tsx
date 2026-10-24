@@ -3,7 +3,7 @@ import { Trash2, Trophy } from "lucide-react";
 import { useState } from "react";
 import { RobotBuddy } from "@/components/Characters";
 import { Button, Card, ConfirmDialog, EmptyState, Loading, PageHeader } from "@/components/ui";
-import { gameMeta, gradeLabel, subjectLabel } from "@/lib/constants";
+import { gameMetaFor, gradeLabel, subjectLabel } from "@/lib/constants";
 import { successRate } from "@/lib/scoring";
 import { formatDuration, formatNum } from "@/lib/utils";
 import { useData } from "@/store/data";
@@ -72,7 +72,7 @@ export default function ResultsPage() {
                   <tr key={r.id} className="border-t border-hero-ink/5">
                     <td className="px-4 py-3 font-bold">
                       {r.gameTitle}
-                      <span className="block text-sm font-normal text-hero-muted">{gameMeta(r.type).name}</span>
+                      <span className="block text-sm font-normal text-hero-muted">{gameMetaFor(r.type, r.subject).name}</span>
                     </td>
                     <td className="px-4 py-3">{gradeLabel(r.grade)} • {subjectLabel(r.subject)}</td>
                     <td className="px-4 py-3 text-hero-green font-bold">{n(r.correct)}</td>

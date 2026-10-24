@@ -3,7 +3,7 @@ import Link from "next/link";
 import { motion } from "motion/react";
 import { Play, Settings2, Box, Square, Hourglass } from "lucide-react";
 import type { ReactNode } from "react";
-import { DIFFICULTY_LABELS, gameMeta, gradeLabel, subjectLabel } from "@/lib/constants";
+import { DIFFICULTY_LABELS, gameMeta, gameMetaFor, gradeLabel, subjectLabel } from "@/lib/constants";
 import type { GameConfig, GameType } from "@/lib/types";
 import { sound } from "@/lib/audio";
 import { GameArt } from "./GameArt";
@@ -48,7 +48,7 @@ function Shell({ type, children, index = 0 }: { type: GameType; children: ReactN
 }
 
 export function GameCard({ game, index }: { game: GameConfig; index?: number }) {
-  const meta = gameMeta(game.type);
+  const meta = gameMetaFor(game.type, game.subject);
   return (
     <Shell type={game.type} index={index}>
       <div className="flex flex-wrap gap-2">

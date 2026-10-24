@@ -1,4 +1,4 @@
-import { gameMeta, KIND_LABELS } from "./constants";
+import { gameMetaFor, KIND_LABELS } from "./constants";
 import type { GameConfig, Question, QuestionKind } from "./types";
 import { validateRaceSettings } from "./race";
 import { TRAIN_DEFAULTS, validateTrainSettings } from "./train";
@@ -88,7 +88,7 @@ export function shuffleChoices(p: PlayableQuestion): PlayableQuestion {
 }
 
 export function preparePlayable(game: GameConfig): PlayableQuestion[] {
-  const meta = gameMeta(game.type);
+  const meta = gameMetaFor(game.type, game.subject);
   const list = game.questions
     .filter((q) => meta.kinds.includes(q.kind))
     .map(toPlayable)
@@ -136,7 +136,7 @@ export function validateQuestion(q: Question): string[] {
 
 export function validateGame(game: GameConfig): ValidationIssue[] {
   const issues: ValidationIssue[] = [];
-  const meta = gameMeta(game.type);
+  const meta = gameMetaFor(game.type, game.subject);
   if (!game.title.trim()) issues.push({ message: "أدخل عنوانًا للعبة." });
   if (!game.lesson.trim()) issues.push({ message: "أدخل عنوان الدرس." });
   game.questions.forEach((q, index) => {

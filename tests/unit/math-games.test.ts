@@ -145,7 +145,7 @@ describe("math game generators", () => {
         for (const t of pizzaTasks(l, 9)) {
           if (t.kind === "name") expect(t.answer).toBe(!t.equal ? "ليس نصفًا ولا ربعًا" : t.parts === 2 ? "نصف" : "ربع");
           if (t.kind === "group") {
-            expect(Number(t.answer)).toBe(t.fraction === "half" ? t.items / 2 : t.items / 4);
+            expect(Number(t.answer)).toBe((t.items / t.den) * t.num);
             expect(t.choices).toContain(t.answer);
           }
         }
@@ -160,7 +160,7 @@ describe("math game generators", () => {
             t.coins.forEach((c) => expect(COINS.some((x) => x.value === c)).toBe(true));
             // payable exactly with the offered coins (smallest coin divides the price)
             expect(t.price % Math.min(...t.coins)).toBe(0);
-          } else expect(t.answer).toBe(String(t.big / t.small));
+          } else if (t.kind === "equal") expect(t.answer).toBe(String(t.big / t.small));
         }
   });
 
