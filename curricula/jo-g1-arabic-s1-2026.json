@@ -1,0 +1,4386 @@
+{
+  "app": "heroes-world",
+  "kind": "curriculum",
+  "version": 1,
+  "curriculum": {
+    "id": "jo-g1-arabic-s1-2026",
+    "country": "الأردن",
+    "title": "العربية لغتي — الصف الأول — الفصل الدراسي الأول",
+    "grade": 1,
+    "subject": "arabic",
+    "semester": 1,
+    "textbook": {
+      "title": "العربية لغتي، الصف الأول، كتاب الطالب، الفصل الدراسي الأول",
+      "publisher": "المركز الوطني لتطوير المناهج",
+      "isbn": "978-9923-41-561-0",
+      "pages": 158,
+      "sha256": "55e90bc7fd8bdf6fb11f79f02bdbda704ae27d6c114cdcd1481e19bcc3e9761b"
+    },
+    "generatedBy": "Claude Code from the textbook PDF (textbook-to-curriculum); listening/speaking lessons are listed without questions (they need audio or picture talk); songs (أنشد) not included",
+    "generatedAt": "2026-10-24",
+    "units": [
+      {
+        "id": "u1",
+        "number": 1,
+        "title": "الْوَحْدَةُ الْأولى: أُسْرَتي",
+        "semester": 1,
+        "pages": [
+          8,
+          31
+        ],
+        "lessons": [
+          {
+            "id": "u1-l1",
+            "title": "أَسْتَمِعُ بِانْتِباهٍ وَتَرْكيزٍ",
+            "pages": [
+              8,
+              9
+            ],
+            "questions": [],
+            "number": 1
+          },
+          {
+            "id": "u1-l2",
+            "title": "أَتَحَدَّثُ بِطَلاقَةٍ",
+            "pages": [
+              10,
+              11
+            ],
+            "questions": [],
+            "number": 2
+          },
+          {
+            "id": "u1-l3",
+            "title": "حَرْفُ الْمَدِّ الْأَلِفُ (ا، ى)",
+            "pages": [
+              12,
+              13
+            ],
+            "questions": [
+              {
+                "id": "u1-l3-t01",
+                "origin": "textbook",
+                "page": 13,
+                "kind": "mcq",
+                "prompt": "أيّ كلمة فيها حرف المد الألف؟",
+                "correctIndex": 0,
+                "difficulty": 1,
+                "choices": [
+                  "نار",
+                  "فول",
+                  "قِرد"
+                ]
+              },
+              {
+                "id": "u1-l3-t02",
+                "origin": "textbook",
+                "page": 13,
+                "kind": "mcq",
+                "prompt": "أيّ كلمة فيها حرف المد الألف؟",
+                "correctIndex": 0,
+                "difficulty": 1,
+                "choices": [
+                  "بارِد",
+                  "فول",
+                  "قِرد"
+                ]
+              },
+              {
+                "id": "u1-l3-t03",
+                "origin": "textbook",
+                "page": 13,
+                "kind": "mcq",
+                "prompt": "أيّ كلمة تنتهي بحرف المد الألف (ى)؟",
+                "correctIndex": 0,
+                "difficulty": 1,
+                "choices": [
+                  "مُستشفى",
+                  "نار",
+                  "دار"
+                ]
+              },
+              {
+                "id": "u1-l3-t04",
+                "origin": "textbook",
+                "page": 12,
+                "kind": "mcq",
+                "prompt": "حرف المد الألف يُسبَق بحرف حركته:",
+                "correctIndex": 0,
+                "difficulty": 1,
+                "choices": [
+                  "الفتحة",
+                  "الضمة",
+                  "الكسرة"
+                ]
+              },
+              {
+                "id": "u1-l3-t05",
+                "origin": "textbook",
+                "kind": "order",
+                "prompt": "رتّب الحروف لتكوّن كلمة",
+                "answer": "دار",
+                "difficulty": 1,
+                "page": 12
+              },
+              {
+                "id": "u1-l3-t06",
+                "origin": "textbook",
+                "kind": "order",
+                "prompt": "رتّب الحروف لتكوّن كلمة",
+                "answer": "عصا",
+                "difficulty": 1,
+                "page": 12
+              },
+              {
+                "id": "u1-l3-t07",
+                "origin": "textbook",
+                "kind": "order",
+                "prompt": "رتّب الحروف لتكوّن كلمة",
+                "answer": "غزال",
+                "difficulty": 1,
+                "page": 13
+              },
+              {
+                "id": "u1-l3-t08",
+                "origin": "textbook",
+                "kind": "order",
+                "prompt": "رتّب الحروف لتكوّن كلمة",
+                "answer": "قطار",
+                "difficulty": 1,
+                "page": 13
+              },
+              {
+                "id": "u1-l3-g01",
+                "origin": "generated",
+                "kind": "mcq",
+                "prompt": "أيّ كلمة فيها حرف المد الألف؟",
+                "correctIndex": 0,
+                "difficulty": 1,
+                "choices": [
+                  "ماء",
+                  "بيت",
+                  "توت"
+                ]
+              }
+            ],
+            "number": 3,
+            "games": [
+              {
+                "template": "words"
+              },
+              {
+                "template": "quiz"
+              }
+            ]
+          },
+          {
+            "id": "u1-l4",
+            "title": "حَرْفُ الْمَدِّ الْواوُ (و)",
+            "pages": [
+              14,
+              15
+            ],
+            "questions": [
+              {
+                "id": "u1-l4-t01",
+                "origin": "textbook",
+                "page": 15,
+                "kind": "mcq",
+                "prompt": "أيّ كلمة فيها حرف المد الواو؟",
+                "correctIndex": 0,
+                "difficulty": 1,
+                "choices": [
+                  "فول",
+                  "سعيد",
+                  "مازِن"
+                ]
+              },
+              {
+                "id": "u1-l4-t02",
+                "origin": "textbook",
+                "page": 15,
+                "kind": "mcq",
+                "prompt": "أيّ كلمة فيها حرف المد الواو؟",
+                "correctIndex": 0,
+                "difficulty": 1,
+                "choices": [
+                  "توت",
+                  "مازِن",
+                  "سعيد"
+                ]
+              },
+              {
+                "id": "u1-l4-t03",
+                "origin": "textbook",
+                "page": 14,
+                "kind": "mcq",
+                "prompt": "حرف المد الواو يُسبَق بحرف حركته:",
+                "correctIndex": 1,
+                "difficulty": 1,
+                "choices": [
+                  "الفتحة",
+                  "الضمة",
+                  "الكسرة"
+                ]
+              },
+              {
+                "id": "u1-l4-t04",
+                "origin": "textbook",
+                "page": 14,
+                "kind": "mcq",
+                "prompt": "حرف الواو له شكل واحد، ولا يتّصل بالحرف الذي بعده.",
+                "correctIndex": 0,
+                "difficulty": 1,
+                "choices": [
+                  "صح",
+                  "خطأ"
+                ]
+              },
+              {
+                "id": "u1-l4-t05",
+                "origin": "textbook",
+                "kind": "order",
+                "prompt": "رتّب الحروف لتكوّن كلمة",
+                "answer": "كوب",
+                "difficulty": 1,
+                "page": 14
+              },
+              {
+                "id": "u1-l4-t06",
+                "origin": "textbook",
+                "kind": "order",
+                "prompt": "رتّب الحروف لتكوّن كلمة",
+                "answer": "بوق",
+                "difficulty": 1,
+                "page": 14
+              },
+              {
+                "id": "u1-l4-t07",
+                "origin": "textbook",
+                "kind": "order",
+                "prompt": "رتّب الحروف لتكوّن كلمة",
+                "answer": "توت",
+                "difficulty": 1,
+                "page": 14
+              },
+              {
+                "id": "u1-l4-t08",
+                "origin": "textbook",
+                "kind": "order",
+                "prompt": "رتّب الحروف لتكوّن كلمة",
+                "answer": "نجوم",
+                "difficulty": 1,
+                "page": 15
+              },
+              {
+                "id": "u1-l4-g01",
+                "origin": "generated",
+                "kind": "mcq",
+                "prompt": "أيّ كلمة فيها حرف المد الواو؟",
+                "correctIndex": 0,
+                "difficulty": 1,
+                "choices": [
+                  "صابون",
+                  "باب",
+                  "شادي"
+                ]
+              }
+            ],
+            "number": 4,
+            "games": [
+              {
+                "template": "words"
+              },
+              {
+                "template": "quiz"
+              }
+            ]
+          },
+          {
+            "id": "u1-l5",
+            "title": "حَرْفُ الْمَدِّ الْياءُ (ي، يـ)",
+            "pages": [
+              16,
+              17
+            ],
+            "questions": [
+              {
+                "id": "u1-l5-t01",
+                "origin": "textbook",
+                "page": 17,
+                "kind": "mcq",
+                "prompt": "أيّ كلمة فيها حرف المد الياء؟",
+                "correctIndex": 0,
+                "difficulty": 1,
+                "choices": [
+                  "عصير",
+                  "باب"
+                ]
+              },
+              {
+                "id": "u1-l5-t02",
+                "origin": "textbook",
+                "page": 17,
+                "kind": "mcq",
+                "prompt": "أيّ كلمة فيها حرف المد الياء؟",
+                "correctIndex": 0,
+                "difficulty": 1,
+                "choices": [
+                  "أخي",
+                  "باب"
+                ]
+              },
+              {
+                "id": "u1-l5-t03",
+                "origin": "textbook",
+                "page": 16,
+                "kind": "mcq",
+                "prompt": "حرف المد الياء يُسبَق بحرف حركته:",
+                "correctIndex": 2,
+                "difficulty": 1,
+                "choices": [
+                  "الفتحة",
+                  "الضمة",
+                  "الكسرة"
+                ]
+              },
+              {
+                "id": "u1-l5-t04",
+                "origin": "textbook",
+                "page": 17,
+                "kind": "mcq",
+                "prompt": "أيّ كلمة فيها حرف المد الياء؟",
+                "correctIndex": 0,
+                "difficulty": 1,
+                "choices": [
+                  "ريش",
+                  "نار",
+                  "فول"
+                ]
+              },
+              {
+                "id": "u1-l5-t05",
+                "origin": "textbook",
+                "kind": "order",
+                "prompt": "رتّب الحروف لتكوّن كلمة",
+                "answer": "حليب",
+                "difficulty": 1,
+                "page": 16
+              },
+              {
+                "id": "u1-l5-t06",
+                "origin": "textbook",
+                "kind": "order",
+                "prompt": "رتّب الحروف لتكوّن كلمة",
+                "answer": "قميص",
+                "difficulty": 1,
+                "page": 16
+              },
+              {
+                "id": "u1-l5-t07",
+                "origin": "textbook",
+                "kind": "order",
+                "prompt": "رتّب الحروف لتكوّن كلمة",
+                "answer": "تين",
+                "difficulty": 1,
+                "page": 17
+              },
+              {
+                "id": "u1-l5-t08",
+                "origin": "textbook",
+                "kind": "order",
+                "prompt": "رتّب الحروف لتكوّن كلمة",
+                "answer": "فيل",
+                "difficulty": 1,
+                "page": 17
+              },
+              {
+                "id": "u1-l5-t09",
+                "origin": "textbook",
+                "kind": "order",
+                "prompt": "رتّب الحروف لتكوّن كلمة",
+                "answer": "ديك",
+                "difficulty": 1,
+                "page": 17
+              }
+            ],
+            "number": 5,
+            "games": [
+              {
+                "template": "words"
+              },
+              {
+                "template": "quiz"
+              }
+            ]
+          },
+          {
+            "id": "u1-hk",
+            "title": "الْحَرَكاتُ وَالسُّكونُ",
+            "pages": [
+              19,
+              19
+            ],
+            "questions": [
+              {
+                "id": "u1-hk-t01",
+                "origin": "textbook",
+                "page": 19,
+                "kind": "mcq",
+                "prompt": "ما الحركة على الحرف «دُ»؟",
+                "correctIndex": 1,
+                "difficulty": 1,
+                "choices": [
+                  "الفتحة",
+                  "الضمة",
+                  "الكسرة",
+                  "السكون"
+                ]
+              },
+              {
+                "id": "u1-hk-t02",
+                "origin": "textbook",
+                "page": 19,
+                "kind": "mcq",
+                "prompt": "ما الحركة على الحرف «بَ»؟",
+                "correctIndex": 0,
+                "difficulty": 1,
+                "choices": [
+                  "الفتحة",
+                  "الضمة",
+                  "الكسرة",
+                  "السكون"
+                ]
+              },
+              {
+                "id": "u1-hk-t03",
+                "origin": "textbook",
+                "page": 19,
+                "kind": "mcq",
+                "prompt": "ما الحركة على الحرف «ذِ»؟",
+                "correctIndex": 2,
+                "difficulty": 1,
+                "choices": [
+                  "الفتحة",
+                  "الضمة",
+                  "الكسرة",
+                  "السكون"
+                ]
+              },
+              {
+                "id": "u1-hk-t04",
+                "origin": "textbook",
+                "page": 19,
+                "kind": "mcq",
+                "prompt": "ما الذي يُرسم على الحرف «سْ»؟",
+                "correctIndex": 3,
+                "difficulty": 1,
+                "choices": [
+                  "الفتحة",
+                  "الضمة",
+                  "الكسرة",
+                  "السكون"
+                ]
+              },
+              {
+                "id": "u1-hk-t05",
+                "origin": "textbook",
+                "page": 19,
+                "kind": "mcq",
+                "prompt": "السكون يُرسم على الحرف الذي:",
+                "correctIndex": 0,
+                "difficulty": 1,
+                "choices": [
+                  "لا يحمل حركة",
+                  "يحمل فتحة",
+                  "يحمل ضمة"
+                ]
+              },
+              {
+                "id": "u1-hk-t06",
+                "origin": "textbook",
+                "page": 19,
+                "kind": "mcq",
+                "prompt": "في كلمة «تَمْر» الحرف الساكن هو:",
+                "correctIndex": 0,
+                "difficulty": 1,
+                "choices": [
+                  "مْ",
+                  "تَ",
+                  "ر"
+                ]
+              },
+              {
+                "id": "u1-hk-t07",
+                "origin": "textbook",
+                "kind": "match",
+                "prompt": "طابق كل حرف مع حركته",
+                "pairs": [
+                  {
+                    "a": "رَ",
+                    "b": "الفتحة"
+                  },
+                  {
+                    "a": "كُ",
+                    "b": "الضمة"
+                  },
+                  {
+                    "a": "ذِ",
+                    "b": "الكسرة"
+                  },
+                  {
+                    "a": "سْ",
+                    "b": "السكون"
+                  }
+                ],
+                "difficulty": 1,
+                "page": 19
+              },
+              {
+                "id": "u1-hk-g01",
+                "origin": "generated",
+                "kind": "mcq",
+                "prompt": "أيّ حرف عليه سكون؟",
+                "correctIndex": 0,
+                "difficulty": 1,
+                "choices": [
+                  "رْ",
+                  "رَ",
+                  "رُ",
+                  "رِ"
+                ]
+              }
+            ],
+            "games": [
+              {
+                "template": "quiz"
+              },
+              {
+                "template": "memory"
+              }
+            ]
+          },
+          {
+            "id": "u1-l6",
+            "title": "حَرْفُ الْباءِ (ب، بـ)",
+            "pages": [
+              20,
+              23
+            ],
+            "questions": [
+              {
+                "id": "u1-l6-t01",
+                "origin": "textbook",
+                "page": 20,
+                "kind": "mcq",
+                "prompt": "أيّ كلمة تبدأ بحرف الباء؟",
+                "correctIndex": 0,
+                "difficulty": 1,
+                "choices": [
+                  "بحر",
+                  "عنب",
+                  "حبل"
+                ]
+              },
+              {
+                "id": "u1-l6-t02",
+                "origin": "textbook",
+                "page": 20,
+                "kind": "mcq",
+                "prompt": "أين حرف الباء في كلمة «عنب»؟",
+                "correctIndex": 2,
+                "difficulty": 1,
+                "choices": [
+                  "في أولها",
+                  "في وسطها",
+                  "في آخرها"
+                ]
+              },
+              {
+                "id": "u1-l6-t03",
+                "origin": "textbook",
+                "page": 20,
+                "kind": "mcq",
+                "prompt": "أين حرف الباء في كلمة «حبل»؟",
+                "correctIndex": 1,
+                "difficulty": 1,
+                "choices": [
+                  "في أولها",
+                  "في وسطها",
+                  "في آخرها"
+                ]
+              },
+              {
+                "id": "u1-l6-t04",
+                "origin": "textbook",
+                "page": 21,
+                "kind": "mcq",
+                "prompt": "ما الحركة على الباء في «بَقرة»؟",
+                "correctIndex": 0,
+                "difficulty": 1,
+                "choices": [
+                  "الفتحة",
+                  "الضمة",
+                  "الكسرة"
+                ]
+              },
+              {
+                "id": "u1-l6-t05",
+                "origin": "textbook",
+                "page": 21,
+                "kind": "mcq",
+                "prompt": "ما الحركة على الباء في «بُرتقال»؟",
+                "correctIndex": 1,
+                "difficulty": 1,
+                "choices": [
+                  "الفتحة",
+                  "الضمة",
+                  "الكسرة"
+                ]
+              },
+              {
+                "id": "u1-l6-t06",
+                "origin": "textbook",
+                "page": 21,
+                "kind": "mcq",
+                "prompt": "ما الحركة على الباء في «بِئر»؟",
+                "correctIndex": 2,
+                "difficulty": 1,
+                "choices": [
+                  "الفتحة",
+                  "الضمة",
+                  "الكسرة"
+                ]
+              },
+              {
+                "id": "u1-l6-t07",
+                "origin": "textbook",
+                "page": 22,
+                "kind": "mcq",
+                "prompt": "بَا + بِي = ؟",
+                "correctIndex": 0,
+                "difficulty": 1,
+                "choices": [
+                  "بابي",
+                  "بابا",
+                  "بابُ"
+                ]
+              },
+              {
+                "id": "u1-l6-t08",
+                "origin": "textbook",
+                "kind": "order",
+                "prompt": "رتّب الحروف لتكوّن كلمة",
+                "answer": "باب",
+                "difficulty": 1,
+                "page": 20
+              },
+              {
+                "id": "u1-l6-t09",
+                "origin": "textbook",
+                "kind": "order",
+                "prompt": "رتّب الحروف لتكوّن كلمة",
+                "answer": "بحر",
+                "difficulty": 1,
+                "page": 20
+              },
+              {
+                "id": "u1-l6-t10",
+                "origin": "textbook",
+                "kind": "order",
+                "prompt": "رتّب الحروف لتكوّن كلمة",
+                "answer": "كلب",
+                "difficulty": 1,
+                "page": 22
+              }
+            ],
+            "number": 6,
+            "games": [
+              {
+                "template": "words"
+              },
+              {
+                "template": "quiz"
+              }
+            ]
+          },
+          {
+            "id": "u1-l7",
+            "title": "حَرْفُ الْميمِ (م، مـ)",
+            "pages": [
+              24,
+              31
+            ],
+            "questions": [
+              {
+                "id": "u1-l7-t01",
+                "origin": "textbook",
+                "page": 24,
+                "kind": "mcq",
+                "prompt": "أيّ كلمة تبدأ بحرف الميم؟",
+                "correctIndex": 0,
+                "difficulty": 1,
+                "choices": [
+                  "مِقص",
+                  "شمس",
+                  "قلم"
+                ]
+              },
+              {
+                "id": "u1-l7-t02",
+                "origin": "textbook",
+                "page": 24,
+                "kind": "mcq",
+                "prompt": "أين حرف الميم في كلمة «قلم»؟",
+                "correctIndex": 2,
+                "difficulty": 1,
+                "choices": [
+                  "في أولها",
+                  "في وسطها",
+                  "في آخرها"
+                ]
+              },
+              {
+                "id": "u1-l7-t03",
+                "origin": "textbook",
+                "page": 24,
+                "kind": "mcq",
+                "prompt": "أين حرف الميم في كلمة «شمس»؟",
+                "correctIndex": 1,
+                "difficulty": 1,
+                "choices": [
+                  "في أولها",
+                  "في وسطها",
+                  "في آخرها"
+                ]
+              },
+              {
+                "id": "u1-l7-t04",
+                "origin": "textbook",
+                "page": 25,
+                "kind": "mcq",
+                "prompt": "ما الحركة على الميم في «مَلعب»؟",
+                "correctIndex": 0,
+                "difficulty": 1,
+                "choices": [
+                  "الفتحة",
+                  "الضمة",
+                  "الكسرة"
+                ]
+              },
+              {
+                "id": "u1-l7-t05",
+                "origin": "textbook",
+                "page": 25,
+                "kind": "mcq",
+                "prompt": "ما الحركة على الميم في «مُصحف»؟",
+                "correctIndex": 1,
+                "difficulty": 1,
+                "choices": [
+                  "الفتحة",
+                  "الضمة",
+                  "الكسرة"
+                ]
+              },
+              {
+                "id": "u1-l7-t06",
+                "origin": "textbook",
+                "page": 25,
+                "kind": "mcq",
+                "prompt": "ما الحركة على الميم في «مِفتاح»؟",
+                "correctIndex": 2,
+                "difficulty": 1,
+                "choices": [
+                  "الفتحة",
+                  "الضمة",
+                  "الكسرة"
+                ]
+              },
+              {
+                "id": "u1-l7-t07",
+                "origin": "textbook",
+                "page": 26,
+                "kind": "mcq",
+                "prompt": "مَا + مَا = ؟",
+                "correctIndex": 0,
+                "difficulty": 1,
+                "choices": [
+                  "ماما",
+                  "مامي",
+                  "موم"
+                ]
+              },
+              {
+                "id": "u1-l7-t08",
+                "origin": "textbook",
+                "kind": "order",
+                "prompt": "رتّب الحروف لتكوّن كلمة",
+                "answer": "قلم",
+                "difficulty": 1,
+                "page": 24
+              },
+              {
+                "id": "u1-l7-t09",
+                "origin": "textbook",
+                "kind": "order",
+                "prompt": "رتّب الحروف لتكوّن كلمة",
+                "answer": "شمس",
+                "difficulty": 1,
+                "page": 24
+              },
+              {
+                "id": "u1-l7-t10",
+                "origin": "textbook",
+                "kind": "order",
+                "prompt": "رتّب الحروف لتكوّن كلمة",
+                "answer": "قمر",
+                "difficulty": 1,
+                "page": 26
+              }
+            ],
+            "number": 7,
+            "games": [
+              {
+                "template": "words"
+              },
+              {
+                "template": "quiz"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "u2",
+        "number": 2,
+        "title": "الْوَحْدَةُ الثّانِيَةُ: أَنا أُحِبُّ وَطَني",
+        "semester": 1,
+        "pages": [
+          32,
+          65
+        ],
+        "lessons": [
+          {
+            "id": "u2-l1",
+            "title": "أَسْتَمِعُ بِانْتِباهٍ وَتَرْكيزٍ",
+            "pages": [
+              32,
+              33
+            ],
+            "questions": [],
+            "number": 1
+          },
+          {
+            "id": "u2-l2",
+            "title": "أَتَحَدَّثُ بِطَلاقَةٍ",
+            "pages": [
+              34,
+              34
+            ],
+            "questions": [],
+            "number": 2
+          },
+          {
+            "id": "u2-l3",
+            "title": "حَرْفُ اللّامِ (ل، لـ)",
+            "pages": [
+              35,
+              39
+            ],
+            "questions": [
+              {
+                "id": "u2-l3-t01",
+                "origin": "textbook",
+                "page": 35,
+                "kind": "mcq",
+                "prompt": "أيّ كلمة تبدأ بحرف اللام؟",
+                "correctIndex": 0,
+                "difficulty": 1,
+                "choices": [
+                  "لحم",
+                  "عسل",
+                  "هلال"
+                ]
+              },
+              {
+                "id": "u2-l3-t02",
+                "origin": "textbook",
+                "page": 35,
+                "kind": "mcq",
+                "prompt": "أين حرف اللام في كلمة «عسل»؟",
+                "correctIndex": 2,
+                "difficulty": 1,
+                "choices": [
+                  "في أولها",
+                  "في وسطها",
+                  "في آخرها"
+                ]
+              },
+              {
+                "id": "u2-l3-t03",
+                "origin": "textbook",
+                "page": 35,
+                "kind": "mcq",
+                "prompt": "أين حرف اللام في كلمة «حليب»؟",
+                "correctIndex": 1,
+                "difficulty": 1,
+                "choices": [
+                  "في أولها",
+                  "في وسطها",
+                  "في آخرها"
+                ]
+              },
+              {
+                "id": "u2-l3-t04",
+                "origin": "textbook",
+                "page": 36,
+                "kind": "mcq",
+                "prompt": "ما المقطع الأول في كلمة «مَلْعَب»؟",
+                "correctIndex": 0,
+                "difficulty": 1,
+                "choices": [
+                  "مَلْ",
+                  "مَا",
+                  "مِلْ"
+                ]
+              },
+              {
+                "id": "u2-l3-t05",
+                "origin": "textbook",
+                "page": 36,
+                "kind": "mcq",
+                "prompt": "ما المقطع الأول في كلمة «بُلْبُل»؟",
+                "correctIndex": 0,
+                "difficulty": 1,
+                "choices": [
+                  "بُلْ",
+                  "بَلْ",
+                  "بُو"
+                ]
+              },
+              {
+                "id": "u2-l3-t06",
+                "origin": "textbook",
+                "page": 36,
+                "kind": "mcq",
+                "prompt": "أيّ مقطع فيه مدّ؟",
+                "correctIndex": 0,
+                "difficulty": 1,
+                "choices": [
+                  "لا",
+                  "لَ",
+                  "لْ"
+                ]
+              },
+              {
+                "id": "u2-l3-t07",
+                "origin": "textbook",
+                "kind": "order",
+                "prompt": "رتّب الحروف لتكوّن كلمة",
+                "answer": "لحم",
+                "difficulty": 1,
+                "page": 35
+              },
+              {
+                "id": "u2-l3-t08",
+                "origin": "textbook",
+                "kind": "order",
+                "prompt": "رتّب الحروف لتكوّن كلمة",
+                "answer": "ملح",
+                "difficulty": 1,
+                "page": 35
+              },
+              {
+                "id": "u2-l3-t09",
+                "origin": "textbook",
+                "kind": "order",
+                "prompt": "رتّب الحروف لتكوّن كلمة",
+                "answer": "لبن",
+                "difficulty": 1,
+                "page": 35
+              },
+              {
+                "id": "u2-l3-t10",
+                "origin": "textbook",
+                "kind": "order",
+                "prompt": "رتّب الحروف لتكوّن كلمة",
+                "answer": "بالون",
+                "difficulty": 1,
+                "page": 35
+              }
+            ],
+            "number": 3,
+            "games": [
+              {
+                "template": "words"
+              },
+              {
+                "template": "quiz"
+              }
+            ]
+          },
+          {
+            "id": "u2-l4",
+            "title": "حَرْفُ الدّالِ (د)",
+            "pages": [
+              40,
+              44
+            ],
+            "questions": [
+              {
+                "id": "u2-l4-t01",
+                "origin": "textbook",
+                "page": 40,
+                "kind": "mcq",
+                "prompt": "أيّ كلمة تبدأ بحرف الدال؟",
+                "correctIndex": 0,
+                "difficulty": 1,
+                "choices": [
+                  "ديك",
+                  "أسد",
+                  "بدر"
+                ]
+              },
+              {
+                "id": "u2-l4-t02",
+                "origin": "textbook",
+                "page": 40,
+                "kind": "mcq",
+                "prompt": "أين حرف الدال في كلمة «أسد»؟",
+                "correctIndex": 2,
+                "difficulty": 1,
+                "choices": [
+                  "في أولها",
+                  "في وسطها",
+                  "في آخرها"
+                ]
+              },
+              {
+                "id": "u2-l4-t03",
+                "origin": "textbook",
+                "page": 40,
+                "kind": "mcq",
+                "prompt": "أين حرف الدال في كلمة «بدر»؟",
+                "correctIndex": 1,
+                "difficulty": 1,
+                "choices": [
+                  "في أولها",
+                  "في وسطها",
+                  "في آخرها"
+                ]
+              },
+              {
+                "id": "u2-l4-t04",
+                "origin": "textbook",
+                "page": 40,
+                "kind": "mcq",
+                "prompt": "حرف الدال له شكل واحد، ولا يتّصل بالحرف الذي بعده.",
+                "correctIndex": 0,
+                "difficulty": 1,
+                "choices": [
+                  "صح",
+                  "خطأ"
+                ]
+              },
+              {
+                "id": "u2-l4-t05",
+                "origin": "textbook",
+                "page": 41,
+                "kind": "mcq",
+                "prompt": "ما المقطع الأول في كلمة «مَدْرَسة»؟",
+                "correctIndex": 0,
+                "difficulty": 1,
+                "choices": [
+                  "مَدْ",
+                  "مَا",
+                  "مُدْ"
+                ]
+              },
+              {
+                "id": "u2-l4-t06",
+                "origin": "textbook",
+                "page": 41,
+                "kind": "mcq",
+                "prompt": "ما المقطع الأول في كلمة «هُدْهُد»؟",
+                "correctIndex": 0,
+                "difficulty": 1,
+                "choices": [
+                  "هُدْ",
+                  "هَدْ",
+                  "هُو"
+                ]
+              },
+              {
+                "id": "u2-l4-t07",
+                "origin": "textbook",
+                "kind": "order",
+                "prompt": "رتّب الحروف لتكوّن كلمة",
+                "answer": "دار",
+                "difficulty": 1,
+                "page": 40
+              },
+              {
+                "id": "u2-l4-t08",
+                "origin": "textbook",
+                "kind": "order",
+                "prompt": "رتّب الحروف لتكوّن كلمة",
+                "answer": "درج",
+                "difficulty": 1,
+                "page": 40
+              },
+              {
+                "id": "u2-l4-t09",
+                "origin": "textbook",
+                "kind": "order",
+                "prompt": "رتّب الحروف لتكوّن كلمة",
+                "answer": "ديك",
+                "difficulty": 1,
+                "page": 40
+              },
+              {
+                "id": "u2-l4-t10",
+                "origin": "textbook",
+                "kind": "order",
+                "prompt": "رتّب الحروف لتكوّن كلمة",
+                "answer": "دهان",
+                "difficulty": 1,
+                "page": 40
+              }
+            ],
+            "number": 4,
+            "games": [
+              {
+                "template": "words"
+              },
+              {
+                "template": "quiz"
+              }
+            ]
+          },
+          {
+            "id": "u2-l5",
+            "title": "حَرْفُ النّونِ (ن، نـ)",
+            "pages": [
+              45,
+              49
+            ],
+            "questions": [
+              {
+                "id": "u2-l5-t01",
+                "origin": "textbook",
+                "page": 45,
+                "kind": "mcq",
+                "prompt": "أيّ كلمة تبدأ بحرف النون؟",
+                "correctIndex": 0,
+                "difficulty": 1,
+                "choices": [
+                  "نمر",
+                  "أذن",
+                  "منزل"
+                ]
+              },
+              {
+                "id": "u2-l5-t02",
+                "origin": "textbook",
+                "page": 45,
+                "kind": "mcq",
+                "prompt": "أين حرف النون في كلمة «أذن»؟",
+                "correctIndex": 2,
+                "difficulty": 1,
+                "choices": [
+                  "في أولها",
+                  "في وسطها",
+                  "في آخرها"
+                ]
+              },
+              {
+                "id": "u2-l5-t03",
+                "origin": "textbook",
+                "page": 45,
+                "kind": "mcq",
+                "prompt": "أين حرف النون في كلمة «منزل»؟",
+                "correctIndex": 1,
+                "difficulty": 1,
+                "choices": [
+                  "في أولها",
+                  "في وسطها",
+                  "في آخرها"
+                ]
+              },
+              {
+                "id": "u2-l5-t04",
+                "origin": "textbook",
+                "page": 46,
+                "kind": "mcq",
+                "prompt": "ما المقطع الأول في كلمة «مَنْزِل»؟",
+                "correctIndex": 0,
+                "difficulty": 1,
+                "choices": [
+                  "مَنْ",
+                  "مِنْ",
+                  "مَا"
+                ]
+              },
+              {
+                "id": "u2-l5-t05",
+                "origin": "textbook",
+                "page": 46,
+                "kind": "mcq",
+                "prompt": "ما المقطع الأول في كلمة «بُنْدُق»؟",
+                "correctIndex": 0,
+                "difficulty": 1,
+                "choices": [
+                  "بُنْ",
+                  "بَنْ",
+                  "بُو"
+                ]
+              },
+              {
+                "id": "u2-l5-t06",
+                "origin": "textbook",
+                "page": 46,
+                "kind": "mcq",
+                "prompt": "ما المقطع الأول في كلمة «بِنْطال»؟",
+                "correctIndex": 0,
+                "difficulty": 1,
+                "choices": [
+                  "بِنْ",
+                  "بَنْ",
+                  "بِي"
+                ]
+              },
+              {
+                "id": "u2-l5-t07",
+                "origin": "textbook",
+                "page": 46,
+                "kind": "mcq",
+                "prompt": "أيّ مقطع فيه مدّ؟",
+                "correctIndex": 0,
+                "difficulty": 1,
+                "choices": [
+                  "نو",
+                  "نُ",
+                  "نْ"
+                ]
+              },
+              {
+                "id": "u2-l5-t08",
+                "origin": "textbook",
+                "kind": "order",
+                "prompt": "رتّب الحروف لتكوّن كلمة",
+                "answer": "نمر",
+                "difficulty": 1,
+                "page": 45
+              },
+              {
+                "id": "u2-l5-t09",
+                "origin": "textbook",
+                "kind": "order",
+                "prompt": "رتّب الحروف لتكوّن كلمة",
+                "answer": "نمل",
+                "difficulty": 1,
+                "page": 45
+              },
+              {
+                "id": "u2-l5-t10",
+                "origin": "textbook",
+                "kind": "order",
+                "prompt": "رتّب الحروف لتكوّن كلمة",
+                "answer": "نجوم",
+                "difficulty": 1,
+                "page": 45
+              },
+              {
+                "id": "u2-l5-t11",
+                "origin": "textbook",
+                "kind": "order",
+                "prompt": "رتّب الحروف لتكوّن كلمة",
+                "answer": "فانوس",
+                "difficulty": 1,
+                "page": 45
+              }
+            ],
+            "number": 5,
+            "games": [
+              {
+                "template": "words"
+              },
+              {
+                "template": "quiz"
+              }
+            ]
+          },
+          {
+            "id": "u2-l6",
+            "title": "تَنْوينُ الضَّمِّ",
+            "pages": [
+              51,
+              52
+            ],
+            "questions": [
+              {
+                "id": "u2-l6-t01",
+                "origin": "textbook",
+                "page": 51,
+                "kind": "mcq",
+                "prompt": "تنوين الضم «ـٌ» يشبه في الرسم:",
+                "correctIndex": 1,
+                "difficulty": 1,
+                "choices": [
+                  "الفتحة",
+                  "الضمة",
+                  "الكسرة"
+                ]
+              },
+              {
+                "id": "u2-l6-t02",
+                "origin": "textbook",
+                "page": 51,
+                "kind": "mcq",
+                "prompt": "أيّ كلمة فيها تنوين الضم؟",
+                "correctIndex": 0,
+                "difficulty": 1,
+                "choices": [
+                  "بَرْقٌ",
+                  "القارِبُ",
+                  "القَمَرُ"
+                ]
+              },
+              {
+                "id": "u2-l6-t03",
+                "origin": "textbook",
+                "page": 51,
+                "kind": "mcq",
+                "prompt": "التنوين نون زائدة تُلفظ ولا تُكتب.",
+                "correctIndex": 0,
+                "difficulty": 1,
+                "choices": [
+                  "صح",
+                  "خطأ"
+                ]
+              },
+              {
+                "id": "u2-l6-t04",
+                "origin": "textbook",
+                "page": 52,
+                "kind": "mcq",
+                "prompt": "التنوين لا يأتي إلّا في نهاية الكلمات.",
+                "correctIndex": 0,
+                "difficulty": 1,
+                "choices": [
+                  "صح",
+                  "خطأ"
+                ]
+              },
+              {
+                "id": "u2-l6-t05",
+                "origin": "textbook",
+                "page": 52,
+                "kind": "mcq",
+                "prompt": "ما الحرف الأخير الذي عليه تنوين الضم في كلمة «بابٌ»؟",
+                "correctIndex": 0,
+                "difficulty": 1,
+                "choices": [
+                  "بٌ",
+                  "ا",
+                  "بَ"
+                ]
+              },
+              {
+                "id": "u2-l6-t06",
+                "origin": "textbook",
+                "page": 52,
+                "kind": "mcq",
+                "prompt": "أيّ كلمة كُتب عليها تنوين الضم صحيحًا؟",
+                "correctIndex": 0,
+                "difficulty": 1,
+                "choices": [
+                  "جَبَلٌ",
+                  "جَبَلْ",
+                  "جَبَلَ"
+                ]
+              },
+              {
+                "id": "u2-l6-t07",
+                "origin": "textbook",
+                "page": 51,
+                "kind": "mcq",
+                "prompt": "أيّ كلمة فيها تنوين الضم؟",
+                "correctIndex": 0,
+                "difficulty": 1,
+                "choices": [
+                  "قَلَمٌ",
+                  "قَلَمُ",
+                  "قَلَمْ"
+                ]
+              },
+              {
+                "id": "u2-l6-t08",
+                "origin": "textbook",
+                "kind": "match",
+                "prompt": "طابق كل كلمة مع حرفها الأخير المنوّن",
+                "pairs": [
+                  {
+                    "a": "أَسَدٌ",
+                    "b": "دٌ"
+                  },
+                  {
+                    "a": "عَسَلٌ",
+                    "b": "لٌ"
+                  },
+                  {
+                    "a": "قَلَمٌ",
+                    "b": "مٌ"
+                  },
+                  {
+                    "a": "أُذُنٌ",
+                    "b": "نٌ"
+                  }
+                ],
+                "difficulty": 1,
+                "page": 51
+              },
+              {
+                "id": "u2-l6-g01",
+                "origin": "generated",
+                "kind": "truefalse",
+                "prompt": "في كلمة «مَطَرٌ» تنوين ضم على الحرف الأخير.",
+                "correctIndex": 0,
+                "difficulty": 1
+              }
+            ],
+            "number": 6,
+            "games": [
+              {
+                "template": "quiz"
+              },
+              {
+                "template": "memory"
+              }
+            ]
+          },
+          {
+            "id": "u2-l7",
+            "title": "حَرْفُ الرّاءِ (ر)",
+            "pages": [
+              53,
+              57
+            ],
+            "questions": [
+              {
+                "id": "u2-l7-t01",
+                "origin": "textbook",
+                "page": 53,
+                "kind": "mcq",
+                "prompt": "أيّ كلمة تبدأ بحرف الراء؟",
+                "correctIndex": 0,
+                "difficulty": 1,
+                "choices": [
+                  "رمل",
+                  "سرير",
+                  "خيار"
+                ]
+              },
+              {
+                "id": "u2-l7-t02",
+                "origin": "textbook",
+                "page": 53,
+                "kind": "mcq",
+                "prompt": "أين حرف الراء في كلمة «خيار»؟",
+                "correctIndex": 2,
+                "difficulty": 1,
+                "choices": [
+                  "في أولها",
+                  "في وسطها",
+                  "في آخرها"
+                ]
+              },
+              {
+                "id": "u2-l7-t03",
+                "origin": "textbook",
+                "page": 53,
+                "kind": "mcq",
+                "prompt": "أين حرف الراء في كلمة «كرسي»؟",
+                "correctIndex": 1,
+                "difficulty": 1,
+                "choices": [
+                  "في أولها",
+                  "في وسطها",
+                  "في آخرها"
+                ]
+              },
+              {
+                "id": "u2-l7-t04",
+                "origin": "textbook",
+                "page": 53,
+                "kind": "mcq",
+                "prompt": "حرف الراء له شكل واحد، ولا يتّصل بالحرف الذي يليه.",
+                "correctIndex": 0,
+                "difficulty": 1,
+                "choices": [
+                  "صح",
+                  "خطأ"
+                ]
+              },
+              {
+                "id": "u2-l7-t05",
+                "origin": "textbook",
+                "page": 54,
+                "kind": "mcq",
+                "prompt": "ما المقطع الأول في كلمة «مَرْكَب»؟",
+                "correctIndex": 0,
+                "difficulty": 1,
+                "choices": [
+                  "مَرْ",
+                  "مِرْ",
+                  "مَا"
+                ]
+              },
+              {
+                "id": "u2-l7-t06",
+                "origin": "textbook",
+                "page": 54,
+                "kind": "mcq",
+                "prompt": "ما المقطع الأول في كلمة «بُرْتُقال»؟",
+                "correctIndex": 0,
+                "difficulty": 1,
+                "choices": [
+                  "بُرْ",
+                  "بَرْ",
+                  "بُو"
+                ]
+              },
+              {
+                "id": "u2-l7-t07",
+                "origin": "textbook",
+                "kind": "order",
+                "prompt": "رتّب الحروف لتكوّن كلمة",
+                "answer": "رمل",
+                "difficulty": 1,
+                "page": 53
+              },
+              {
+                "id": "u2-l7-t08",
+                "origin": "textbook",
+                "kind": "order",
+                "prompt": "رتّب الحروف لتكوّن كلمة",
+                "answer": "رمان",
+                "difficulty": 1,
+                "page": 53
+              },
+              {
+                "id": "u2-l7-t09",
+                "origin": "textbook",
+                "kind": "order",
+                "prompt": "رتّب الحروف لتكوّن كلمة",
+                "answer": "خروف",
+                "difficulty": 1,
+                "page": 53
+              },
+              {
+                "id": "u2-l7-t10",
+                "origin": "textbook",
+                "kind": "order",
+                "prompt": "رتّب الحروف لتكوّن كلمة",
+                "answer": "سرير",
+                "difficulty": 1,
+                "page": 53
+              }
+            ],
+            "number": 7,
+            "games": [
+              {
+                "template": "words"
+              },
+              {
+                "template": "quiz"
+              }
+            ]
+          },
+          {
+            "id": "u2-l8",
+            "title": "حَرْفُ السّينِ (س، سـ)",
+            "pages": [
+              58,
+              65
+            ],
+            "questions": [
+              {
+                "id": "u2-l8-t01",
+                "origin": "textbook",
+                "page": 58,
+                "kind": "mcq",
+                "prompt": "أيّ كلمة تبدأ بحرف السين؟",
+                "correctIndex": 0,
+                "difficulty": 1,
+                "choices": [
+                  "سمكة",
+                  "عدس",
+                  "حاسوب"
+                ]
+              },
+              {
+                "id": "u2-l8-t02",
+                "origin": "textbook",
+                "page": 58,
+                "kind": "mcq",
+                "prompt": "أين حرف السين في كلمة «عدس»؟",
+                "correctIndex": 2,
+                "difficulty": 1,
+                "choices": [
+                  "في أولها",
+                  "في وسطها",
+                  "في آخرها"
+                ]
+              },
+              {
+                "id": "u2-l8-t03",
+                "origin": "textbook",
+                "page": 58,
+                "kind": "mcq",
+                "prompt": "أين حرف السين في كلمة «حاسوب»؟",
+                "correctIndex": 1,
+                "difficulty": 1,
+                "choices": [
+                  "في أولها",
+                  "في وسطها",
+                  "في آخرها"
+                ]
+              },
+              {
+                "id": "u2-l8-t04",
+                "origin": "textbook",
+                "page": 59,
+                "kind": "mcq",
+                "prompt": "ما المقطع الأول في كلمة «رَسْم»؟",
+                "correctIndex": 0,
+                "difficulty": 1,
+                "choices": [
+                  "رَسْ",
+                  "رَا",
+                  "رِسْ"
+                ]
+              },
+              {
+                "id": "u2-l8-t05",
+                "origin": "textbook",
+                "page": 59,
+                "kind": "mcq",
+                "prompt": "ما المقطع الأول في كلمة «بُسْتان»؟",
+                "correctIndex": 0,
+                "difficulty": 1,
+                "choices": [
+                  "بُسْ",
+                  "بَسْ",
+                  "بُو"
+                ]
+              },
+              {
+                "id": "u2-l8-t06",
+                "origin": "textbook",
+                "page": 59,
+                "kind": "mcq",
+                "prompt": "ما المقطع الأول في كلمة «مِسْطَرة»؟",
+                "correctIndex": 0,
+                "difficulty": 1,
+                "choices": [
+                  "مِسْ",
+                  "مَسْ",
+                  "مِي"
+                ]
+              },
+              {
+                "id": "u2-l8-t07",
+                "origin": "textbook",
+                "page": 59,
+                "kind": "mcq",
+                "prompt": "أيّ مقطع فيه مدّ؟",
+                "correctIndex": 0,
+                "difficulty": 1,
+                "choices": [
+                  "سي",
+                  "سِ",
+                  "سْ"
+                ]
+              },
+              {
+                "id": "u2-l8-t08",
+                "origin": "textbook",
+                "kind": "order",
+                "prompt": "رتّب الحروف لتكوّن كلمة",
+                "answer": "ساعة",
+                "difficulty": 1,
+                "page": 58
+              },
+              {
+                "id": "u2-l8-t09",
+                "origin": "textbook",
+                "kind": "order",
+                "prompt": "رتّب الحروف لتكوّن كلمة",
+                "answer": "سفينة",
+                "difficulty": 1,
+                "page": 58
+              },
+              {
+                "id": "u2-l8-t10",
+                "origin": "textbook",
+                "kind": "order",
+                "prompt": "رتّب الحروف لتكوّن كلمة",
+                "answer": "مسمار",
+                "difficulty": 1,
+                "page": 58
+              },
+              {
+                "id": "u2-l8-t11",
+                "origin": "textbook",
+                "kind": "order",
+                "prompt": "رتّب الحروف لتكوّن كلمة",
+                "answer": "غسيل",
+                "difficulty": 1,
+                "page": 58
+              }
+            ],
+            "number": 8,
+            "games": [
+              {
+                "template": "words"
+              },
+              {
+                "template": "quiz"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "u3",
+        "number": 3,
+        "title": "الْوَحْدَةُ الثّالِثَةُ: أُحِبُّ النَّظافَةَ",
+        "semester": 1,
+        "pages": [
+          66,
+          99
+        ],
+        "lessons": [
+          {
+            "id": "u3-l1",
+            "title": "أَسْتَمِعُ بِانْتِباهٍ وَتَرْكيزٍ",
+            "pages": [
+              66,
+              67
+            ],
+            "questions": [],
+            "number": 1
+          },
+          {
+            "id": "u3-l2",
+            "title": "أَتَحَدَّثُ بِطَلاقَةٍ",
+            "pages": [
+              68,
+              68
+            ],
+            "questions": [],
+            "number": 2
+          },
+          {
+            "id": "u3-l3",
+            "title": "حَرْفُ الْفاءِ (ف، فـ، ـفـ)",
+            "pages": [
+              69,
+              73
+            ],
+            "questions": [
+              {
+                "id": "u3-l3-t01",
+                "origin": "textbook",
+                "page": 69,
+                "kind": "mcq",
+                "prompt": "أيّ كلمة تبدأ بحرف الفاء؟",
+                "correctIndex": 0,
+                "difficulty": 1,
+                "choices": [
+                  "فيل",
+                  "هاتف",
+                  "قفل"
+                ]
+              },
+              {
+                "id": "u3-l3-t02",
+                "origin": "textbook",
+                "page": 69,
+                "kind": "mcq",
+                "prompt": "أين حرف الفاء في كلمة «هاتف»؟",
+                "correctIndex": 2,
+                "difficulty": 1,
+                "choices": [
+                  "في أولها",
+                  "في وسطها",
+                  "في آخرها"
+                ]
+              },
+              {
+                "id": "u3-l3-t03",
+                "origin": "textbook",
+                "page": 69,
+                "kind": "mcq",
+                "prompt": "أين حرف الفاء في كلمة «عصفور»؟",
+                "correctIndex": 1,
+                "difficulty": 1,
+                "choices": [
+                  "في أولها",
+                  "في وسطها",
+                  "في آخرها"
+                ]
+              },
+              {
+                "id": "u3-l3-t04",
+                "origin": "textbook",
+                "page": 69,
+                "kind": "mcq",
+                "prompt": "كم شكلًا لحرف الفاء؟",
+                "correctIndex": 0,
+                "difficulty": 1,
+                "choices": [
+                  "ثلاثة",
+                  "شكلان",
+                  "شكل واحد"
+                ]
+              },
+              {
+                "id": "u3-l3-t05",
+                "origin": "textbook",
+                "page": 70,
+                "kind": "mcq",
+                "prompt": "ما المقطع الأول في كلمة «دَفْتَر»؟",
+                "correctIndex": 0,
+                "difficulty": 1,
+                "choices": [
+                  "دَفْ",
+                  "دَا",
+                  "دُفْ"
+                ]
+              },
+              {
+                "id": "u3-l3-t06",
+                "origin": "textbook",
+                "page": 70,
+                "kind": "mcq",
+                "prompt": "ما المقطع الأول في كلمة «مِفْتاح»؟",
+                "correctIndex": 0,
+                "difficulty": 1,
+                "choices": [
+                  "مِفْ",
+                  "مَفْ",
+                  "مِي"
+                ]
+              },
+              {
+                "id": "u3-l3-t07",
+                "origin": "textbook",
+                "page": 70,
+                "kind": "mcq",
+                "prompt": "أيّ مقطع فيه مدّ؟",
+                "correctIndex": 0,
+                "difficulty": 1,
+                "choices": [
+                  "فو",
+                  "فُ",
+                  "فْ"
+                ]
+              },
+              {
+                "id": "u3-l3-t08",
+                "origin": "textbook",
+                "kind": "order",
+                "prompt": "رتّب الحروف لتكوّن كلمة",
+                "answer": "فيل",
+                "difficulty": 1,
+                "page": 69
+              },
+              {
+                "id": "u3-l3-t09",
+                "origin": "textbook",
+                "kind": "order",
+                "prompt": "رتّب الحروف لتكوّن كلمة",
+                "answer": "فجل",
+                "difficulty": 1,
+                "page": 69
+              },
+              {
+                "id": "u3-l3-t10",
+                "origin": "textbook",
+                "kind": "order",
+                "prompt": "رتّب الحروف لتكوّن كلمة",
+                "answer": "فراشة",
+                "difficulty": 1,
+                "page": 69
+              },
+              {
+                "id": "u3-l3-t11",
+                "origin": "textbook",
+                "kind": "order",
+                "prompt": "رتّب الحروف لتكوّن كلمة",
+                "answer": "فانوس",
+                "difficulty": 1,
+                "page": 69
+              }
+            ],
+            "number": 3,
+            "games": [
+              {
+                "template": "words"
+              },
+              {
+                "template": "quiz"
+              }
+            ]
+          },
+          {
+            "id": "u3-l4",
+            "title": "حَرْفُ الصّادِ (ص، صـ)",
+            "pages": [
+              74,
+              78
+            ],
+            "questions": [
+              {
+                "id": "u3-l4-t01",
+                "origin": "textbook",
+                "page": 74,
+                "kind": "mcq",
+                "prompt": "أيّ كلمة تبدأ بحرف الصاد؟",
+                "correctIndex": 0,
+                "difficulty": 1,
+                "choices": [
+                  "صوف",
+                  "قميص",
+                  "حصان"
+                ]
+              },
+              {
+                "id": "u3-l4-t02",
+                "origin": "textbook",
+                "page": 74,
+                "kind": "mcq",
+                "prompt": "أين حرف الصاد في كلمة «قميص»؟",
+                "correctIndex": 2,
+                "difficulty": 1,
+                "choices": [
+                  "في أولها",
+                  "في وسطها",
+                  "في آخرها"
+                ]
+              },
+              {
+                "id": "u3-l4-t03",
+                "origin": "textbook",
+                "page": 74,
+                "kind": "mcq",
+                "prompt": "أين حرف الصاد في كلمة «حصان»؟",
+                "correctIndex": 1,
+                "difficulty": 1,
+                "choices": [
+                  "في أولها",
+                  "في وسطها",
+                  "في آخرها"
+                ]
+              },
+              {
+                "id": "u3-l4-t04",
+                "origin": "textbook",
+                "page": 75,
+                "kind": "mcq",
+                "prompt": "ما المقطع الأول في كلمة «مَصْروف»؟",
+                "correctIndex": 0,
+                "difficulty": 1,
+                "choices": [
+                  "مَصْ",
+                  "مِصْ",
+                  "مَا"
+                ]
+              },
+              {
+                "id": "u3-l4-t05",
+                "origin": "textbook",
+                "page": 75,
+                "kind": "mcq",
+                "prompt": "ما المقطع الأول في كلمة «عُصْفور»؟",
+                "correctIndex": 0,
+                "difficulty": 1,
+                "choices": [
+                  "عُصْ",
+                  "عَصْ",
+                  "عُو"
+                ]
+              },
+              {
+                "id": "u3-l4-t06",
+                "origin": "textbook",
+                "page": 75,
+                "kind": "mcq",
+                "prompt": "ما المقطع الأول في كلمة «حِصْن»؟",
+                "correctIndex": 0,
+                "difficulty": 1,
+                "choices": [
+                  "حِصْ",
+                  "حَصْ",
+                  "حِي"
+                ]
+              },
+              {
+                "id": "u3-l4-t07",
+                "origin": "textbook",
+                "kind": "order",
+                "prompt": "رتّب الحروف لتكوّن كلمة",
+                "answer": "صوف",
+                "difficulty": 1,
+                "page": 74
+              },
+              {
+                "id": "u3-l4-t08",
+                "origin": "textbook",
+                "kind": "order",
+                "prompt": "رتّب الحروف لتكوّن كلمة",
+                "answer": "صمغ",
+                "difficulty": 1,
+                "page": 74
+              },
+              {
+                "id": "u3-l4-t09",
+                "origin": "textbook",
+                "kind": "order",
+                "prompt": "رتّب الحروف لتكوّن كلمة",
+                "answer": "عصير",
+                "difficulty": 1,
+                "page": 74
+              },
+              {
+                "id": "u3-l4-t10",
+                "origin": "textbook",
+                "kind": "order",
+                "prompt": "رتّب الحروف لتكوّن كلمة",
+                "answer": "صنارة",
+                "difficulty": 1,
+                "page": 74
+              }
+            ],
+            "number": 4,
+            "games": [
+              {
+                "template": "words"
+              },
+              {
+                "template": "quiz"
+              }
+            ]
+          },
+          {
+            "id": "u3-l5",
+            "title": "حَرْفُ الْقافِ (ق، قـ، ـقـ)",
+            "pages": [
+              79,
+              83
+            ],
+            "questions": [
+              {
+                "id": "u3-l5-t01",
+                "origin": "textbook",
+                "page": 79,
+                "kind": "mcq",
+                "prompt": "أيّ كلمة تبدأ بحرف القاف؟",
+                "correctIndex": 0,
+                "difficulty": 1,
+                "choices": [
+                  "قلم",
+                  "ورق",
+                  "صقر"
+                ]
+              },
+              {
+                "id": "u3-l5-t02",
+                "origin": "textbook",
+                "page": 79,
+                "kind": "mcq",
+                "prompt": "أين حرف القاف في كلمة «ورق»؟",
+                "correctIndex": 2,
+                "difficulty": 1,
+                "choices": [
+                  "في أولها",
+                  "في وسطها",
+                  "في آخرها"
+                ]
+              },
+              {
+                "id": "u3-l5-t03",
+                "origin": "textbook",
+                "page": 79,
+                "kind": "mcq",
+                "prompt": "أين حرف القاف في كلمة «صقر»؟",
+                "correctIndex": 1,
+                "difficulty": 1,
+                "choices": [
+                  "في أولها",
+                  "في وسطها",
+                  "في آخرها"
+                ]
+              },
+              {
+                "id": "u3-l5-t04",
+                "origin": "textbook",
+                "page": 79,
+                "kind": "mcq",
+                "prompt": "كم شكلًا لحرف القاف؟",
+                "correctIndex": 0,
+                "difficulty": 1,
+                "choices": [
+                  "ثلاثة",
+                  "شكلان",
+                  "شكل واحد"
+                ]
+              },
+              {
+                "id": "u3-l5-t05",
+                "origin": "textbook",
+                "page": 80,
+                "kind": "mcq",
+                "prompt": "ما المقطع الأول في كلمة «سَقْف»؟",
+                "correctIndex": 0,
+                "difficulty": 1,
+                "choices": [
+                  "سَقْ",
+                  "سِقْ",
+                  "سَا"
+                ]
+              },
+              {
+                "id": "u3-l5-t06",
+                "origin": "textbook",
+                "page": 80,
+                "kind": "mcq",
+                "prompt": "ما المقطع الأول في كلمة «لُقْمة»؟",
+                "correctIndex": 0,
+                "difficulty": 1,
+                "choices": [
+                  "لُقْ",
+                  "لَقْ",
+                  "لُو"
+                ]
+              },
+              {
+                "id": "u3-l5-t07",
+                "origin": "textbook",
+                "page": 80,
+                "kind": "mcq",
+                "prompt": "ما المقطع الأول في كلمة «مِقْلاة»؟",
+                "correctIndex": 0,
+                "difficulty": 1,
+                "choices": [
+                  "مِقْ",
+                  "مَقْ",
+                  "مِي"
+                ]
+              },
+              {
+                "id": "u3-l5-t08",
+                "origin": "textbook",
+                "kind": "order",
+                "prompt": "رتّب الحروف لتكوّن كلمة",
+                "answer": "قلم",
+                "difficulty": 1,
+                "page": 79
+              },
+              {
+                "id": "u3-l5-t09",
+                "origin": "textbook",
+                "kind": "order",
+                "prompt": "رتّب الحروف لتكوّن كلمة",
+                "answer": "قصر",
+                "difficulty": 1,
+                "page": 79
+              },
+              {
+                "id": "u3-l5-t10",
+                "origin": "textbook",
+                "kind": "order",
+                "prompt": "رتّب الحروف لتكوّن كلمة",
+                "answer": "قارب",
+                "difficulty": 1,
+                "page": 79
+              },
+              {
+                "id": "u3-l5-t11",
+                "origin": "textbook",
+                "kind": "order",
+                "prompt": "رتّب الحروف لتكوّن كلمة",
+                "answer": "حقيبة",
+                "difficulty": 1,
+                "page": 79
+              }
+            ],
+            "number": 5,
+            "games": [
+              {
+                "template": "words"
+              },
+              {
+                "template": "quiz"
+              }
+            ]
+          },
+          {
+            "id": "u3-l6",
+            "title": "تَنْوينُ الْكَسْرِ",
+            "pages": [
+              85,
+              86
+            ],
+            "questions": [
+              {
+                "id": "u3-l6-t01",
+                "origin": "textbook",
+                "page": 85,
+                "kind": "mcq",
+                "prompt": "تنوين الكسر «ـٍ» يشبه في الرسم:",
+                "correctIndex": 2,
+                "difficulty": 1,
+                "choices": [
+                  "الفتحة",
+                  "الضمة",
+                  "الكسرة"
+                ]
+              },
+              {
+                "id": "u3-l6-t02",
+                "origin": "textbook",
+                "page": 85,
+                "kind": "mcq",
+                "prompt": "أيّ كلمة فيها تنوين الكسر؟",
+                "correctIndex": 0,
+                "difficulty": 1,
+                "choices": [
+                  "صَحْنٍ",
+                  "الْحُبوبِ",
+                  "نَمْلٌ"
+                ]
+              },
+              {
+                "id": "u3-l6-t03",
+                "origin": "textbook",
+                "page": 85,
+                "kind": "mcq",
+                "prompt": "أيّ كلمة فيها تنوين الكسر؟",
+                "correctIndex": 0,
+                "difficulty": 1,
+                "choices": [
+                  "حِزامٍ",
+                  "نَمْلٌ",
+                  "الْحُبوبِ"
+                ]
+              },
+              {
+                "id": "u3-l6-t04",
+                "origin": "textbook",
+                "page": 86,
+                "kind": "mcq",
+                "prompt": "يُرسم تنوين الكسر تحت الحرف الأخير من الكلمة.",
+                "correctIndex": 0,
+                "difficulty": 1,
+                "choices": [
+                  "صح",
+                  "خطأ"
+                ]
+              },
+              {
+                "id": "u3-l6-t05",
+                "origin": "textbook",
+                "page": 86,
+                "kind": "mcq",
+                "prompt": "أيّ كلمة كُتب عليها تنوين الكسر صحيحًا؟",
+                "correctIndex": 0,
+                "difficulty": 1,
+                "choices": [
+                  "شَمْسٍ",
+                  "شَمْسٌ",
+                  "شَمْسْ"
+                ]
+              },
+              {
+                "id": "u3-l6-t06",
+                "origin": "textbook",
+                "page": 86,
+                "kind": "mcq",
+                "prompt": "في جملة «سارَ فارِسٌ في بُسْتانٍ قَريبٍ» كلمة فيها تنوين كسر هي:",
+                "correctIndex": 0,
+                "difficulty": 1,
+                "choices": [
+                  "بُسْتانٍ",
+                  "فارِسٌ",
+                  "سارَ"
+                ]
+              },
+              {
+                "id": "u3-l6-t07",
+                "origin": "textbook",
+                "kind": "match",
+                "prompt": "طابق كل كلمة مع حرفها الأخير المنوّن",
+                "pairs": [
+                  {
+                    "a": "بابٍ",
+                    "b": "بٍ"
+                  },
+                  {
+                    "a": "رَغيفٍ",
+                    "b": "فٍ"
+                  },
+                  {
+                    "a": "جَبَلٍ",
+                    "b": "لٍ"
+                  },
+                  {
+                    "a": "عَدَسٍ",
+                    "b": "سٍ"
+                  }
+                ],
+                "difficulty": 1,
+                "page": 85
+              },
+              {
+                "id": "u3-l6-g01",
+                "origin": "generated",
+                "kind": "truefalse",
+                "prompt": "في كلمة «قارِبٍ» تنوين كسر تحت الحرف الأخير.",
+                "correctIndex": 0,
+                "difficulty": 1
+              },
+              {
+                "id": "u3-l6-g02",
+                "origin": "generated",
+                "kind": "mcq",
+                "prompt": "أيّ تنوين في كلمة «حَليبٍ»؟",
+                "correctIndex": 0,
+                "difficulty": 1,
+                "choices": [
+                  "تنوين الكسر",
+                  "تنوين الضم"
+                ]
+              }
+            ],
+            "number": 6,
+            "games": [
+              {
+                "template": "quiz"
+              },
+              {
+                "template": "memory"
+              }
+            ]
+          },
+          {
+            "id": "u3-l7",
+            "title": "حَرْفُ الْحاءِ (ح، حـ)",
+            "pages": [
+              87,
+              91
+            ],
+            "questions": [
+              {
+                "id": "u3-l7-t01",
+                "origin": "textbook",
+                "page": 87,
+                "kind": "mcq",
+                "prompt": "أيّ كلمة تبدأ بحرف الحاء؟",
+                "correctIndex": 0,
+                "difficulty": 1,
+                "choices": [
+                  "حوت",
+                  "تمساح",
+                  "لحم"
+                ]
+              },
+              {
+                "id": "u3-l7-t02",
+                "origin": "textbook",
+                "page": 87,
+                "kind": "mcq",
+                "prompt": "أين حرف الحاء في كلمة «تمساح»؟",
+                "correctIndex": 2,
+                "difficulty": 1,
+                "choices": [
+                  "في أولها",
+                  "في وسطها",
+                  "في آخرها"
+                ]
+              },
+              {
+                "id": "u3-l7-t03",
+                "origin": "textbook",
+                "page": 87,
+                "kind": "mcq",
+                "prompt": "أين حرف الحاء في كلمة «طحين»؟",
+                "correctIndex": 1,
+                "difficulty": 1,
+                "choices": [
+                  "في أولها",
+                  "في وسطها",
+                  "في آخرها"
+                ]
+              },
+              {
+                "id": "u3-l7-t04",
+                "origin": "textbook",
+                "page": 88,
+                "kind": "mcq",
+                "prompt": "ما المقطع الأول في كلمة «لَحْم»؟",
+                "correctIndex": 0,
+                "difficulty": 1,
+                "choices": [
+                  "لَحْ",
+                  "لِحْ",
+                  "لَا"
+                ]
+              },
+              {
+                "id": "u3-l7-t05",
+                "origin": "textbook",
+                "page": 88,
+                "kind": "mcq",
+                "prompt": "ما المقطع الأول في كلمة «مُحْسِن»؟",
+                "correctIndex": 0,
+                "difficulty": 1,
+                "choices": [
+                  "مُحْ",
+                  "مَحْ",
+                  "مُو"
+                ]
+              },
+              {
+                "id": "u3-l7-t06",
+                "origin": "textbook",
+                "page": 88,
+                "kind": "mcq",
+                "prompt": "ما المقطع الأول في كلمة «رِحْلة»؟",
+                "correctIndex": 0,
+                "difficulty": 1,
+                "choices": [
+                  "رِحْ",
+                  "رَحْ",
+                  "رِي"
+                ]
+              },
+              {
+                "id": "u3-l7-t07",
+                "origin": "textbook",
+                "page": 88,
+                "kind": "mcq",
+                "prompt": "أيّ مقطع فيه مدّ؟",
+                "correctIndex": 0,
+                "difficulty": 1,
+                "choices": [
+                  "حا",
+                  "حَ",
+                  "حْ"
+                ]
+              },
+              {
+                "id": "u3-l7-t08",
+                "origin": "textbook",
+                "kind": "order",
+                "prompt": "رتّب الحروف لتكوّن كلمة",
+                "answer": "حوت",
+                "difficulty": 1,
+                "page": 87
+              },
+              {
+                "id": "u3-l7-t09",
+                "origin": "textbook",
+                "kind": "order",
+                "prompt": "رتّب الحروف لتكوّن كلمة",
+                "answer": "حصان",
+                "difficulty": 1,
+                "page": 87
+              },
+              {
+                "id": "u3-l7-t10",
+                "origin": "textbook",
+                "kind": "order",
+                "prompt": "رتّب الحروف لتكوّن كلمة",
+                "answer": "حلوى",
+                "difficulty": 1,
+                "page": 87
+              },
+              {
+                "id": "u3-l7-t11",
+                "origin": "textbook",
+                "kind": "order",
+                "prompt": "رتّب الحروف لتكوّن كلمة",
+                "answer": "حمامة",
+                "difficulty": 1,
+                "page": 87
+              }
+            ],
+            "number": 7,
+            "games": [
+              {
+                "template": "words"
+              },
+              {
+                "template": "quiz"
+              }
+            ]
+          },
+          {
+            "id": "u3-l8",
+            "title": "حَرْفُ الزّايِ (ز)",
+            "pages": [
+              92,
+              99
+            ],
+            "questions": [
+              {
+                "id": "u3-l8-t01",
+                "origin": "textbook",
+                "page": 92,
+                "kind": "mcq",
+                "prompt": "أيّ كلمة تبدأ بحرف الزاي؟",
+                "correctIndex": 0,
+                "difficulty": 1,
+                "choices": [
+                  "زيت",
+                  "موز",
+                  "غزلان"
+                ]
+              },
+              {
+                "id": "u3-l8-t02",
+                "origin": "textbook",
+                "page": 92,
+                "kind": "mcq",
+                "prompt": "أين حرف الزاي في كلمة «موز»؟",
+                "correctIndex": 2,
+                "difficulty": 1,
+                "choices": [
+                  "في أولها",
+                  "في وسطها",
+                  "في آخرها"
+                ]
+              },
+              {
+                "id": "u3-l8-t03",
+                "origin": "textbook",
+                "page": 92,
+                "kind": "mcq",
+                "prompt": "أين حرف الزاي في كلمة «ميزان»؟",
+                "correctIndex": 1,
+                "difficulty": 1,
+                "choices": [
+                  "في أولها",
+                  "في وسطها",
+                  "في آخرها"
+                ]
+              },
+              {
+                "id": "u3-l8-t04",
+                "origin": "textbook",
+                "page": 92,
+                "kind": "mcq",
+                "prompt": "ما الحرف الذي يشبه حرف الزاي في رسمه؟",
+                "correctIndex": 0,
+                "difficulty": 1,
+                "choices": [
+                  "الراء",
+                  "الدال",
+                  "النون"
+                ]
+              },
+              {
+                "id": "u3-l8-t05",
+                "origin": "textbook",
+                "page": 92,
+                "kind": "mcq",
+                "prompt": "حرف الزاي له شكل واحد، ولا يتّصل بالحرف الذي يليه.",
+                "correctIndex": 0,
+                "difficulty": 1,
+                "choices": [
+                  "صح",
+                  "خطأ"
+                ]
+              },
+              {
+                "id": "u3-l8-t06",
+                "origin": "textbook",
+                "page": 93,
+                "kind": "mcq",
+                "prompt": "ما المقطع الأول في كلمة «مَزْرَعة»؟",
+                "correctIndex": 0,
+                "difficulty": 1,
+                "choices": [
+                  "مَزْ",
+                  "مِزْ",
+                  "مَا"
+                ]
+              },
+              {
+                "id": "u3-l8-t07",
+                "origin": "textbook",
+                "page": 93,
+                "kind": "mcq",
+                "prompt": "ما المقطع الأول في كلمة «حُزْن»؟",
+                "correctIndex": 0,
+                "difficulty": 1,
+                "choices": [
+                  "حُزْ",
+                  "حَزْ",
+                  "حُو"
+                ]
+              },
+              {
+                "id": "u3-l8-t08",
+                "origin": "textbook",
+                "kind": "order",
+                "prompt": "رتّب الحروف لتكوّن كلمة",
+                "answer": "زيت",
+                "difficulty": 1,
+                "page": 92
+              },
+              {
+                "id": "u3-l8-t09",
+                "origin": "textbook",
+                "kind": "order",
+                "prompt": "رتّب الحروف لتكوّن كلمة",
+                "answer": "زبدة",
+                "difficulty": 1,
+                "page": 92
+              },
+              {
+                "id": "u3-l8-t10",
+                "origin": "textbook",
+                "kind": "order",
+                "prompt": "رتّب الحروف لتكوّن كلمة",
+                "answer": "جزيرة",
+                "difficulty": 1,
+                "page": 92
+              },
+              {
+                "id": "u3-l8-t11",
+                "origin": "textbook",
+                "kind": "order",
+                "prompt": "رتّب الحروف لتكوّن كلمة",
+                "answer": "حلزون",
+                "difficulty": 1,
+                "page": 92
+              }
+            ],
+            "number": 8,
+            "games": [
+              {
+                "template": "words"
+              },
+              {
+                "template": "quiz"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "u4",
+        "number": 4,
+        "title": "الْوَحْدَةُ الرّابِعَةُ: رُسومي الْمُتَحَرِّكَةُ",
+        "semester": 1,
+        "pages": [
+          100,
+          133
+        ],
+        "lessons": [
+          {
+            "id": "u4-l1",
+            "title": "أَسْتَمِعُ بِانْتِباهٍ وَتَرْكيزٍ",
+            "pages": [
+              100,
+              101
+            ],
+            "questions": [],
+            "number": 1
+          },
+          {
+            "id": "u4-l2",
+            "title": "أَتَحَدَّثُ بِطَلاقَةٍ",
+            "pages": [
+              102,
+              102
+            ],
+            "questions": [],
+            "number": 2
+          },
+          {
+            "id": "u4-l3a",
+            "title": "حَرْفُ التّاءِ الْمَفْتوحَةِ (ت، تـ)",
+            "pages": [
+              103,
+              107
+            ],
+            "questions": [
+              {
+                "id": "u4-l3a-t01",
+                "origin": "textbook",
+                "page": 103,
+                "kind": "mcq",
+                "prompt": "أيّ كلمة تبدأ بحرف التاء؟",
+                "correctIndex": 0,
+                "difficulty": 1,
+                "choices": [
+                  "تمر",
+                  "بيت",
+                  "مكتب"
+                ]
+              },
+              {
+                "id": "u4-l3a-t02",
+                "origin": "textbook",
+                "page": 103,
+                "kind": "mcq",
+                "prompt": "أين حرف التاء في كلمة «بيت»؟",
+                "correctIndex": 2,
+                "difficulty": 1,
+                "choices": [
+                  "في أولها",
+                  "في وسطها",
+                  "في آخرها"
+                ]
+              },
+              {
+                "id": "u4-l3a-t03",
+                "origin": "textbook",
+                "page": 103,
+                "kind": "mcq",
+                "prompt": "أين حرف التاء في كلمة «مكتب»؟",
+                "correctIndex": 1,
+                "difficulty": 1,
+                "choices": [
+                  "في أولها",
+                  "في وسطها",
+                  "في آخرها"
+                ]
+              },
+              {
+                "id": "u4-l3a-t04",
+                "origin": "textbook",
+                "page": 104,
+                "kind": "mcq",
+                "prompt": "ما المقطع الأول في كلمة «بَتْرا»؟",
+                "correctIndex": 0,
+                "difficulty": 1,
+                "choices": [
+                  "بَتْ",
+                  "بِتْ",
+                  "بَا"
+                ]
+              },
+              {
+                "id": "u4-l3a-t05",
+                "origin": "textbook",
+                "page": 104,
+                "kind": "mcq",
+                "prompt": "ما المقطع الأول في كلمة «سِتْر»؟",
+                "correctIndex": 0,
+                "difficulty": 1,
+                "choices": [
+                  "سِتْ",
+                  "سَتْ",
+                  "سِي"
+                ]
+              },
+              {
+                "id": "u4-l3a-t06",
+                "origin": "textbook",
+                "page": 104,
+                "kind": "mcq",
+                "prompt": "أيّ مقطع فيه مدّ؟",
+                "correctIndex": 0,
+                "difficulty": 1,
+                "choices": [
+                  "تي",
+                  "تِ",
+                  "تْ"
+                ]
+              },
+              {
+                "id": "u4-l3a-t07",
+                "origin": "textbook",
+                "kind": "order",
+                "prompt": "رتّب الحروف لتكوّن كلمة",
+                "answer": "تمر",
+                "difficulty": 1,
+                "page": 103
+              },
+              {
+                "id": "u4-l3a-t08",
+                "origin": "textbook",
+                "kind": "order",
+                "prompt": "رتّب الحروف لتكوّن كلمة",
+                "answer": "تاج",
+                "difficulty": 1,
+                "page": 103
+              },
+              {
+                "id": "u4-l3a-t09",
+                "origin": "textbook",
+                "kind": "order",
+                "prompt": "رتّب الحروف لتكوّن كلمة",
+                "answer": "تفاح",
+                "difficulty": 1,
+                "page": 103
+              },
+              {
+                "id": "u4-l3a-t10",
+                "origin": "textbook",
+                "kind": "order",
+                "prompt": "رتّب الحروف لتكوّن كلمة",
+                "answer": "تمساح",
+                "difficulty": 1,
+                "page": 103
+              }
+            ],
+            "number": 3,
+            "games": [
+              {
+                "template": "words"
+              },
+              {
+                "template": "quiz"
+              }
+            ]
+          },
+          {
+            "id": "u4-l3b",
+            "title": "حَرْفُ التّاءِ الْمَرْبوطَةِ (ة، ـة)",
+            "pages": [
+              108,
+              111
+            ],
+            "questions": [
+              {
+                "id": "u4-l3b-t01",
+                "origin": "textbook",
+                "page": 108,
+                "kind": "mcq",
+                "prompt": "أين تأتي التاء المربوطة في الكلمة؟",
+                "correctIndex": 0,
+                "difficulty": 1,
+                "choices": [
+                  "في آخرها",
+                  "في أولها",
+                  "في وسطها"
+                ]
+              },
+              {
+                "id": "u4-l3b-t02",
+                "origin": "textbook",
+                "page": 109,
+                "kind": "mcq",
+                "prompt": "أيّ كلمة تنتهي بالتاء المربوطة؟",
+                "correctIndex": 0,
+                "difficulty": 1,
+                "choices": [
+                  "فَطيرَةٌ",
+                  "طالِباتٌ",
+                  "نَباتٌ"
+                ]
+              },
+              {
+                "id": "u4-l3b-t03",
+                "origin": "textbook",
+                "page": 109,
+                "kind": "mcq",
+                "prompt": "أيّ كلمة تنتهي بالتاء المفتوحة؟",
+                "correctIndex": 0,
+                "difficulty": 1,
+                "choices": [
+                  "نَباتٌ",
+                  "بَقَرَةٌ",
+                  "حَديقَةٌ"
+                ]
+              },
+              {
+                "id": "u4-l3b-t04",
+                "origin": "textbook",
+                "page": 109,
+                "kind": "mcq",
+                "prompt": "أيّ كلمة تنتهي بالتاء المربوطة؟",
+                "correctIndex": 0,
+                "difficulty": 1,
+                "choices": [
+                  "مَزْرَعَةٌ",
+                  "طالِباتٌ",
+                  "نَباتٌ"
+                ]
+              },
+              {
+                "id": "u4-l3b-t05",
+                "origin": "textbook",
+                "page": 109,
+                "kind": "mcq",
+                "prompt": "نكمل كلمة «نَجْمـ…» بـ:",
+                "correctIndex": 0,
+                "difficulty": 1,
+                "choices": [
+                  "ـة",
+                  "ت",
+                  "تـ"
+                ]
+              },
+              {
+                "id": "u4-l3b-t06",
+                "origin": "textbook",
+                "page": 109,
+                "kind": "mcq",
+                "prompt": "نكمل كلمة «حافِلَـ…» بـ:",
+                "correctIndex": 0,
+                "difficulty": 1,
+                "choices": [
+                  "ـة",
+                  "ة",
+                  "تـ"
+                ]
+              },
+              {
+                "id": "u4-l3b-t07",
+                "origin": "textbook",
+                "kind": "order",
+                "prompt": "رتّب الحروف لتكوّن كلمة",
+                "answer": "سمكة",
+                "difficulty": 1,
+                "page": 108
+              },
+              {
+                "id": "u4-l3b-t08",
+                "origin": "textbook",
+                "kind": "order",
+                "prompt": "رتّب الحروف لتكوّن كلمة",
+                "answer": "وردة",
+                "difficulty": 1,
+                "page": 108
+              },
+              {
+                "id": "u4-l3b-t09",
+                "origin": "textbook",
+                "kind": "order",
+                "prompt": "رتّب الحروف لتكوّن كلمة",
+                "answer": "شجرة",
+                "difficulty": 1,
+                "page": 108
+              },
+              {
+                "id": "u4-l3b-t10",
+                "origin": "textbook",
+                "kind": "order",
+                "prompt": "رتّب الحروف لتكوّن كلمة",
+                "answer": "دودة",
+                "difficulty": 1,
+                "page": 108
+              }
+            ],
+            "number": 3,
+            "games": [
+              {
+                "template": "words"
+              },
+              {
+                "template": "quiz"
+              }
+            ]
+          },
+          {
+            "id": "u4-l4",
+            "title": "حَرْفُ الشّينِ (ش، شـ)",
+            "pages": [
+              112,
+              117
+            ],
+            "questions": [
+              {
+                "id": "u4-l4-t01",
+                "origin": "textbook",
+                "page": 112,
+                "kind": "mcq",
+                "prompt": "أيّ كلمة تبدأ بحرف الشين؟",
+                "correctIndex": 0,
+                "difficulty": 1,
+                "choices": [
+                  "شمس",
+                  "ريش",
+                  "عشب"
+                ]
+              },
+              {
+                "id": "u4-l4-t02",
+                "origin": "textbook",
+                "page": 112,
+                "kind": "mcq",
+                "prompt": "أين حرف الشين في كلمة «ريش»؟",
+                "correctIndex": 2,
+                "difficulty": 1,
+                "choices": [
+                  "في أولها",
+                  "في وسطها",
+                  "في آخرها"
+                ]
+              },
+              {
+                "id": "u4-l4-t03",
+                "origin": "textbook",
+                "page": 112,
+                "kind": "mcq",
+                "prompt": "أين حرف الشين في كلمة «منشار»؟",
+                "correctIndex": 1,
+                "difficulty": 1,
+                "choices": [
+                  "في أولها",
+                  "في وسطها",
+                  "في آخرها"
+                ]
+              },
+              {
+                "id": "u4-l4-t04",
+                "origin": "textbook",
+                "page": 113,
+                "kind": "mcq",
+                "prompt": "ما المقطع الأول في كلمة «مَشْروع»؟",
+                "correctIndex": 0,
+                "difficulty": 1,
+                "choices": [
+                  "مَشْ",
+                  "مِشْ",
+                  "مَا"
+                ]
+              },
+              {
+                "id": "u4-l4-t05",
+                "origin": "textbook",
+                "page": 113,
+                "kind": "mcq",
+                "prompt": "ما المقطع الأول في كلمة «بُشْرى»؟",
+                "correctIndex": 0,
+                "difficulty": 1,
+                "choices": [
+                  "بُشْ",
+                  "بَشْ",
+                  "بُو"
+                ]
+              },
+              {
+                "id": "u4-l4-t06",
+                "origin": "textbook",
+                "page": 113,
+                "kind": "mcq",
+                "prompt": "ما المقطع الأول في كلمة «قِشْرة»؟",
+                "correctIndex": 0,
+                "difficulty": 1,
+                "choices": [
+                  "قِشْ",
+                  "قَشْ",
+                  "قِي"
+                ]
+              },
+              {
+                "id": "u4-l4-t07",
+                "origin": "textbook",
+                "kind": "order",
+                "prompt": "رتّب الحروف لتكوّن كلمة",
+                "answer": "شمس",
+                "difficulty": 1,
+                "page": 112
+              },
+              {
+                "id": "u4-l4-t08",
+                "origin": "textbook",
+                "kind": "order",
+                "prompt": "رتّب الحروف لتكوّن كلمة",
+                "answer": "شموع",
+                "difficulty": 1,
+                "page": 112
+              },
+              {
+                "id": "u4-l4-t09",
+                "origin": "textbook",
+                "kind": "order",
+                "prompt": "رتّب الحروف لتكوّن كلمة",
+                "answer": "شراع",
+                "difficulty": 1,
+                "page": 112
+              },
+              {
+                "id": "u4-l4-t10",
+                "origin": "textbook",
+                "kind": "order",
+                "prompt": "رتّب الحروف لتكوّن كلمة",
+                "answer": "شجرة",
+                "difficulty": 1,
+                "page": 112
+              }
+            ],
+            "number": 4,
+            "games": [
+              {
+                "template": "words"
+              },
+              {
+                "template": "quiz"
+              }
+            ]
+          },
+          {
+            "id": "u4-l5",
+            "title": "تَنْوينُ الْفَتْحِ",
+            "pages": [
+              118,
+              119
+            ],
+            "questions": [
+              {
+                "id": "u4-l5-t01",
+                "origin": "textbook",
+                "page": 118,
+                "kind": "mcq",
+                "prompt": "تنوين الفتح «ـً» يشبه في الرسم:",
+                "correctIndex": 0,
+                "difficulty": 1,
+                "choices": [
+                  "الفتحة",
+                  "الضمة",
+                  "الكسرة"
+                ]
+              },
+              {
+                "id": "u4-l5-t02",
+                "origin": "textbook",
+                "page": 118,
+                "kind": "mcq",
+                "prompt": "أيّ كلمة فيها تنوين الفتح؟",
+                "correctIndex": 0,
+                "difficulty": 1,
+                "choices": [
+                  "بَدْرًا",
+                  "سِنْدِبادُ",
+                  "بَحْرٍ"
+                ]
+              },
+              {
+                "id": "u4-l5-t03",
+                "origin": "textbook",
+                "page": 118,
+                "kind": "mcq",
+                "prompt": "يأتي مع تنوين الفتح ألف لا تُلفظ.",
+                "correctIndex": 0,
+                "difficulty": 1,
+                "choices": [
+                  "صح",
+                  "خطأ"
+                ]
+              },
+              {
+                "id": "u4-l5-t04",
+                "origin": "textbook",
+                "page": 119,
+                "kind": "mcq",
+                "prompt": "أيّ كلمة كُتب فيها تنوين الفتح صحيحًا؟",
+                "correctIndex": 0,
+                "difficulty": 1,
+                "choices": [
+                  "فيلًا",
+                  "فيلٌ",
+                  "فيلٍ"
+                ]
+              },
+              {
+                "id": "u4-l5-t05",
+                "origin": "textbook",
+                "page": 119,
+                "kind": "mcq",
+                "prompt": "في جملة «شَرِبَ حامِدٌ حَليبًا» كلمة فيها تنوين فتح هي:",
+                "correctIndex": 0,
+                "difficulty": 1,
+                "choices": [
+                  "حَليبًا",
+                  "حامِدٌ",
+                  "شَرِبَ"
+                ]
+              },
+              {
+                "id": "u4-l5-t06",
+                "origin": "textbook",
+                "page": 119,
+                "kind": "mcq",
+                "prompt": "إذا انتهت الكلمة بالتاء المربوطة مثل «كُرَةً» لا نضيف ألف تنوين الفتح.",
+                "correctIndex": 0,
+                "difficulty": 1,
+                "choices": [
+                  "صح",
+                  "خطأ"
+                ]
+              },
+              {
+                "id": "u4-l5-t07",
+                "origin": "textbook",
+                "kind": "match",
+                "prompt": "طابق كل تنوين مع شكله",
+                "pairs": [
+                  {
+                    "a": "تنوين الفتح",
+                    "b": "ـً"
+                  },
+                  {
+                    "a": "تنوين الضم",
+                    "b": "ـٌ"
+                  },
+                  {
+                    "a": "تنوين الكسر",
+                    "b": "ـٍ"
+                  }
+                ],
+                "difficulty": 1,
+                "page": 118
+              },
+              {
+                "id": "u4-l5-g01",
+                "origin": "generated",
+                "kind": "truefalse",
+                "prompt": "في كلمة «عَسَلًا» تنوين فتح.",
+                "correctIndex": 0,
+                "difficulty": 1
+              },
+              {
+                "id": "u4-l5-g02",
+                "origin": "generated",
+                "kind": "mcq",
+                "prompt": "أيّ تنوين في كلمة «قَفَصًا»؟",
+                "correctIndex": 0,
+                "difficulty": 1,
+                "choices": [
+                  "تنوين الفتح",
+                  "تنوين الكسر",
+                  "تنوين الضم"
+                ]
+              }
+            ],
+            "number": 5,
+            "games": [
+              {
+                "template": "quiz"
+              },
+              {
+                "template": "memory"
+              }
+            ]
+          },
+          {
+            "id": "u4-l6",
+            "title": "حَرْفُ الطّاءِ (ط)",
+            "pages": [
+              120,
+              124
+            ],
+            "questions": [
+              {
+                "id": "u4-l6-t01",
+                "origin": "textbook",
+                "page": 120,
+                "kind": "mcq",
+                "prompt": "أيّ كلمة تبدأ بحرف الطاء؟",
+                "correctIndex": 0,
+                "difficulty": 1,
+                "choices": [
+                  "طين",
+                  "مشط",
+                  "قطار"
+                ]
+              },
+              {
+                "id": "u4-l6-t02",
+                "origin": "textbook",
+                "page": 120,
+                "kind": "mcq",
+                "prompt": "أين حرف الطاء في كلمة «مشط»؟",
+                "correctIndex": 2,
+                "difficulty": 1,
+                "choices": [
+                  "في أولها",
+                  "في وسطها",
+                  "في آخرها"
+                ]
+              },
+              {
+                "id": "u4-l6-t03",
+                "origin": "textbook",
+                "page": 120,
+                "kind": "mcq",
+                "prompt": "أين حرف الطاء في كلمة «قطار»؟",
+                "correctIndex": 1,
+                "difficulty": 1,
+                "choices": [
+                  "في أولها",
+                  "في وسطها",
+                  "في آخرها"
+                ]
+              },
+              {
+                "id": "u4-l6-t04",
+                "origin": "textbook",
+                "page": 120,
+                "kind": "mcq",
+                "prompt": "كم شكلًا لحرف الطاء؟",
+                "correctIndex": 0,
+                "difficulty": 1,
+                "choices": [
+                  "شكل واحد",
+                  "شكلان",
+                  "ثلاثة"
+                ]
+              },
+              {
+                "id": "u4-l6-t05",
+                "origin": "textbook",
+                "page": 121,
+                "kind": "mcq",
+                "prompt": "ما المقطع الأول في كلمة «بَطْن»؟",
+                "correctIndex": 0,
+                "difficulty": 1,
+                "choices": [
+                  "بَطْ",
+                  "بِطْ",
+                  "بَا"
+                ]
+              },
+              {
+                "id": "u4-l6-t06",
+                "origin": "textbook",
+                "page": 121,
+                "kind": "mcq",
+                "prompt": "ما المقطع الأول في كلمة «قُطْن»؟",
+                "correctIndex": 0,
+                "difficulty": 1,
+                "choices": [
+                  "قُطْ",
+                  "قَطْ",
+                  "قُو"
+                ]
+              },
+              {
+                "id": "u4-l6-t07",
+                "origin": "textbook",
+                "page": 121,
+                "kind": "mcq",
+                "prompt": "ما المقطع الأول في كلمة «مِطْرَقة»؟",
+                "correctIndex": 0,
+                "difficulty": 1,
+                "choices": [
+                  "مِطْ",
+                  "مَطْ",
+                  "مِي"
+                ]
+              },
+              {
+                "id": "u4-l6-t08",
+                "origin": "textbook",
+                "kind": "order",
+                "prompt": "رتّب الحروف لتكوّن كلمة",
+                "answer": "طين",
+                "difficulty": 1,
+                "page": 120
+              },
+              {
+                "id": "u4-l6-t09",
+                "origin": "textbook",
+                "kind": "order",
+                "prompt": "رتّب الحروف لتكوّن كلمة",
+                "answer": "طيور",
+                "difficulty": 1,
+                "page": 120
+              },
+              {
+                "id": "u4-l6-t10",
+                "origin": "textbook",
+                "kind": "order",
+                "prompt": "رتّب الحروف لتكوّن كلمة",
+                "answer": "قطار",
+                "difficulty": 1,
+                "page": 120
+              },
+              {
+                "id": "u4-l6-t11",
+                "origin": "textbook",
+                "kind": "order",
+                "prompt": "رتّب الحروف لتكوّن كلمة",
+                "answer": "طحين",
+                "difficulty": 1,
+                "page": 120
+              }
+            ],
+            "number": 6,
+            "games": [
+              {
+                "template": "words"
+              },
+              {
+                "template": "quiz"
+              }
+            ]
+          },
+          {
+            "id": "u4-l7",
+            "title": "حَرْفُ الْجيمِ (ج، جـ)",
+            "pages": [
+              125,
+              133
+            ],
+            "questions": [
+              {
+                "id": "u4-l7-t01",
+                "origin": "textbook",
+                "page": 125,
+                "kind": "mcq",
+                "prompt": "أيّ كلمة تبدأ بحرف الجيم؟",
+                "correctIndex": 0,
+                "difficulty": 1,
+                "choices": [
+                  "جمل",
+                  "درج",
+                  "فجل"
+                ]
+              },
+              {
+                "id": "u4-l7-t02",
+                "origin": "textbook",
+                "page": 125,
+                "kind": "mcq",
+                "prompt": "أين حرف الجيم في كلمة «درج»؟",
+                "correctIndex": 2,
+                "difficulty": 1,
+                "choices": [
+                  "في أولها",
+                  "في وسطها",
+                  "في آخرها"
+                ]
+              },
+              {
+                "id": "u4-l7-t03",
+                "origin": "textbook",
+                "page": 125,
+                "kind": "mcq",
+                "prompt": "أين حرف الجيم في كلمة «عجين»؟",
+                "correctIndex": 1,
+                "difficulty": 1,
+                "choices": [
+                  "في أولها",
+                  "في وسطها",
+                  "في آخرها"
+                ]
+              },
+              {
+                "id": "u4-l7-t04",
+                "origin": "textbook",
+                "page": 126,
+                "kind": "mcq",
+                "prompt": "ما المقطع الأول في كلمة «نَجْمة»؟",
+                "correctIndex": 0,
+                "difficulty": 1,
+                "choices": [
+                  "نَجْ",
+                  "نِجْ",
+                  "نَا"
+                ]
+              },
+              {
+                "id": "u4-l7-t05",
+                "origin": "textbook",
+                "page": 126,
+                "kind": "mcq",
+                "prompt": "ما المقطع الأول في كلمة «فُجْل»؟",
+                "correctIndex": 0,
+                "difficulty": 1,
+                "choices": [
+                  "فُجْ",
+                  "فَجْ",
+                  "فُو"
+                ]
+              },
+              {
+                "id": "u4-l7-t06",
+                "origin": "textbook",
+                "page": 126,
+                "kind": "mcq",
+                "prompt": "ما المقطع الأول في كلمة «عِجْل»؟",
+                "correctIndex": 0,
+                "difficulty": 1,
+                "choices": [
+                  "عِجْ",
+                  "عَجْ",
+                  "عِي"
+                ]
+              },
+              {
+                "id": "u4-l7-t07",
+                "origin": "textbook",
+                "page": 126,
+                "kind": "mcq",
+                "prompt": "أيّ مقطع فيه مدّ؟",
+                "correctIndex": 0,
+                "difficulty": 1,
+                "choices": [
+                  "جو",
+                  "جُ",
+                  "جْ"
+                ]
+              },
+              {
+                "id": "u4-l7-t08",
+                "origin": "textbook",
+                "kind": "order",
+                "prompt": "رتّب الحروف لتكوّن كلمة",
+                "answer": "جمل",
+                "difficulty": 1,
+                "page": 125
+              },
+              {
+                "id": "u4-l7-t09",
+                "origin": "textbook",
+                "kind": "order",
+                "prompt": "رتّب الحروف لتكوّن كلمة",
+                "answer": "جزر",
+                "difficulty": 1,
+                "page": 125
+              },
+              {
+                "id": "u4-l7-t10",
+                "origin": "textbook",
+                "kind": "order",
+                "prompt": "رتّب الحروف لتكوّن كلمة",
+                "answer": "جدار",
+                "difficulty": 1,
+                "page": 125
+              },
+              {
+                "id": "u4-l7-t11",
+                "origin": "textbook",
+                "kind": "order",
+                "prompt": "رتّب الحروف لتكوّن كلمة",
+                "answer": "دجاجة",
+                "difficulty": 1,
+                "page": 125
+              }
+            ],
+            "number": 7,
+            "games": [
+              {
+                "template": "words"
+              },
+              {
+                "template": "quiz"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "u5",
+        "number": 5,
+        "title": "الْوَحْدَةُ الْخامِسَةُ: لُعْبَتي الْمُفَضَّلَةُ",
+        "semester": 1,
+        "pages": [
+          134,
+          158
+        ],
+        "lessons": [
+          {
+            "id": "u5-l1",
+            "title": "أَسْتَمِعُ بِانْتِباهٍ وَتَرْكيزٍ",
+            "pages": [
+              134,
+              135
+            ],
+            "questions": [],
+            "number": 1
+          },
+          {
+            "id": "u5-l2",
+            "title": "أَتَحَدَّثُ بِطَلاقَةٍ",
+            "pages": [
+              136,
+              136
+            ],
+            "questions": [],
+            "number": 2
+          },
+          {
+            "id": "u5-l3",
+            "title": "حَرْفُ الضّادِ (ض، ضـ)",
+            "pages": [
+              137,
+              141
+            ],
+            "questions": [
+              {
+                "id": "u5-l3-t01",
+                "origin": "textbook",
+                "page": 137,
+                "kind": "mcq",
+                "prompt": "أيّ كلمة تبدأ بحرف الضاد؟",
+                "correctIndex": 0,
+                "difficulty": 1,
+                "choices": [
+                  "ضبع",
+                  "مريض",
+                  "رضيع"
+                ]
+              },
+              {
+                "id": "u5-l3-t02",
+                "origin": "textbook",
+                "page": 137,
+                "kind": "mcq",
+                "prompt": "أين حرف الضاد في كلمة «مريض»؟",
+                "correctIndex": 2,
+                "difficulty": 1,
+                "choices": [
+                  "في أولها",
+                  "في وسطها",
+                  "في آخرها"
+                ]
+              },
+              {
+                "id": "u5-l3-t03",
+                "origin": "textbook",
+                "page": 137,
+                "kind": "mcq",
+                "prompt": "أين حرف الضاد في كلمة «مضرب»؟",
+                "correctIndex": 1,
+                "difficulty": 1,
+                "choices": [
+                  "في أولها",
+                  "في وسطها",
+                  "في آخرها"
+                ]
+              },
+              {
+                "id": "u5-l3-t04",
+                "origin": "textbook",
+                "page": 137,
+                "kind": "mcq",
+                "prompt": "لماذا سُمّيت لغتنا العربية؟",
+                "correctIndex": 0,
+                "difficulty": 1,
+                "choices": [
+                  "لغة الضاد",
+                  "لغة الصاد",
+                  "لغة الدال"
+                ]
+              },
+              {
+                "id": "u5-l3-t05",
+                "origin": "textbook",
+                "page": 138,
+                "kind": "mcq",
+                "prompt": "ما المقطع الأول في كلمة «فَضْل»؟",
+                "correctIndex": 0,
+                "difficulty": 1,
+                "choices": [
+                  "فَضْ",
+                  "فِضْ",
+                  "فَا"
+                ]
+              },
+              {
+                "id": "u5-l3-t06",
+                "origin": "textbook",
+                "page": 138,
+                "kind": "mcq",
+                "prompt": "ما المقطع الأول في كلمة «رُضْوان»؟",
+                "correctIndex": 0,
+                "difficulty": 1,
+                "choices": [
+                  "رُضْ",
+                  "رَضْ",
+                  "رُو"
+                ]
+              },
+              {
+                "id": "u5-l3-t07",
+                "origin": "textbook",
+                "page": 138,
+                "kind": "mcq",
+                "prompt": "ما المقطع الأول في كلمة «مِضْرَب»؟",
+                "correctIndex": 0,
+                "difficulty": 1,
+                "choices": [
+                  "مِضْ",
+                  "مَضْ",
+                  "مِي"
+                ]
+              },
+              {
+                "id": "u5-l3-t08",
+                "origin": "textbook",
+                "kind": "order",
+                "prompt": "رتّب الحروف لتكوّن كلمة",
+                "answer": "ضرس",
+                "difficulty": 1,
+                "page": 137
+              },
+              {
+                "id": "u5-l3-t09",
+                "origin": "textbook",
+                "kind": "order",
+                "prompt": "رتّب الحروف لتكوّن كلمة",
+                "answer": "ضيوف",
+                "difficulty": 1,
+                "page": 137
+              },
+              {
+                "id": "u5-l3-t10",
+                "origin": "textbook",
+                "kind": "order",
+                "prompt": "رتّب الحروف لتكوّن كلمة",
+                "answer": "ضفدع",
+                "difficulty": 1,
+                "page": 137
+              },
+              {
+                "id": "u5-l3-t11",
+                "origin": "textbook",
+                "kind": "order",
+                "prompt": "رتّب الحروف لتكوّن كلمة",
+                "answer": "ضابط",
+                "difficulty": 1,
+                "page": 137
+              }
+            ],
+            "number": 3,
+            "games": [
+              {
+                "template": "words"
+              },
+              {
+                "template": "quiz"
+              }
+            ]
+          },
+          {
+            "id": "u5-l4",
+            "title": "حَرْفُ الْعَيْنِ (ع، عـ، ـعـ، ـع)",
+            "pages": [
+              142,
+              146
+            ],
+            "questions": [
+              {
+                "id": "u5-l4-t01",
+                "origin": "textbook",
+                "page": 142,
+                "kind": "mcq",
+                "prompt": "أيّ كلمة تبدأ بحرف العين؟",
+                "correctIndex": 0,
+                "difficulty": 1,
+                "choices": [
+                  "عنب",
+                  "شارع",
+                  "ثعلب"
+                ]
+              },
+              {
+                "id": "u5-l4-t02",
+                "origin": "textbook",
+                "page": 142,
+                "kind": "mcq",
+                "prompt": "أين حرف العين في كلمة «شارع»؟",
+                "correctIndex": 2,
+                "difficulty": 1,
+                "choices": [
+                  "في أولها",
+                  "في وسطها",
+                  "في آخرها"
+                ]
+              },
+              {
+                "id": "u5-l4-t03",
+                "origin": "textbook",
+                "page": 142,
+                "kind": "mcq",
+                "prompt": "أين حرف العين في كلمة «بعوضة»؟",
+                "correctIndex": 1,
+                "difficulty": 1,
+                "choices": [
+                  "في أولها",
+                  "في وسطها",
+                  "في آخرها"
+                ]
+              },
+              {
+                "id": "u5-l4-t04",
+                "origin": "textbook",
+                "page": 142,
+                "kind": "mcq",
+                "prompt": "كم شكلًا لحرف العين؟",
+                "correctIndex": 0,
+                "difficulty": 1,
+                "choices": [
+                  "أربعة",
+                  "ثلاثة",
+                  "شكلان"
+                ]
+              },
+              {
+                "id": "u5-l4-t05",
+                "origin": "textbook",
+                "page": 143,
+                "kind": "mcq",
+                "prompt": "ما المقطع الأول في كلمة «ثَعْلَب»؟",
+                "correctIndex": 0,
+                "difficulty": 1,
+                "choices": [
+                  "ثَعْ",
+                  "ثِعْ",
+                  "ثَا"
+                ]
+              },
+              {
+                "id": "u5-l4-t06",
+                "origin": "textbook",
+                "page": 143,
+                "kind": "mcq",
+                "prompt": "ما المقطع الأول في كلمة «لُعْبة»؟",
+                "correctIndex": 0,
+                "difficulty": 1,
+                "choices": [
+                  "لُعْ",
+                  "لَعْ",
+                  "لُو"
+                ]
+              },
+              {
+                "id": "u5-l4-t07",
+                "origin": "textbook",
+                "page": 143,
+                "kind": "mcq",
+                "prompt": "ما المقطع الأول في كلمة «شِعْر»؟",
+                "correctIndex": 0,
+                "difficulty": 1,
+                "choices": [
+                  "شِعْ",
+                  "شَعْ",
+                  "شِي"
+                ]
+              },
+              {
+                "id": "u5-l4-t08",
+                "origin": "textbook",
+                "kind": "order",
+                "prompt": "رتّب الحروف لتكوّن كلمة",
+                "answer": "علم",
+                "difficulty": 1,
+                "page": 142
+              },
+              {
+                "id": "u5-l4-t09",
+                "origin": "textbook",
+                "kind": "order",
+                "prompt": "رتّب الحروف لتكوّن كلمة",
+                "answer": "عسل",
+                "difficulty": 1,
+                "page": 142
+              },
+              {
+                "id": "u5-l4-t10",
+                "origin": "textbook",
+                "kind": "order",
+                "prompt": "رتّب الحروف لتكوّن كلمة",
+                "answer": "عنب",
+                "difficulty": 1,
+                "page": 142
+              },
+              {
+                "id": "u5-l4-t11",
+                "origin": "textbook",
+                "kind": "order",
+                "prompt": "رتّب الحروف لتكوّن كلمة",
+                "answer": "عيدان",
+                "difficulty": 1,
+                "page": 142
+              }
+            ],
+            "number": 4,
+            "games": [
+              {
+                "template": "words"
+              },
+              {
+                "template": "quiz"
+              }
+            ]
+          },
+          {
+            "id": "u5-l5",
+            "title": "حَرْفُ الْكافِ (ك، كـ)",
+            "pages": [
+              147,
+              152
+            ],
+            "questions": [
+              {
+                "id": "u5-l5-t01",
+                "origin": "textbook",
+                "page": 147,
+                "kind": "mcq",
+                "prompt": "أيّ كلمة تبدأ بحرف الكاف؟",
+                "correctIndex": 0,
+                "difficulty": 1,
+                "choices": [
+                  "كتاب",
+                  "سمك",
+                  "مكتب"
+                ]
+              },
+              {
+                "id": "u5-l5-t02",
+                "origin": "textbook",
+                "page": 147,
+                "kind": "mcq",
+                "prompt": "أين حرف الكاف في كلمة «سمك»؟",
+                "correctIndex": 2,
+                "difficulty": 1,
+                "choices": [
+                  "في أولها",
+                  "في وسطها",
+                  "في آخرها"
+                ]
+              },
+              {
+                "id": "u5-l5-t03",
+                "origin": "textbook",
+                "page": 147,
+                "kind": "mcq",
+                "prompt": "أين حرف الكاف في كلمة «مكتب»؟",
+                "correctIndex": 1,
+                "difficulty": 1,
+                "choices": [
+                  "في أولها",
+                  "في وسطها",
+                  "في آخرها"
+                ]
+              },
+              {
+                "id": "u5-l5-t04",
+                "origin": "textbook",
+                "page": 148,
+                "kind": "mcq",
+                "prompt": "ما المقطع الأول في كلمة «بَكْر»؟",
+                "correctIndex": 0,
+                "difficulty": 1,
+                "choices": [
+                  "بَكْ",
+                  "بِكْ",
+                  "بَا"
+                ]
+              },
+              {
+                "id": "u5-l5-t05",
+                "origin": "textbook",
+                "page": 148,
+                "kind": "mcq",
+                "prompt": "ما المقطع الأول في كلمة «شُكْر»؟",
+                "correctIndex": 0,
+                "difficulty": 1,
+                "choices": [
+                  "شُكْ",
+                  "شَكْ",
+                  "شُو"
+                ]
+              },
+              {
+                "id": "u5-l5-t06",
+                "origin": "textbook",
+                "page": 148,
+                "kind": "mcq",
+                "prompt": "ما المقطع الأول في كلمة «مِكْنَس»؟",
+                "correctIndex": 0,
+                "difficulty": 1,
+                "choices": [
+                  "مِكْ",
+                  "مَكْ",
+                  "مِي"
+                ]
+              },
+              {
+                "id": "u5-l5-t07",
+                "origin": "textbook",
+                "page": 148,
+                "kind": "mcq",
+                "prompt": "أيّ مقطع فيه مدّ؟",
+                "correctIndex": 0,
+                "difficulty": 1,
+                "choices": [
+                  "كا",
+                  "كَ",
+                  "كْ"
+                ]
+              },
+              {
+                "id": "u5-l5-t08",
+                "origin": "textbook",
+                "kind": "order",
+                "prompt": "رتّب الحروف لتكوّن كلمة",
+                "answer": "كلب",
+                "difficulty": 1,
+                "page": 147
+              },
+              {
+                "id": "u5-l5-t09",
+                "origin": "textbook",
+                "kind": "order",
+                "prompt": "رتّب الحروف لتكوّن كلمة",
+                "answer": "كأس",
+                "difficulty": 1,
+                "page": 147
+              },
+              {
+                "id": "u5-l5-t10",
+                "origin": "textbook",
+                "kind": "order",
+                "prompt": "رتّب الحروف لتكوّن كلمة",
+                "answer": "كيس",
+                "difficulty": 1,
+                "page": 147
+              },
+              {
+                "id": "u5-l5-t11",
+                "origin": "textbook",
+                "kind": "order",
+                "prompt": "رتّب الحروف لتكوّن كلمة",
+                "answer": "كوب",
+                "difficulty": 1,
+                "page": 147
+              }
+            ],
+            "number": 5,
+            "games": [
+              {
+                "template": "words"
+              },
+              {
+                "template": "quiz"
+              }
+            ]
+          },
+          {
+            "id": "u5-l6",
+            "title": "حَرْفُ الْواوِ (و)",
+            "pages": [
+              153,
+              154
+            ],
+            "questions": [
+              {
+                "id": "u5-l6-t01",
+                "origin": "textbook",
+                "page": 153,
+                "kind": "mcq",
+                "prompt": "أيّ كلمة تبدأ بحرف الواو؟",
+                "correctIndex": 0,
+                "difficulty": 1,
+                "choices": [
+                  "ورقة",
+                  "دلو",
+                  "لوز"
+                ]
+              },
+              {
+                "id": "u5-l6-t02",
+                "origin": "textbook",
+                "page": 153,
+                "kind": "mcq",
+                "prompt": "أين حرف الواو في كلمة «دلو»؟",
+                "correctIndex": 2,
+                "difficulty": 1,
+                "choices": [
+                  "في أولها",
+                  "في وسطها",
+                  "في آخرها"
+                ]
+              },
+              {
+                "id": "u5-l6-t03",
+                "origin": "textbook",
+                "page": 154,
+                "kind": "mcq",
+                "prompt": "أين حرف الواو في كلمة «جرو»؟",
+                "correctIndex": 2,
+                "difficulty": 1,
+                "choices": [
+                  "في أولها",
+                  "في وسطها",
+                  "في آخرها"
+                ]
+              },
+              {
+                "id": "u5-l6-t04",
+                "origin": "textbook",
+                "page": 154,
+                "kind": "mcq",
+                "prompt": "ما الحركة على الواو في «وَلَد»؟",
+                "correctIndex": 0,
+                "difficulty": 1,
+                "choices": [
+                  "الفتحة",
+                  "الضمة",
+                  "الكسرة"
+                ]
+              },
+              {
+                "id": "u5-l6-t05",
+                "origin": "textbook",
+                "page": 153,
+                "kind": "mcq",
+                "prompt": "ما الحركة على الواو في «وِسادة»؟",
+                "correctIndex": 2,
+                "difficulty": 1,
+                "choices": [
+                  "الفتحة",
+                  "الضمة",
+                  "الكسرة"
+                ]
+              },
+              {
+                "id": "u5-l6-t06",
+                "origin": "textbook",
+                "page": 153,
+                "kind": "mcq",
+                "prompt": "ما الحركة على الواو في «وُرود»؟",
+                "correctIndex": 1,
+                "difficulty": 1,
+                "choices": [
+                  "الفتحة",
+                  "الضمة",
+                  "الكسرة"
+                ]
+              },
+              {
+                "id": "u5-l6-t07",
+                "origin": "textbook",
+                "page": 153,
+                "kind": "mcq",
+                "prompt": "ما الذي على الواو في «لَوْز»؟",
+                "correctIndex": 3,
+                "difficulty": 1,
+                "choices": [
+                  "الفتحة",
+                  "الضمة",
+                  "الكسرة",
+                  "السكون"
+                ]
+              },
+              {
+                "id": "u5-l6-t08",
+                "origin": "textbook",
+                "kind": "order",
+                "prompt": "رتّب الحروف لتكوّن كلمة",
+                "answer": "وجه",
+                "difficulty": 1,
+                "page": 153
+              },
+              {
+                "id": "u5-l6-t09",
+                "origin": "textbook",
+                "kind": "order",
+                "prompt": "رتّب الحروف لتكوّن كلمة",
+                "answer": "ورود",
+                "difficulty": 1,
+                "page": 153
+              },
+              {
+                "id": "u5-l6-t10",
+                "origin": "textbook",
+                "kind": "order",
+                "prompt": "رتّب الحروف لتكوّن كلمة",
+                "answer": "ولد",
+                "difficulty": 1,
+                "page": 154
+              },
+              {
+                "id": "u5-l6-t11",
+                "origin": "textbook",
+                "kind": "order",
+                "prompt": "رتّب الحروف لتكوّن كلمة",
+                "answer": "وشاح",
+                "difficulty": 1,
+                "page": 154
+              }
+            ],
+            "number": 6,
+            "games": [
+              {
+                "template": "words"
+              },
+              {
+                "template": "quiz"
+              }
+            ]
+          },
+          {
+            "id": "u5-l7",
+            "title": "حَرْفُ الْياءِ (ي، يـ)",
+            "pages": [
+              155,
+              158
+            ],
+            "questions": [
+              {
+                "id": "u5-l7-t01",
+                "origin": "textbook",
+                "page": 155,
+                "kind": "mcq",
+                "prompt": "أيّ كلمة تبدأ بحرف الياء؟",
+                "correctIndex": 0,
+                "difficulty": 1,
+                "choices": [
+                  "يد",
+                  "شاي",
+                  "بيض"
+                ]
+              },
+              {
+                "id": "u5-l7-t02",
+                "origin": "textbook",
+                "page": 155,
+                "kind": "mcq",
+                "prompt": "أين حرف الياء في كلمة «شاي»؟",
+                "correctIndex": 2,
+                "difficulty": 1,
+                "choices": [
+                  "في أولها",
+                  "في وسطها",
+                  "في آخرها"
+                ]
+              },
+              {
+                "id": "u5-l7-t03",
+                "origin": "textbook",
+                "page": 155,
+                "kind": "mcq",
+                "prompt": "أين حرف الياء في كلمة «مصيف»؟",
+                "correctIndex": 1,
+                "difficulty": 1,
+                "choices": [
+                  "في أولها",
+                  "في وسطها",
+                  "في آخرها"
+                ]
+              },
+              {
+                "id": "u5-l7-t04",
+                "origin": "textbook",
+                "page": 155,
+                "kind": "mcq",
+                "prompt": "ما الحركة على الياء في «يَد»؟",
+                "correctIndex": 0,
+                "difficulty": 1,
+                "choices": [
+                  "الفتحة",
+                  "الضمة",
+                  "الكسرة"
+                ]
+              },
+              {
+                "id": "u5-l7-t05",
+                "origin": "textbook",
+                "page": 156,
+                "kind": "mcq",
+                "prompt": "ما الحركة على الياء في «يُسْرى»؟",
+                "correctIndex": 1,
+                "difficulty": 1,
+                "choices": [
+                  "الفتحة",
+                  "الضمة",
+                  "الكسرة"
+                ]
+              },
+              {
+                "id": "u5-l7-t06",
+                "origin": "textbook",
+                "page": 155,
+                "kind": "mcq",
+                "prompt": "ما الذي على الياء في «بَيْض»؟",
+                "correctIndex": 3,
+                "difficulty": 1,
+                "choices": [
+                  "الفتحة",
+                  "الضمة",
+                  "الكسرة",
+                  "السكون"
+                ]
+              },
+              {
+                "id": "u5-l7-t07",
+                "origin": "textbook",
+                "page": 156,
+                "kind": "mcq",
+                "prompt": "ما الذي على الياء في «صَيْف»؟",
+                "correctIndex": 3,
+                "difficulty": 1,
+                "choices": [
+                  "الفتحة",
+                  "الضمة",
+                  "الكسرة",
+                  "السكون"
+                ]
+              },
+              {
+                "id": "u5-l7-t08",
+                "origin": "textbook",
+                "kind": "order",
+                "prompt": "رتّب الحروف لتكوّن كلمة",
+                "answer": "يقطين",
+                "difficulty": 1,
+                "page": 155
+              },
+              {
+                "id": "u5-l7-t09",
+                "origin": "textbook",
+                "kind": "order",
+                "prompt": "رتّب الحروف لتكوّن كلمة",
+                "answer": "ينبوع",
+                "difficulty": 1,
+                "page": 155
+              },
+              {
+                "id": "u5-l7-t10",
+                "origin": "textbook",
+                "kind": "order",
+                "prompt": "رتّب الحروف لتكوّن كلمة",
+                "answer": "ليمون",
+                "difficulty": 1,
+                "page": 156
+              },
+              {
+                "id": "u5-l7-t11",
+                "origin": "textbook",
+                "kind": "order",
+                "prompt": "رتّب الحروف لتكوّن كلمة",
+                "answer": "ياسمين",
+                "difficulty": 1,
+                "page": 156
+              }
+            ],
+            "number": 7,
+            "games": [
+              {
+                "template": "words"
+              },
+              {
+                "template": "quiz"
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  }
+}

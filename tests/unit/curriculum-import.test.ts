@@ -1,3 +1,5 @@
+import { readdirSync, readFileSync } from "node:fs";
+import { join } from "node:path";
 import { beforeEach, describe, expect, it } from "vitest";
 import { collectBackupData, makeBackup, parseBackup, restoreBackup } from "@/lib/backup";
 import { duplicateOf, fingerprint, planImport } from "@/lib/curriculum/import";
@@ -131,6 +133,18 @@ describe("import plan", () => {
     const renamed = { ...f, curriculum: { ...f.curriculum, id: "another-id" } };
     expect(duplicateOf(planImport(renamed), [a.book])).not.toBeNull(); // same titles
     expect(fingerprint({ ...f, curriculum: { ...f.curriculum, textbook: { title: "x", sha256: "ABC" } } })).toBe("sha256:abc");
+  });
+});
+
+describe("curriculum files in curricula/", () => {
+  const dir = join(__dirname, "../../curricula");
+  const files = readdirSync(dir).filter((f) => f.endsWith(".json") && JSON.parse(readFileSync(join(dir, f), "utf8")).kind === "curriculum");
+  it.each(files)("%s is valid and every game it builds passes the game check", (f) => {
+    const r = validateCurriculumFile(JSON.parse(readFileSync(join(dir, f), "utf8")));
+    expect(r.issues.filter((i) => i.level === "error")).toEqual([]);
+    const plan = planImport(r.file!);
+    expect(plan.games.length).toBeGreaterThan(0);
+    for (const g of plan.games) expect(validateGame(g)).toEqual([]);
   });
 });
 

@@ -186,3 +186,27 @@ test("full Grade 1 math book (semester 1): replaces the first test import, 17 le
   await page.getByRole("button", { name: "ابدأ اللعب" }).click();
   await expect(page.getByTestId("classroom")).toBeVisible();
 });
+
+test("full Grade 1 Arabic book (semester 1): 39 lessons, the word maker plays the lesson's words", async ({ page }) => {
+  const FULL = path.join(__dirname, "../../curricula/jo-g1-arabic-s1-2026.json");
+  await freshStart(page);
+  await page.getByRole("link", { name: "📚 استيراد منهج" }).first().click();
+  await expect(page.getByRole("heading", { name: "📚 استيراد منهج" })).toBeVisible();
+  await page.getByTestId("curriculum-input").setInputFiles(FULL);
+  await expect(page.getByTestId("import-summary")).toContainText("295 سؤالًا (287 من الكتاب، 8 مولّدة) • 58 لعبة");
+  await page.getByRole("button", { name: "استيراد", exact: true }).click();
+  await expect(page.getByText(/تم استيراد المنهج: 39 درسًا و295 سؤالًا و58 لعبة/)).toBeVisible();
+
+  // Lesson «حرف الباء»: the word maker builds باب / بحر / كلب from shuffled letters.
+  await page.goto("/play/?id=imp_jo-g1-arabic-s1-2026__u1-l6__words");
+  await page.getByRole("button", { name: "ابدأ اللعب" }).click();
+  const tiles = page.locator("[data-task] [data-testid=words-tile]");
+  await expect(tiles.first()).toBeVisible({ timeout: 15_000 });
+  const letters = [...(await tiles.allTextContents())].sort().join("");
+  expect(["باب", "بحر", "كلب"].map((w) => [...w].sort().join(""))).toContain(letters);
+  // Lesson «تنوين الضم»: the quiz starts with the lesson's questions.
+  // (one difficulty in the file, so no difficulty screen)
+  await page.goto("/play/?id=imp_jo-g1-arabic-s1-2026__u2-l6__quiz");
+  await page.getByRole("button", { name: "ابدأ اللعب" }).click();
+  await expect(page.getByTestId("question-prompt")).toBeVisible({ timeout: 15_000 });
+});
