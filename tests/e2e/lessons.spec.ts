@@ -129,12 +129,12 @@ test.describe("lesson preparation", () => {
     await page.getByRole("button", { name: "إيقاف مؤقت" }).click();
     await expect(page.getByText("الحصة متوقفة مؤقتًا")).toBeVisible();
     await page.getByRole("button", { name: "متابعة" }).click();
-    await page.getByRole("button", { name: "الانتقال للمرحلة التالية" }).click();
+    await page.getByTestId("stage-done").getByRole("button", { name: "الانتقال للمرحلة التالية" }).click();
     // 2) Main game: number train, six questions
     await expect(page.getByTestId("stage-intro").last()).toHaveText("اللعبة الرئيسية");
     await answerTrainLesson(page, 6);
     await expect(page.getByTestId("stage-done")).toBeVisible({ timeout: 20_000 });
-    await page.getByRole("button", { name: "الانتقال للمرحلة التالية" }).click();
+    await page.getByTestId("stage-done").getByRole("button", { name: "الانتقال للمرحلة التالية" }).click();
     // 3) Closing challenge between two teams
     await expect(page.getByTestId("stage-intro").last()).toHaveText("التحدي الختامي");
     for (let i = 0; i < 5; i++) {
@@ -162,9 +162,14 @@ test.describe("lesson preparation", () => {
     await page.getByRole("button", { name: "إنشاء الحصة" }).click();
     await page.waitForURL(/\/lessons\/edit/);
     await page.getByRole("button", { name: "ابدأ الحصة الآن" }).click();
+    await page.waitForURL(/\/lesson-run/);
     await page.getByRole("button", { name: "ابدأ الحصة الآن" }).click();
     await expect(page.getByTestId("warmup")).toBeVisible();
-    await page.getByRole("button", { name: "الانتقال للمرحلة التالية" }).click();
+    await page.getByRole("button", { name: "الانتقال للمرحلة التالية" }).click(); // floating button (large screens)
+    await expect(page.getByTestId("stage-intro").last()).toHaveText("اللعبة الرئيسية");
+    await page.getByRole("button", { name: "المرحلة السابقة" }).click();
+    await expect(page.getByTestId("stage-intro").last()).toHaveText("التمهيد");
+    await page.getByRole("button", { name: "المرحلة التالية", exact: true }).click(); // toolbar button
     await expect(page.getByTestId("stage-intro").last()).toHaveText("اللعبة الرئيسية");
     await page.getByRole("button", { name: "المرحلة السابقة" }).click();
     await expect(page.getByTestId("stage-intro").last()).toHaveText("التمهيد");

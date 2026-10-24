@@ -187,7 +187,7 @@ export function LessonRunner() {
   return (
     <div ref={rootRef} className="relative flex h-dvh flex-col overflow-hidden bg-hero-bg" data-testid="lesson-runner">
       <header className="z-40 flex flex-wrap items-center gap-2 bg-gradient-to-l from-hero-blue to-hero-purple px-3 py-2 text-white md:px-5">
-        <div className="min-w-0 flex-1">
+        <div className="min-w-0 basis-full md:basis-0 md:flex-1">
           <h1 className="truncate font-display text-lg font-extrabold md:text-2xl">{plan.title}{preview && " • معاينة"}</h1>
           <div className="flex items-center gap-2 text-sm">
             {plan.segments.map((s, i) => (
@@ -205,6 +205,7 @@ export function LessonRunner() {
             <Hud label="تمديد دقيقة" onClick={() => setRemaining((r) => r.map((v, i) => (i === stage ? v + 60 : v)))}><Plus /></Hud>
             <Hud label={paused ? "استئناف" : "إيقاف مؤقت"} onClick={() => setPaused((p) => !p)}>{paused ? <Play /> : <Pause />}</Hud>
             <Hud label="المرحلة السابقة" disabled={stage === 0} onClick={() => goStage(stage - 1)}><ChevronRight /></Hud>
+            <Hud label="المرحلة التالية" disabled={stage === 2} onClick={() => goStage(stage + 1)}><ChevronLeft /></Hud>
             <Hud label="إعادة النشاط" onClick={() => { setRunKey((k) => k + 1); setResults((r) => r.map((v, i) => (i === stage ? null : v))); }}><RotateCcw /></Hud>
             <Hud label="إنهاء الحصة" onClick={endLesson}><Square /></Hud>
           </>
@@ -284,7 +285,7 @@ export function LessonRunner() {
           <button
             type="button"
             onClick={() => goStage(stage + 1)}
-            className="absolute bottom-3 start-3 z-30 flex min-h-12 cursor-pointer items-center gap-2 rounded-2xl bg-white/95 px-4 font-display font-bold shadow-soft"
+            className="absolute bottom-3 start-3 z-30 hidden min-h-12 cursor-pointer items-center gap-2 rounded-2xl bg-white/95 px-4 font-display font-bold shadow-soft lg:flex"
           >
             الانتقال للمرحلة التالية <ChevronLeft className="size-5" />
           </button>

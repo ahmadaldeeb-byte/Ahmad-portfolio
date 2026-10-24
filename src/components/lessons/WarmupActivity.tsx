@@ -80,7 +80,7 @@ export function WarmupActivity({ activity, onDone }: { activity: WarmupSegment["
               <span className="h-6 w-1.5 rounded-full bg-hero-ink/70" />
               <span
                 className={cn(
-                  "grid size-12 place-items-center rounded-2xl font-display text-2xl font-extrabold md:size-14 md:text-3xl",
+                  "grid size-8 place-items-center rounded-xl font-display text-base font-extrabold sm:size-12 sm:rounded-2xl sm:text-2xl md:size-14 md:text-3xl",
                   n === q.n ? "bg-hero-blue text-white" : n === pos && solved ? "bg-hero-green text-white" : "bg-white shadow-soft",
                 )}
               >
