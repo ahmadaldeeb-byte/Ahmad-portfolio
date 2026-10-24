@@ -1,4 +1,5 @@
-import type { CurriculumBook, CurriculumLesson, CurriculumUnit, PlannedGame, Semester } from "./types";
+import type { GameType } from "@/lib/types";
+import type { CurriculumBook, CurriculumLesson, CurriculumUnit, Semester } from "./types";
 
 /*
  * Provisional index of the Jordanian Grade 1 mathematics book (2 semesters,
@@ -11,7 +12,8 @@ import type { CurriculumBook, CurriculumLesson, CurriculumUnit, PlannedGame, Sem
 
 type L = [title: string, extra?: Partial<Omit<CurriculumLesson, "id" | "title">>];
 
-const p = (...planned: PlannedGame[]) => ({ planned });
+/** Lesson games (all playable now). */
+const p = (...games: GameType[]) => ({ games });
 
 function unit(number: number, semester: Semester, title: string, lessons: L[]): CurriculumUnit {
   const id = `g1m-u${number}`;
@@ -60,7 +62,7 @@ export const GRADE1_MATH: CurriculumBook = {
       ["الْعَدُّ الْقَفْزِيُّ"],
       ["الْعَدَدُ السّابِقُ وَالْعَدَدُ التّالي", { games: ["train"], template: "prev-next" }],
       ["مُقارَنَةُ الْأَعْدادِ", p("crocodile")],
-      ["تَرْتيبُ الْأَعْدادِ", { games: ["train"], planned: ["crocodile"] }],
+      ["تَرْتيبُ الْأَعْدادِ", { games: ["train", "crocodile"] }],
       ["التَّقْديرُ"],
     ]),
     unit(4, 1, "الْجَمْعُ", [
@@ -108,7 +110,7 @@ export const GRADE1_MATH: CurriculumBook = {
       ["الْأَجْزاءُ الْمُتَطابِقَةُ", p("pizza")],
       ["النِّصْفُ", p("pizza")],
       ["الرُّبْعُ", p("pizza")],
-      ["الْكَسْرُ كَجُزْءٍ مِنْ مَجْموعَةٍ"],
+      ["الْكَسْرُ كَجُزْءٍ مِنْ مَجْموعَةٍ", p("pizza")],
     ]),
     unit(11, 2, "الزَّمَنُ وَالنُّقودُ", [
       ["أَيّامُ الْأُسْبوعِ"],

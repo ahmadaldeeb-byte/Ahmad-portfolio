@@ -1,4 +1,5 @@
 "use client";
+import { useState } from "react";
 import type { MathSettings } from "@/lib/math/common";
 import { MATH_GAME_INFO, type MathGameType } from "@/lib/math/meta";
 import { Field, Segmented, inputClass } from "./ui";
@@ -8,6 +9,7 @@ export function MathSettingsForm({ type, value, onChange }: { type: MathGameType
   const info = MATH_GAME_INFO[type];
   const set = (patch: Partial<MathSettings>) => onChange({ ...value, ...patch });
   const presets = [5, 8, 10, 15];
+  const [custom, setCustom] = useState(!presets.includes(value.count));
   return (
     <div className="flex flex-col gap-5">
       <Field label="المستوى" group>
@@ -15,8 +17,15 @@ export function MathSettingsForm({ type, value, onChange }: { type: MathGameType
       </Field>
       {type !== "raceAdd" && (
         <Field label="عدد المهام" group>
-          <Segmented value={presets.includes(value.count) ? value.count : 0} onChange={(c) => set({ count: c || value.count })} options={[...presets.map((c) => ({ value: c, label: String(c) })), { value: 0, label: "عدد مخصص" }]} />
-          {!presets.includes(value.count) && (
+          <Segmented
+            value={custom ? 0 : value.count}
+            onChange={(c) => {
+              setCustom(c === 0);
+              if (c) set({ count: c });
+            }}
+            options={[...presets.map((c) => ({ value: c, label: String(c) })), { value: 0, label: "عدد مخصص" }]}
+          />
+          {custom && (
             <input type="number" min={1} max={30} aria-label="عدد المهام المخصص" className={`${inputClass} mt-2 w-28`} value={value.count} onChange={(e) => set({ count: Math.round(Number(e.target.value) || 1) })} />
           )}
         </Field>

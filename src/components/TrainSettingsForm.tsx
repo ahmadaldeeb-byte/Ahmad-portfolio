@@ -1,4 +1,5 @@
 "use client";
+import { useState } from "react";
 import { carCount, validateTrainSettings, type TrainDifficulty, type TrainMode, type TrainSettings } from "@/lib/train";
 import { Field, Segmented, inputClass } from "./ui";
 
@@ -13,7 +14,8 @@ const COUNTS = [5, 10, 15];
 export function TrainSettingsForm({ value, onChange }: { value: TrainSettings; onChange: (v: TrainSettings) => void }) {
   const set = (patch: Partial<TrainSettings>) => onChange({ ...value, ...patch });
   const preset = RANGES.find((r) => r.min === value.min && r.max === value.max)?.id ?? "custom";
-  const countPreset = COUNTS.includes(value.count) ? value.count : 0;
+  const [customCount, setCustomCount] = useState(!COUNTS.includes(value.count));
+  const countPreset = customCount ? 0 : value.count;
   const errors = validateTrainSettings(value);
   return (
     <div className="flex flex-col gap-5">
@@ -53,7 +55,12 @@ export function TrainSettingsForm({ value, onChange }: { value: TrainSettings; o
         )}
       </Field>
       <Field label="عدد الأسئلة" group>
-        <Segmented value={countPreset} onChange={(c) => set({ count: c || value.count })} options={[...COUNTS.map((c) => ({ value: c, label: String(c) })), { value: 0, label: "عدد مخصص" }]} />
+        <Segmented
+          value={countPreset}
+          onChange={(c) => {
+            setCustomCount(c === 0);
+            if (c) set({ count: c });
+          }} options={[...COUNTS.map((c) => ({ value: c, label: String(c) })), { value: 0, label: "عدد مخصص" }]} />
         {countPreset === 0 && (
           <input type="number" min={1} max={50} className={`${inputClass} mt-2 w-28`} value={value.count} onChange={(e) => set({ count: Math.round(Number(e.target.value) || 1) })} aria-label="عدد الأسئلة المخصص" />
         )}

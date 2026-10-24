@@ -297,6 +297,42 @@ const LESSON_TRAIN: Record<string, Partial<TrainSettings>> = {
   "g1m-u2-l7": { mode: "mix", min: 0, max: 99, count: 10, difficulty: "medium" },
 };
 
+/** Level of each math game for the lessons it serves (default 1). */
+const LESSON_LEVELS: Record<string, Partial<Record<GameType, 1 | 2 | 3>>> = {
+  "g1m-u2-l2": { factory: 2 },
+  "g1m-u2-l3": { factory: 2 },
+  "g1m-u2-l4": { factory: 3 },
+  "g1m-u2-l5": { island: 2 },
+  "g1m-u3-l4": { crocodile: 2 },
+  "g1m-u3-l5": { crocodile: 3 },
+  "g1m-u4-l5": { rocket: 2 },
+  "g1m-u4-l6": { rocket: 2 },
+  "g1m-u4-l7": { rocket: 3 },
+  "g1m-u5-l2": { appleBasket: 2 },
+  "g1m-u5-l3": { appleBasket: 3 },
+  "g1m-u5-l4": { pirates: 2 },
+  "g1m-u5-l5": { pirates: 2 },
+  "g1m-u7-l2": { raceAdd: 2 },
+  "g1m-u7-l3": { raceAdd: 3 },
+  "g1m-u8-l1": { pirates: 3 },
+  "g1m-u8-l2": { pirates: 3 },
+  "g1m-u8-l3": { pirates: 3 },
+  "g1m-u9-l3": { shapes: 2 },
+  "g1m-u9-l4": { shapes: 3 },
+  "g1m-u10-l2": { pizza: 2 },
+  "g1m-u10-l3": { pizza: 2 },
+  "g1m-u10-l4": { pizza: 3 },
+  "g1m-u11-l3": { clock: 2 },
+  "g1m-u11-l4": { clock: 3 },
+  "g1m-u11-l6": { market: 2 },
+  "g1m-u11-l7": { market: 3 },
+  "g1m-u12-l2": { measure: 3 },
+  "g1m-u12-l3": { measure: 2 },
+  "g1m-u12-l4": { measure: 3 },
+  "g1m-u12-l5": { measure: 3 },
+  "g1m-u12-l6": { measure: 3 },
+};
+
 /** Games prepared for specific curriculum lessons (shown on the curriculum page and in the library). */
 export function lessonGames(): GameConfig[] {
   const out: GameConfig[] = [];
@@ -304,12 +340,13 @@ export function lessonGames(): GameConfig[] {
     for (const unit of book.units)
       for (const lesson of unit.lessons)
         for (const type of lesson.games) {
-          if (type !== "train") continue;
-          const settings = defaultSettings("train");
-          settings.train = { ...TRAIN_DEFAULTS, ...LESSON_TRAIN[lesson.id] };
+          const settings = defaultSettings(type);
+          if (type === "train") settings.train = { ...TRAIN_DEFAULTS, ...LESSON_TRAIN[lesson.id] };
+          else if (isMathGame(type)) settings.math = { ...MATH_DEFAULTS, level: LESSON_LEVELS[lesson.id]?.[type] ?? 1 };
+          else continue;
           out.push({
             id: `lesson_${lesson.id}_${type}`,
-            title: `قطار الأرقام — ${lesson.title.replace(/[\u064B-\u0652]/g, "")}`,
+            title: `${GAMES.find((g) => g.type === type)!.name} — ${lesson.title.replace(/[\u064B-\u0652]/g, "")}`,
             grade: book.grade,
             subject: book.subject,
             lesson: lesson.title.replace(/[\u064B-\u0652]/g, ""),

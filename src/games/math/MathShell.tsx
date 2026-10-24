@@ -21,6 +21,8 @@ export interface MathApi {
   /** Test mode, after a wrong answer: show the right answer. */
   revealed: boolean;
   mistakes: number;
+  /** The current task was just answered correctly. */
+  solved: boolean;
   fmt: (n: number | string) => string;
 }
 
@@ -52,6 +54,7 @@ export function MathShell<T>({ game, paused, onFinish, tasks, prompt, skill, hin
   const [mistakes, setMistakes] = useState(0);
   const [locked, setLocked] = useState(false);
   const [revealed, setRevealed] = useState(false);
+  const [solvedNow, setSolvedNow] = useState(false);
   const [score, setScore] = useState(0);
   const [solved, setSolved] = useState(0);
   const [celebrating, setCelebrating] = useState(0);
@@ -77,6 +80,7 @@ export function MathShell<T>({ game, paused, onFinish, tasks, prompt, skill, hin
       setMistakes(0);
       setLocked(false);
       setRevealed(false);
+      setSolvedNow(false);
       setShowHint(false);
     }, delay);
   };
@@ -98,6 +102,7 @@ export function MathShell<T>({ game, paused, onFinish, tasks, prompt, skill, hin
       const nextSolved = solved + 1;
       setScore(nextScore);
       setSolved(nextSolved);
+      setSolvedNow(true);
       setLocked(true);
       const extra = celebrate?.(nextSolved) ?? 0;
       if (extra) {
@@ -123,7 +128,7 @@ export function MathShell<T>({ game, paused, onFinish, tasks, prompt, skill, hin
     advance(2200, score);
   };
 
-  const api: MathApi = { submit, locked: locked || paused, revealed, mistakes, fmt };
+  const api: MathApi = { submit, locked: locked || paused, revealed, mistakes, solved: solvedNow, fmt };
 
   return (
     <div className="relative flex size-full flex-col">

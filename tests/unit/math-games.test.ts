@@ -182,6 +182,11 @@ describe("math game generators", () => {
           if (t.kind === "units") continue;
           expect(new Set(t.values).size).toBe(t.values.length);
           expect(measureAnswer(t)).toBeGreaterThanOrEqual(0);
+          if (t.kind === "mass") {
+            // a feather is never heavier than a brick
+            const order = ["🪶", "🎈", "🍎", "📚", "🍉", "🧱"];
+            t.items.forEach((it, k) => expect(t.values[k]).toBe(order.indexOf(it) + 1));
+          }
         }
   });
 });

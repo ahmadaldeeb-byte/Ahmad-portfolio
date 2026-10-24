@@ -1,8 +1,33 @@
 import type { GameType } from "@/lib/types";
 
 /** Original vector illustrations used as game thumbnails. */
+const MATH_ART: Partial<Record<GameType, { emoji: string; bg: string; deco: string }>> = {
+  island: { emoji: "🏝️", bg: "#A5D8FF", deco: "🍎" },
+  crocodile: { emoji: "🐊", bg: "#B2F2BB", deco: "🐟" },
+  rocket: { emoji: "🚀", bg: "#1B1464", deco: "🪐" },
+  appleBasket: { emoji: "🍎", bg: "#FFE3E3", deco: "🧺" },
+  factory: { emoji: "🏗️", bg: "#FFF3BF", deco: "🧱" },
+  raceAdd: { emoji: "🏎️", bg: "#D0EBFF", deco: "➕" },
+  pirates: { emoji: "🏴‍☠️", bg: "#F3D9A4", deco: "🗝️" },
+  shapes: { emoji: "🏰", bg: "#C3FAE8", deco: "🔺" },
+  pizza: { emoji: "🍕", bg: "#FFE8CC", deco: "½" },
+  market: { emoji: "🛒", bg: "#FFDEEB", deco: "🪙" },
+  clock: { emoji: "🕒", bg: "#DBE4FF", deco: "⏰" },
+  measure: { emoji: "⚖️", bg: "#E9ECEF", deco: "📏" },
+};
+
 export function GameArt({ type, className }: { type: GameType; className?: string }) {
   const common = { viewBox: "0 0 240 150", className, "aria-hidden": true } as const;
+  const m = MATH_ART[type];
+  if (m)
+    return (
+      <svg {...common}>
+        <rect width="240" height="150" fill={m.bg} />
+        <circle cx="200" cy="30" r="40" fill="#fff" opacity=".35" />
+        <text x="120" y="102" textAnchor="middle" fontSize="72">{m.emoji}</text>
+        <text x="200" y="135" textAnchor="middle" fontSize="30" fontWeight="bold" fill="#25304B">{m.deco}</text>
+      </svg>
+    );
   switch (type) {
     case "wheel":
       return (

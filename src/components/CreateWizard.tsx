@@ -32,6 +32,9 @@ import { QuestionEditor } from "./QuestionEditor";
 import { TrainSettingsForm } from "./TrainSettingsForm";
 import { TRAIN_DEFAULTS } from "@/lib/train";
 import { RACE_DEFAULTS } from "@/lib/race";
+import { MATH_DEFAULTS } from "@/lib/math/common";
+import { isMathGame } from "@/lib/math/meta";
+import { MathSettingsForm } from "./MathSettingsForm";
 import { toast } from "./Toast";
 import { Badge, Button, Card, EmptyState, Field, IconButton, Loading, Modal, Segmented, inputClass } from "./ui";
 
@@ -132,7 +135,7 @@ export function CreateWizard() {
     update({
       type: t,
       title: !game.title || game.title === oldDefaultTitle ? `${gameMeta(t).name} — ${game.lesson}` : game.title,
-      settings: { ...defaults, ...game.settings, train: game.settings.train ?? defaults.train, timePerQuestion: game.settings.timePerQuestion || defaults.timePerQuestion },
+      settings: { ...defaults, ...game.settings, train: game.settings.train ?? defaults.train, math: game.settings.math ?? defaults.math, timePerQuestion: game.settings.timePerQuestion || defaults.timePerQuestion },
     });
   };
 
@@ -279,6 +282,13 @@ export function CreateWizard() {
             </StepCard>
           )}
 
+          {step === 4 && isMathGame(game.type) && (
+            <StepCard title={`إعدادات «${meta.name}»`}>
+              <p className="mb-4 text-hero-muted">تُولَّد مهام هذه اللعبة تلقائيًا وبصورة صحيحة حسب المستوى الذي تختاره.</p>
+              <MathSettingsForm type={game.type} value={game.settings.math ?? MATH_DEFAULTS} onChange={(math) => updateSettings({ math })} />
+            </StepCard>
+          )}
+
           {step === 4 && meta.generated && game.type === "train" && (
             <StepCard title="إعدادات أسئلة القطار">
               <p className="mb-4 text-hero-muted">تُولَّد أسئلة هذه اللعبة تلقائيًا وبصورة صحيحة ضمن النطاق الذي تختاره، ولا تخرج عنه أبدًا.</p>
@@ -386,7 +396,7 @@ export function CreateWizard() {
                   <Segmented value={game.settings.shuffle ? 1 : 0} onChange={(v) => updateSettings({ shuffle: v === 1 })} options={[{ value: 1, label: "عشوائي" }, { value: 0, label: "بالترتيب" }]} />
                 </Field>
 
-                {game.type === "race" && (
+                {(game.type === "race" || game.type === "raceAdd") && (
                   <>
                     <Field label="مدة السباق الافتراضية (بالدقائق)" hint="يمكن تغييرها قبل كل سباق.">
                       <input
@@ -438,7 +448,7 @@ export function CreateWizard() {
                   <div className="flex flex-col gap-3 md:col-span-2">
                     <div className="flex flex-wrap items-center justify-between gap-3">
                       <span className="font-display text-lg font-bold">الفرق</span>
-                      {game.type === "race" && <span className="text-hero-muted">فريقان يلعبان معًا: الأحمر يمين الشاشة والأزرق يسارها.</span>}
+                      {(game.type === "race" || game.type === "raceAdd") && <span className="text-hero-muted">فريقان يلعبان معًا: الأحمر يمين الشاشة والأزرق يسارها.</span>}
                       {game.type === "wheel" && (
                         <Segmented
                           value={game.settings.teams.length}
@@ -452,7 +462,7 @@ export function CreateWizard() {
                       )}
                     </div>
                     <div className="grid gap-3 sm:grid-cols-2">
-                      {(game.type === "race" ? game.settings.teams.slice(0, 2) : game.settings.teams).map((t, i) => (
+                      {(game.type === "race" || game.type === "raceAdd" ? game.settings.teams.slice(0, 2) : game.settings.teams).map((t, i) => (
                         <div key={i} className="flex items-center gap-3 rounded-2xl border-2 p-2" style={{ borderColor: t.color }}>
                           <span className="size-10 shrink-0 rounded-xl" style={{ background: t.color }} />
                           <input

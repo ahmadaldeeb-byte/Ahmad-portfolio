@@ -306,10 +306,11 @@ export interface MeasureTask {
   values: number[];
   items: string[];
 }
+/** Objects ordered from lightest / smallest to heaviest / largest, so comparisons match real life. */
 export const MEASURE_ITEMS = {
   length: ["✏️", "🖍️", "🖊️"],
-  mass: ["🍉", "🍎", "🪶", "📚", "🎈", "🧱"],
-  capacity: ["🪣", "🥛", "🫖", "🍶"],
+  mass: ["🪶", "🎈", "🍎", "📚", "🍉", "🧱"],
+  capacity: ["🥛", "🍶", "🫖", "🪣"],
 } as const;
 export function measureTasks(level: MathLevel, count: number): MeasureTask[] {
   const kinds: MeasureKind[] = level === 1 ? ["length"] : level === 2 ? ["length", "mass"] : ["length", "mass", "capacity", "units"];
@@ -320,10 +321,14 @@ export function measureTasks(level: MathLevel, count: number): MeasureTask[] {
       const len = rand(3, 9);
       return { key: `units:${len}`, kind, ask, values: [len], items: ["📏"] };
     }
-    const n = kind === "mass" ? 2 : 3;
-    const values = shuffle([2, 4, 6, 8, 10].slice(0, 5)).slice(0, n);
-    const items = kind === "mass" ? shuffle([...MEASURE_ITEMS.mass]).slice(0, 2) : kind === "capacity" ? shuffle([...MEASURE_ITEMS.capacity]).slice(0, 3) : [...MEASURE_ITEMS.length];
-    return { key: `${kind}:${ask}:${values.join(",")}`, kind, ask, values, items };
+    if (kind === "length") {
+      const values = shuffle([3, 5, 7, 9]).slice(0, 3);
+      return { key: `${kind}:${ask}:${values.join(",")}`, kind, ask, values, items: [...MEASURE_ITEMS.length] };
+    }
+    // Mass and capacity: pick real objects; their value is their rank in the ordered list.
+    const list = MEASURE_ITEMS[kind];
+    const idx = shuffle(list.map((_, k) => k)).slice(0, kind === "mass" ? 2 : 3);
+    return { key: `${kind}:${ask}:${idx.join(",")}`, kind, ask, values: idx.map((k) => k + 1), items: idx.map((k) => list[k]) };
   });
 }
 /** Index of the correct object for a comparison task. */

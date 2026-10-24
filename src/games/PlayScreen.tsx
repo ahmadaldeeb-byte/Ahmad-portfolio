@@ -9,6 +9,7 @@ import { HeroKid, RobotBuddy } from "@/components/Characters";
 import { Button, Loading } from "@/components/ui";
 import { sound } from "@/lib/audio";
 import { gameMeta, gradeLabel, subjectLabel } from "@/lib/constants";
+import { MATH_GAME_INFO } from "@/lib/math/meta";
 import { preparePlayable, validateGame } from "@/lib/questions";
 import type { GameType } from "@/lib/types";
 import { uid } from "@/lib/utils";
@@ -35,9 +36,22 @@ const GAME_COMPONENTS: Partial<Record<GameType, ComponentType<GameProps>>> = {
   quiz: dynamic(() => import("./quiz/QuizGame"), { ssr: false, loading: GameLoading }),
   teams: dynamic(() => import("./teams/TeamsGame"), { ssr: false, loading: GameLoading }),
   train: dynamic(() => import("./train/TrainGame"), { ssr: false, loading: GameLoading }),
+  island: dynamic(() => import("./math/IslandGame"), { ssr: false, loading: GameLoading }),
+  crocodile: dynamic(() => import("./math/CrocodileGame"), { ssr: false, loading: GameLoading }),
+  rocket: dynamic(() => import("./math/RocketGame"), { ssr: false, loading: GameLoading }),
+  appleBasket: dynamic(() => import("./math/AppleBasketGame"), { ssr: false, loading: GameLoading }),
+  factory: dynamic(() => import("./math/FactoryGame"), { ssr: false, loading: GameLoading }),
+  raceAdd: dynamic(() => import("./math/RaceAddGame"), { ssr: false, loading: GameLoading }),
+  pirates: dynamic(() => import("./math/PiratesGame"), { ssr: false, loading: GameLoading }),
+  shapes: dynamic(() => import("./math/ShapesGame"), { ssr: false, loading: GameLoading }),
+  pizza: dynamic(() => import("./math/PizzaGame"), { ssr: false, loading: GameLoading }),
+  market: dynamic(() => import("./math/MarketGame"), { ssr: false, loading: GameLoading }),
+  clock: dynamic(() => import("./math/ClockGame"), { ssr: false, loading: GameLoading }),
+  measure: dynamic(() => import("./math/MeasureGame"), { ssr: false, loading: GameLoading }),
 };
 
 const HOW_TO: Partial<Record<GameType, string[]>> = {
+  ...Object.fromEntries(Object.entries(MATH_GAME_INFO).map(([k, v]) => [k, v.howTo])),
   wheel: ["اضغط «دوّر العجلة» لتختار العجلة سؤالًا أو اسمًا بعدل تام.", "يجيب الطالب أو الفريق عن السؤال الظاهر.", "تُزال الخانة المستخدمة إن كان هذا الخيار مفعّلًا."],
   race: ["الفريق الأحمر على يمين الشاشة والفريق الأزرق على يسارها، ويلعبان في الوقت نفسه.", "لكل فريق أسئلته؛ كل إجابة صحيحة تدفع سيارته إلى الأمام، والخطأ لا يحرّكها.", "أول سيارة تعبر خط النهاية تفوز، وإن انتهى الوقت يفوز الأكثر تقدمًا."],
   train: ["في كل محطة عربة فارغة تنتظر عددها.", "اضغط على العدد الصحيح أو اسحبه إلى العربة.", "اضغط «تلميح» لترى خط الأعداد، ولا تُخصم نقاط عند الخطأ في الوضع التعليمي."],

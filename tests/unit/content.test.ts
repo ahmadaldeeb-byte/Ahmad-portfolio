@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { builtinGames, seedQuestions } from "@/content/seed";
+import { BOOKS } from "@/content/curriculum";
 import { GAMES } from "@/lib/constants";
 import { isArabic } from "@/lib/arabic";
 import { toPlayable, validateGame, validateQuestion } from "@/lib/questions";
@@ -30,9 +31,11 @@ describe("sample content", () => {
   });
   it("all built-in games are valid and playable", () => {
     const games = builtinGames();
-    const perSubject = (s: string) => GAMES.filter((g) => g.ready && (!g.subjects || g.subjects.includes(s as never))).length;
-    expect(games.filter((g) => !g.lessonId)).toHaveLength(3 * ["arabic", "math", "science", "english"].reduce((a, s) => a + perSubject(s), 0));
-    expect(games.filter((g) => g.lessonId).length).toBe(4);
+    const per = (s: string, grade: number) => GAMES.filter((g) => g.ready && (!g.subjects || g.subjects.includes(s as never)) && (!g.grades || g.grades.includes(grade as never))).length;
+    const expected = [1, 2, 3].reduce((a, gr) => a + ["arabic", "math", "science", "english"].reduce((b, s) => b + per(s, gr), 0), 0);
+    expect(games.filter((g) => !g.lessonId)).toHaveLength(expected);
+    const lessonLinks = BOOKS.flatMap((b) => b.units.flatMap((u) => u.lessons.flatMap((l) => l.games)));
+    expect(games.filter((g) => g.lessonId).length).toBe(lessonLinks.length);
     for (const g of games) expect(validateGame(g), g.id).toEqual([]);
   });
 });
