@@ -12,7 +12,8 @@ export type GameType =
   | "numbers"
   | "puzzle"
   | "space"
-  | "teams";
+  | "teams"
+  | "train";
 
 /** Question kinds supported by the editor and the question bank. */
 export type QuestionKind = "mcq" | "truefalse" | "order" | "match" | "arithmetic";
@@ -47,6 +48,8 @@ export interface Team {
   color: string;
 }
 
+import type { TrainSettings } from "./train";
+
 export interface GameSettings {
   /** Seconds per question; 0 disables the timer. */
   timePerQuestion: number;
@@ -57,6 +60,8 @@ export interface GameSettings {
   wheelMode?: "questions" | "names";
   wheelNames?: string[];
   removeUsed?: boolean;
+  /** Number train: generator settings (the game makes its own questions). */
+  train?: TrainSettings;
 }
 
 export interface GameConfig {
@@ -70,6 +75,8 @@ export interface GameConfig {
   questions: Question[];
   settings: GameSettings;
   builtin?: boolean;
+  /** Curriculum lesson this game was prepared for. */
+  lessonId?: string;
   createdAt: number;
   updatedAt: number;
 }

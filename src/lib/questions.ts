@@ -1,5 +1,6 @@
 import { gameMeta, KIND_LABELS } from "./constants";
 import type { GameConfig, Question, QuestionKind } from "./types";
+import { TRAIN_DEFAULTS, validateTrainSettings } from "./train";
 import { normalizeDigits, shuffle } from "./utils";
 
 /** A question reduced to "prompt + choices + one correct index", the shape choice-based games play. */
@@ -146,6 +147,10 @@ export function validateGame(game: GameConfig): ValidationIssue[] {
         message: `نوع السؤال «${KIND_LABELS[q.kind]}» غير مدعوم في لعبة «${meta.name}».`,
       });
   });
+  if (meta.generated) {
+    if (game.type === "train") for (const message of validateTrainSettings(game.settings.train ?? TRAIN_DEFAULTS)) issues.push({ message });
+    return issues;
+  }
   const playable = game.questions.filter((q) => meta.kinds.includes(q.kind) && validateQuestion(q).length === 0);
   const isNamesWheel = game.type === "wheel" && game.settings.wheelMode === "names";
   if (isNamesWheel) {

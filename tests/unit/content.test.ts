@@ -30,7 +30,9 @@ describe("sample content", () => {
   });
   it("all built-in games are valid and playable", () => {
     const games = builtinGames();
-    expect(games).toHaveLength(3 * 4 * GAMES.filter((g) => g.ready).length);
+    const perSubject = (s: string) => GAMES.filter((g) => g.ready && (!g.subjects || g.subjects.includes(s as never))).length;
+    expect(games.filter((g) => !g.lessonId)).toHaveLength(3 * ["arabic", "math", "science", "english"].reduce((a, s) => a + perSubject(s), 0));
+    expect(games.filter((g) => g.lessonId).length).toBe(4);
     for (const g of games) expect(validateGame(g), g.id).toEqual([]);
   });
 });

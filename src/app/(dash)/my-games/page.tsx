@@ -4,7 +4,7 @@ import { Copy, Download, Pencil, Play, Plus, Search, Trash2, Upload } from "luci
 import { useMemo, useRef, useState } from "react";
 import { HeroKid } from "@/components/Characters";
 import { GameArt } from "@/components/GameArt";
-import { customizeHref, playHref } from "@/components/GameCard";
+import { customizeHref, playHref, questionCount } from "@/components/GameCard";
 import { toast } from "@/components/Toast";
 import { Badge, Button, ConfirmDialog, EmptyState, IconButton, Loading, PageHeader, inputClass } from "@/components/ui";
 import { gameMeta, gradeLabel, subjectLabel } from "@/lib/constants";
@@ -89,7 +89,7 @@ export default function MyGamesPage() {
                 <div className="min-w-48 flex-1">
                   <h3 className="text-xl font-extrabold">{g.title}</h3>
                   <p className="text-hero-muted">
-                    {gameMeta(g.type).name} • {gradeLabel(g.grade)} • {subjectLabel(g.subject)} • {g.questions.length} سؤالًا
+                    {gameMeta(g.type).name} • {gradeLabel(g.grade)} • {subjectLabel(g.subject)} • {questionCount(g)} سؤالًا
                   </p>
                   <Badge color="#868E96" className="mt-1">آخر تعديل: {new Date(g.updatedAt).toLocaleDateString("ar")}</Badge>
                 </div>

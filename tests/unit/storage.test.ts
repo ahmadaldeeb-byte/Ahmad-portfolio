@@ -38,7 +38,7 @@ describe("IndexedDB repositories", () => {
     await wipe();
     expect(await gamesRepo.all()).toHaveLength(0);
     const r = await importBackup(backup);
-    expect(r).toEqual({ games: 1, questions: 5, results: 1 });
+    expect(r).toEqual({ games: 1, questions: 5, results: 1, lessons: 0 });
     expect((await gamesRepo.all())[0].id).toBe("g2");
     expect(await questionsRepo.count()).toBe(5);
   });

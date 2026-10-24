@@ -5,6 +5,8 @@ import { sound } from "@/lib/audio";
 
 export interface SettingsState {
   volume: number;
+  sfxVolume: number;
+  voiceVolume: number;
   muted: boolean;
   voice: boolean;
   reducedMotion: boolean;
@@ -17,6 +19,8 @@ export const useSettings = create<SettingsState>()(
   persist(
     (set) => ({
       volume: 0.7,
+      sfxVolume: 1,
+      voiceVolume: 1,
       muted: false,
       voice: false,
       reducedMotion: false,
@@ -27,11 +31,11 @@ export const useSettings = create<SettingsState>()(
     {
       name: "heroes-settings",
       onRehydrateStorage: () => (state) => {
-        if (state) sound.configure({ volume: state.volume, muted: state.muted, voice: state.voice });
+        if (state) sound.configure({ volume: state.volume, muted: state.muted, voice: state.voice, sfxVolume: state.sfxVolume, voiceVolume: state.voiceVolume });
       },
     },
   ),
 );
 
 // Keep the sound engine in sync with the settings.
-useSettings.subscribe((s) => sound.configure({ volume: s.volume, muted: s.muted, voice: s.voice }));
+useSettings.subscribe((s) => sound.configure({ volume: s.volume, muted: s.muted, voice: s.voice, sfxVolume: s.sfxVolume, voiceVolume: s.voiceVolume }));

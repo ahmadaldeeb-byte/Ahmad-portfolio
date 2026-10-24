@@ -1,7 +1,7 @@
 import { expect, test } from "@playwright/test";
 import { createArithmeticGame, freshStart, solve } from "./helpers";
 
-const PRAISE = /^(أحسنت!|إجابة رائعة!|أنت بطل!|ممتاز!|رائع جدًا!|لقد نجحت!|سرقة ناجحة!)$/;
+const PRAISE = /^(أحسنت!|إجابة رائعة!|أنت بطل!|ممتاز!|رائع جدًا!|لقد نجحت!|رائع يا بطل!|إجابة صحيحة!|سرقة ناجحة!)$/;
 
 async function prompt(page: import("@playwright/test").Page) {
   return (await page.getByTestId("question-prompt").textContent())!;

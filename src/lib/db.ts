@@ -1,4 +1,5 @@
 import { openDB, type DBSchema, type IDBPDatabase } from "idb";
+import type { LessonPlan } from "./lessons/types";
 import type { GameConfig, GameResult, Question } from "./types";
 
 interface HeroesDB extends DBSchema {
@@ -6,16 +7,19 @@ interface HeroesDB extends DBSchema {
   questions: { key: string; value: Question; indexes: { byGrade: number; bySubject: string } };
   results: { key: string; value: GameResult; indexes: { byStarted: number } };
   meta: { key: string; value: { key: string; value: unknown } };
+  lessons: { key: string; value: LessonPlan };
 }
 
 const DB_NAME = "heroes-world";
-const DB_VERSION = 1;
+const DB_VERSION = 2;
 let dbPromise: Promise<IDBPDatabase<HeroesDB>> | null = null;
 
 export function getDB() {
   if (typeof indexedDB === "undefined") throw new Error("المتصفح لا يدعم التخزين المحلي (IndexedDB).");
   dbPromise ??= openDB<HeroesDB>(DB_NAME, DB_VERSION, {
-    upgrade(db) {
+    upgrade(db, oldVersion) {
+      if (oldVersion < 2 && !db.objectStoreNames.contains("lessons")) db.createObjectStore("lessons", { keyPath: "id" });
+      if (oldVersion >= 1) return;
       const games = db.createObjectStore("games", { keyPath: "id" });
       games.createIndex("byUpdated", "updatedAt");
       const qs = db.createObjectStore("questions", { keyPath: "id" });
@@ -87,6 +91,20 @@ export const resultsRepo = {
   },
 };
 
+export const lessonsRepo = {
+  async all() {
+    const db = await getDB();
+    return (await db.getAll("lessons")).sort((a, b) => b.updatedAt - a.updatedAt);
+  },
+  async put(plan: LessonPlan) {
+    await (await getDB()).put("lessons", plan);
+    return plan;
+  },
+  async remove(id: string) {
+    await (await getDB()).delete("lessons", id);
+  },
+};
+
 export const metaRepo = {
   async get<T>(key: string): Promise<T | undefined> {
     return (await (await getDB()).get("meta", key))?.value as T | undefined;
@@ -103,11 +121,12 @@ export interface Backup {
   games: GameConfig[];
   questions: Question[];
   results: GameResult[];
+  lessons?: LessonPlan[];
 }
 
 export async function exportBackup(): Promise<Backup> {
-  const [games, questions, results] = await Promise.all([gamesRepo.all(), questionsRepo.all(), resultsRepo.all()]);
-  return { app: "heroes-world", version: 1, exportedAt: Date.now(), games, questions, results };
+  const [games, questions, results, lessons] = await Promise.all([gamesRepo.all(), questionsRepo.all(), resultsRepo.all(), lessonsRepo.all()]);
+  return { app: "heroes-world", version: 1, exportedAt: Date.now(), games, questions, results, lessons };
 }
 
 export function isBackup(x: unknown): x is Backup {
@@ -118,11 +137,12 @@ export function isBackup(x: unknown): x is Backup {
 /** Restores a backup by merging records (same id → overwritten). */
 export async function importBackup(b: Backup) {
   const db = await getDB();
-  const tx = db.transaction(["games", "questions", "results"], "readwrite");
+  const tx = db.transaction(["games", "questions", "results", "lessons"], "readwrite");
   const ops: Promise<unknown>[] = [];
   for (const g of b.games) ops.push(tx.objectStore("games").put(g));
   for (const q of b.questions) ops.push(tx.objectStore("questions").put(q));
   for (const r of b.results ?? []) ops.push(tx.objectStore("results").put(r));
+  for (const l of b.lessons ?? []) ops.push(tx.objectStore("lessons").put(l));
   await Promise.all([...ops, tx.done]);
-  return { games: b.games.length, questions: b.questions.length, results: b.results?.length ?? 0 };
+  return { games: b.games.length, questions: b.questions.length, results: b.results?.length ?? 0, lessons: b.lessons?.length ?? 0 };
 }

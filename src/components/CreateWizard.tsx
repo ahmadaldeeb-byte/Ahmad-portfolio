@@ -27,8 +27,10 @@ import { cn, uid } from "@/lib/utils";
 import { useData } from "@/store/data";
 import { RobotBuddy } from "./Characters";
 import { GameArt } from "./GameArt";
-import { playHref } from "./GameCard";
+import { playHref, questionCount } from "./GameCard";
 import { QuestionEditor } from "./QuestionEditor";
+import { TrainSettingsForm } from "./TrainSettingsForm";
+import { TRAIN_DEFAULTS } from "@/lib/train";
 import { toast } from "./Toast";
 import { Badge, Button, Card, EmptyState, Field, IconButton, Loading, Modal, Segmented, inputClass } from "./ui";
 
@@ -129,7 +131,7 @@ export function CreateWizard() {
     update({
       type: t,
       title: !game.title || game.title === oldDefaultTitle ? `${gameMeta(t).name} — ${game.lesson}` : game.title,
-      settings: { ...defaults, ...game.settings, timePerQuestion: game.settings.timePerQuestion || defaults.timePerQuestion },
+      settings: { ...defaults, ...game.settings, train: game.settings.train ?? defaults.train, timePerQuestion: game.settings.timePerQuestion || defaults.timePerQuestion },
     });
   };
 
@@ -268,7 +270,7 @@ export function CreateWizard() {
                         {game.type === g.type && <CheckCircle2 className="size-7 text-hero-blue" />}
                       </span>
                       <span className="text-hero-muted">{g.description}</span>
-                      <span className="text-sm text-hero-muted">يدعم: {g.kinds.map((k) => KIND_LABELS[k]).join("، ")}</span>
+                      <span className="text-sm text-hero-muted">{g.generated ? "أسئلة مولّدة تلقائيًا" : `يدعم: ${g.kinds.map((k) => KIND_LABELS[k]).join("، ")}`}</span>
                     </span>
                   </button>
                 ))}
@@ -276,7 +278,14 @@ export function CreateWizard() {
             </StepCard>
           )}
 
-          {step === 4 && (
+          {step === 4 && meta.generated && game.type === "train" && (
+            <StepCard title="إعدادات أسئلة القطار">
+              <p className="mb-4 text-hero-muted">تُولَّد أسئلة هذه اللعبة تلقائيًا وبصورة صحيحة ضمن النطاق الذي تختاره، ولا تخرج عنه أبدًا.</p>
+              <TrainSettingsForm value={game.settings.train ?? TRAIN_DEFAULTS} onChange={(train) => updateSettings({ train })} />
+            </StepCard>
+          )}
+
+          {step === 4 && !meta.generated && (
             <StepCard
               title={`الأسئلة (${game.questions.length})`}
               actions={
@@ -455,7 +464,7 @@ export function CreateWizard() {
                       {meta.name} • {GRADES[game.grade - 1].label} • {SUBJECTS.find((s) => s.id === game.subject)!.label} • {game.lesson}
                     </p>
                     <p className="mt-2">
-                      {game.questions.length} سؤالًا • {game.settings.timePerQuestion ? `${game.settings.timePerQuestion} ثانية لكل سؤال` : "بدون مؤقت"} • {game.settings.pointsPerCorrect} نقاط للإجابة
+                      {questionCount(game)} سؤالًا • {game.settings.timePerQuestion ? `${game.settings.timePerQuestion} ثانية لكل سؤال` : "بدون مؤقت"} • {game.settings.pointsPerCorrect} نقاط للإجابة
                     </p>
                   </div>
                 </div>

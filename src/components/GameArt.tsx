@@ -128,6 +128,31 @@ export function GameArt({ type, className }: { type: GameType; className?: strin
           <path d="M100 100 l-10 12 l6 2 2 6z" fill="#FA5252" />
         </svg>
       );
+    case "train":
+      return (
+        <svg {...common}>
+          <rect width="240" height="150" fill="#D0EBFF" />
+          <path d="M0 95 L50 40 L100 95 Z" fill="#91A7FF" />
+          <path d="M80 95 L140 30 L200 95 Z" fill="#74C0FC" />
+          <rect y="95" width="240" height="55" fill="#8CE99A" />
+          <rect y="118" width="240" height="6" fill="#868E96" />
+          <g transform="translate(18 82)">
+            <rect width="44" height="30" rx="6" fill="#FA5252" />
+            <rect x="6" y="-14" width="10" height="16" fill="#25304B" />
+            <circle cx="12" cy="34" r="7" fill="#25304B" />
+            <circle cx="34" cy="34" r="7" fill="#25304B" />
+          </g>
+          {["٤", "٥", "؟"].map((t, i) => (
+            <g key={i} transform={`translate(${168 - i * 52} 84)`}>
+              <rect width="46" height="28" rx="5" fill={["#4361EE", "#40C057", "#FF922B"][i]} />
+              <rect x="9" y="3" width="28" height="22" rx="5" fill="#fff" />
+              <text x="23" y="20" textAnchor="middle" fontSize="16" fontWeight="bold" fill="#25304B">{t}</text>
+              <circle cx="10" cy="32" r="6" fill="#25304B" />
+              <circle cx="36" cy="32" r="6" fill="#25304B" />
+            </g>
+          ))}
+        </svg>
+      );
     case "teams":
       return (
         <svg {...common}>

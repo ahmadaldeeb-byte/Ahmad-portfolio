@@ -1,5 +1,7 @@
 import type { Difficulty, GameConfig, GameType, Grade, Question, Subject } from "@/lib/types";
 import { DEFAULT_TEAM_NAMES, GAMES, TEAM_COLORS, gradeLabel, subjectLabel } from "@/lib/constants";
+import { TRAIN_DEFAULTS, type TrainSettings } from "@/lib/train";
+import { BOOKS } from "./curriculum";
 
 /*
  * Sample classroom content for grades 1–3. It is written to suit the age group
@@ -248,8 +250,11 @@ export function defaultSettings(type: GameType) {
     wheelMode: "questions" as const,
     wheelNames: [] as string[],
     removeUsed: true,
+    ...(type === "train" ? { train: { ...TRAIN_DEFAULTS } } : {}),
   };
 }
+
+const TRAIN_RANGES: Record<Grade, { min: number; max: number }> = { 1: { min: 0, max: 20 }, 2: { min: 0, max: 99 }, 3: { min: 100, max: 999 } };
 
 /** Ready-made games for each grade × subject, generated from the sample bank (read-only). */
 export function builtinGames(): GameConfig[] {
@@ -257,8 +262,10 @@ export function builtinGames(): GameConfig[] {
   const out: GameConfig[] = [];
   for (const grade of [1, 2, 3] as Grade[]) {
     for (const subject of ["arabic", "math", "science", "english"] as Subject[]) {
-      for (const meta of GAMES.filter((g) => g.ready)) {
-        const questions = qs.filter((q) => q.grade === grade && q.subject === subject && meta.kinds.includes(q.kind));
+      for (const meta of GAMES.filter((g) => g.ready && (!g.subjects || g.subjects.includes(subject)))) {
+        const questions = meta.generated ? [] : qs.filter((q) => q.grade === grade && q.subject === subject && meta.kinds.includes(q.kind));
+        const settings = defaultSettings(meta.type);
+        if (meta.type === "train") settings.train = { ...TRAIN_DEFAULTS, ...TRAIN_RANGES[grade] };
         out.push({
           id: `builtin_${meta.type}_${grade}_${subject}`,
           title: `${meta.name} — ${subjectLabel(subject)}`,
@@ -268,7 +275,7 @@ export function builtinGames(): GameConfig[] {
           type: meta.type,
           difficulty: 1,
           questions,
-          settings: defaultSettings(meta.type),
+          settings,
           builtin: true,
           createdAt: SEED_TIME,
           updatedAt: SEED_TIME,
@@ -276,5 +283,42 @@ export function builtinGames(): GameConfig[] {
       }
     }
   }
+  return [...out, ...lessonGames()];
+}
+
+/** Train presets suited to each linked curriculum lesson. */
+const LESSON_TRAIN: Record<string, Partial<TrainSettings>> = {
+  "g1m-u3-l3": { mode: "mix", min: 0, max: 20, count: 10, difficulty: "easy" },
+  "g1m-u3-l1": { mode: "missing", min: 0, max: 20, count: 8, difficulty: "medium" },
+  "g1m-u3-l5": { mode: "missing", min: 0, max: 20, count: 8, difficulty: "advanced" },
+  "g1m-u2-l7": { mode: "mix", min: 0, max: 99, count: 10, difficulty: "medium" },
+};
+
+/** Games prepared for specific curriculum lessons (shown on the curriculum page and in the library). */
+export function lessonGames(): GameConfig[] {
+  const out: GameConfig[] = [];
+  for (const book of BOOKS)
+    for (const unit of book.units)
+      for (const lesson of unit.lessons)
+        for (const type of lesson.games) {
+          if (type !== "train") continue;
+          const settings = defaultSettings("train");
+          settings.train = { ...TRAIN_DEFAULTS, ...LESSON_TRAIN[lesson.id] };
+          out.push({
+            id: `lesson_${lesson.id}_${type}`,
+            title: `قطار الأرقام — ${lesson.title.replace(/[\u064B-\u0652]/g, "")}`,
+            grade: book.grade,
+            subject: book.subject,
+            lesson: lesson.title.replace(/[\u064B-\u0652]/g, ""),
+            type,
+            difficulty: 1,
+            questions: [],
+            settings,
+            builtin: true,
+            lessonId: lesson.id,
+            createdAt: SEED_TIME,
+            updatedAt: SEED_TIME,
+          });
+        }
   return out;
 }

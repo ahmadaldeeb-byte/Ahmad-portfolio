@@ -1,9 +1,10 @@
 "use client";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { motion } from "motion/react";
 import {
   BarChart3,
+  BookOpen,
+  Presentation,
   Database,
   Gamepad2,
   GraduationCap,
@@ -21,6 +22,8 @@ import { cn } from "@/lib/utils";
 export const NAV = [
   { href: "/", label: "الرئيسية", icon: Home },
   { href: "/library", label: "مكتبة الألعاب", icon: Gamepad2 },
+  { href: "/lessons", label: "تحضير الحصص", icon: Presentation },
+  { href: "/curriculum", label: "المنهاج والدروس", icon: BookOpen },
   { href: "/create", label: "إنشاء لعبة جديدة", icon: PlusCircle },
   { href: "/bank", label: "بنك الأسئلة", icon: Database },
   { href: "/my-games", label: "ألعابي المحفوظة", icon: Save },
@@ -29,7 +32,7 @@ export const NAV = [
   { href: "/settings", label: "الإعدادات", icon: Settings },
 ];
 
-const MOBILE_NAV = [NAV[0], NAV[1], NAV[2], NAV[4], NAV[7]];
+const MOBILE_NAV = [NAV[0], NAV[1], NAV[2], NAV[3], NAV[9]];
 
 function isActive(pathname: string, href: string) {
   return href === "/" ? pathname === "/" : pathname.startsWith(href);
@@ -68,16 +71,9 @@ export function Shell({ children }: { children: ReactNode }) {
                 href={item.href}
                 className={cn(
                   "relative flex min-h-12 items-center gap-3 rounded-2xl px-4 font-display text-lg font-bold transition",
-                  active ? "text-hero-blue" : "text-white/90 hover:bg-white/10",
+                  active ? "bg-white text-hero-blue shadow-lg" : "text-white/90 hover:bg-white/10",
                 )}
               >
-                {active && (
-                  <motion.span
-                    layoutId="nav-pill"
-                    className="absolute inset-0 rounded-2xl bg-white shadow-lg"
-                    transition={{ type: "spring", stiffness: 400, damping: 32 }}
-                  />
-                )}
                 <Icon className="relative size-6" />
                 <span className="relative">{item.label}</span>
               </Link>
@@ -123,7 +119,7 @@ export function Shell({ children }: { children: ReactNode }) {
               className={cn("flex min-h-16 flex-col items-center justify-center gap-1 text-xs font-bold", active ? "text-hero-blue" : "text-hero-muted")}
             >
               <Icon className="size-6" />
-              {item.label.replace("إنشاء لعبة جديدة", "إنشاء").replace("ألعابي المحفوظة", "ألعابي").replace("مكتبة الألعاب", "المكتبة")}
+              {item.label.replace("تحضير الحصص", "الحصص").replace("المنهاج والدروس", "المنهاج").replace("مكتبة الألعاب", "المكتبة")}
             </Link>
           );
         })}

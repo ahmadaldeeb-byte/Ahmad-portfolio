@@ -20,6 +20,8 @@ class SoundEngine {
   private ctx: AudioContext | null = null;
   private master: GainNode | null = null;
   private volume = 0.7;
+  private sfxVolume = 1;
+  private voiceVolume = 1;
   private muted = false;
   private voiceEnabled = false;
 
@@ -38,11 +40,15 @@ class SoundEngine {
   }
 
   private applyGain() {
-    if (this.master && this.ctx) this.master.gain.setValueAtTime(this.muted ? 0 : this.volume, this.ctx.currentTime);
+    if (this.master && this.ctx) this.master.gain.setValueAtTime(this.muted ? 0 : this.volume * this.sfxVolume, this.ctx.currentTime);
   }
 
-  configure(opts: { volume?: number; muted?: boolean; voice?: boolean }) {
-    if (opts.volume !== undefined) this.volume = Math.max(0, Math.min(1, opts.volume));
+  /** volume = master; sfxVolume / voiceVolume scale effects and spoken phrases independently. */
+  configure(opts: { volume?: number; muted?: boolean; voice?: boolean; sfxVolume?: number; voiceVolume?: number }) {
+    const clamp01 = (v: number) => Math.max(0, Math.min(1, v));
+    if (opts.volume !== undefined) this.volume = clamp01(opts.volume);
+    if (opts.sfxVolume !== undefined) this.sfxVolume = clamp01(opts.sfxVolume);
+    if (opts.voiceVolume !== undefined) this.voiceVolume = clamp01(opts.voiceVolume);
     if (opts.muted !== undefined) this.muted = opts.muted;
     if (opts.voice !== undefined) this.voiceEnabled = opts.voice;
     this.applyGain();
@@ -142,7 +148,7 @@ class SoundEngine {
    * when the teacher enabled it and a natural Arabic voice is installed.
    */
   say(text: string) {
-    if (this.muted || !this.voiceEnabled || typeof speechSynthesis === "undefined") return;
+    if (this.muted || !this.voiceEnabled || this.voiceVolume === 0 || typeof speechSynthesis === "undefined") return;
     const voices = speechSynthesis.getVoices().filter((v) => v.lang.toLowerCase().startsWith("ar"));
     if (voices.length === 0) return;
     const u = new SpeechSynthesisUtterance(text);
@@ -150,7 +156,7 @@ class SoundEngine {
     u.lang = u.voice.lang;
     u.rate = 0.95;
     u.pitch = 1.1;
-    u.volume = this.volume;
+    u.volume = this.volume * this.voiceVolume;
     speechSynthesis.cancel();
     speechSynthesis.speak(u);
   }

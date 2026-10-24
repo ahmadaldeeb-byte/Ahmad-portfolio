@@ -31,18 +31,18 @@ export async function createArithmeticGame(page: Page, opts: { type: string; tit
   await page.getByRole("button", { name: /الرياضيات/ }).click();
   await page.getByPlaceholder("اكتب عنوان الدرس").fill("الجمع");
   await page.getByPlaceholder("مثال: سباق الجمع الكبير").fill(opts.title);
-  await page.getByRole("button", { name: "التالي" }).click();
+  await page.getByRole("button", { name: "التالي", exact: true }).click();
   await page.getByRole("button", { name: new RegExp(opts.type) }).first().click();
-  await page.getByRole("button", { name: "التالي" }).click();
+  await page.getByRole("button", { name: "التالي", exact: true }).click();
   for (const e of opts.exprs) {
     await page.getByRole("button", { name: "سؤال جديد" }).click();
     await page.getByRole("radio", { name: "عملية حسابية" }).last().click();
     await page.getByPlaceholder("7 + 5").last().fill(e);
   }
-  await page.getByRole("button", { name: "التالي" }).click(); // time & points
-  await page.getByRole("button", { name: "التالي" }).click(); // preview
+  await page.getByRole("button", { name: "التالي", exact: true }).click(); // time & points
+  await page.getByRole("button", { name: "التالي", exact: true }).click(); // preview
   await expect(page.getByText("كل شيء جاهز!")).toBeVisible();
-  await page.getByRole("button", { name: "التالي" }).click(); // save & play
+  await page.getByRole("button", { name: "التالي", exact: true }).click(); // save & play
   await page.getByRole("button", { name: "ابدأ اللعب" }).click();
   await page.waitForURL(/\/play\?id=/);
 }

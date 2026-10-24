@@ -12,6 +12,11 @@ import HomePage from "@/app/(dash)/page";
 import ResultsPage from "@/app/(dash)/results/page";
 import SettingsPage from "@/app/(dash)/settings/page";
 import PlayPage from "@/app/play/page";
+import CurriculumPage from "@/app/(dash)/curriculum/page";
+import LessonsPage from "@/app/(dash)/lessons/page";
+import LessonEditPage from "@/app/(dash)/lessons/edit/page";
+import LessonNewPage from "@/app/(dash)/lessons/new/page";
+import LessonRunPage from "@/app/lesson-run/page";
 import { useRoute } from "./shims/router";
 
 const DASH: Record<string, ComponentType> = {
@@ -23,6 +28,10 @@ const DASH: Record<string, ComponentType> = {
   "/grades": GradesPage,
   "/results": ResultsPage,
   "/settings": SettingsPage,
+  "/curriculum": CurriculumPage,
+  "/lessons": LessonsPage,
+  "/lessons/new": LessonNewPage,
+  "/lessons/edit": LessonEditPage,
 };
 
 export function App() {
@@ -34,9 +43,11 @@ export function App() {
       <Suspense fallback={<Loading />}>
         {path === "/play" ? (
           <PlayPage key={search} />
+        ) : path === "/lesson-run" ? (
+          <LessonRunPage key={search} />
         ) : (
           <Shell>
-            <Page key={path === "/create" ? search : undefined} />
+            <Page key={path === "/create" || path.startsWith("/lessons") ? search : undefined} />
           </Shell>
         )}
       </Suspense>

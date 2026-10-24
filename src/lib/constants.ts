@@ -26,6 +26,10 @@ export interface GameMeta {
   minQuestions: number;
   teamBased: boolean;
   accent: string;
+  /** The game generates its own questions from settings (no question list). */
+  generated?: boolean;
+  /** Subjects the game belongs to; all subjects when omitted. */
+  subjects?: Subject[];
 }
 
 const CHOICE_KINDS: QuestionKind[] = ["mcq", "truefalse", "arithmetic"];
@@ -40,6 +44,7 @@ export const GAMES: GameMeta[] = [
   { type: "numbers", name: "أبطال الأرقام", description: "حلّ المسائل لتتقدّم في مغامرة الأرقام.", genre: "مغامرة", dimension: "2D", ready: false, kinds: ["arithmetic", "mcq"], minQuestions: 3, teamBased: false, accent: "#20A4C9" },
   { type: "puzzle", name: "أبطال الألغاز", description: "ركّب أجزاء الصورة التعليمية في مكانها.", genre: "ألغاز", dimension: "2D", ready: false, kinds: ["mcq"], minQuestions: 1, teamBased: false, accent: "#E64980" },
   { type: "space", name: "رحلة إلى النجوم", description: "سافر بمركبتك بين الكواكب بالإجابة عن الأسئلة.", genre: "مغامرة فضائية", dimension: "3D", ready: false, kinds: CHOICE_KINDS, minQuestions: 3, teamBased: false, accent: "#5C3FD9" },
+  { type: "train", name: "قطار الأرقام السحري", description: "أكمل الأعداد الناقصة في عربات القطار: السابق والتالي والعدد الناقص.", genre: "أعداد متتالية", dimension: "3D", ready: true, kinds: [], minQuestions: 0, teamBased: false, accent: "#E8590C", generated: true, subjects: ["math"] },
   { type: "teams", name: "معركة الأبطال", description: "منافسة مباشرة بين الفريق الأحمر والفريق الأزرق.", genre: "تحدي فرق", dimension: "2D", ready: true, kinds: CHOICE_KINDS, minQuestions: 4, teamBased: true, accent: "#FA5252" },
 ];
 
@@ -60,5 +65,5 @@ export const DIFFICULTY_LABELS = { 1: "سهل", 2: "متوسط", 3: "صعب" } a
 export const TEAM_COLORS = ["#FA5252", "#4361EE", "#40C057", "#FFD43B"];
 export const DEFAULT_TEAM_NAMES = ["الفريق الأحمر", "الفريق الأزرق", "الفريق الأخضر", "الفريق الأصفر"];
 
-export const ENCOURAGEMENTS = ["أحسنت!", "إجابة رائعة!", "أنت بطل!", "ممتاز!", "رائع جدًا!", "لقد نجحت!"];
+export const ENCOURAGEMENTS = ["أحسنت!", "إجابة رائعة!", "أنت بطل!", "ممتاز!", "رائع جدًا!", "لقد نجحت!", "رائع يا بطل!", "إجابة صحيحة!"];
 export const TRY_AGAIN = "حاول مرة أخرى!";

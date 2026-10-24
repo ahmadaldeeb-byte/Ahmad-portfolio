@@ -9,6 +9,11 @@ import { sound } from "@/lib/audio";
 import { GameArt } from "./GameArt";
 import { Badge } from "./ui";
 
+/** Number of questions a game will ask (generated games use their settings). */
+export function questionCount(game: GameConfig) {
+  return game.type === "train" ? (game.settings.train?.count ?? 0) : game.questions.length;
+}
+
 export function playHref(id: string) {
   return `/play?id=${encodeURIComponent(id)}`;
 }
@@ -52,7 +57,7 @@ export function GameCard({ game, index }: { game: GameConfig; index?: number }) 
       <h3 className="text-xl font-extrabold leading-snug">{game.title}</h3>
       <p className="text-hero-muted">{meta.description}</p>
       <p className="text-sm text-hero-muted">
-        {gradeLabel(game.grade)} • {subjectLabel(game.subject)} • {game.questions.length} سؤالًا
+        {gradeLabel(game.grade)} • {subjectLabel(game.subject)} • {questionCount(game)} سؤالًا
       </p>
       <div className="mt-auto grid grid-cols-2 gap-2 pt-2">
         <Link

@@ -34,7 +34,7 @@ test.describe("games", () => {
     if (expected) await page.getByRole("button", { name: expected, exact: true }).click();
     else await page.getByTestId("choice").first().click();
     await expect(page.getByRole("status").filter({ hasText: /!/ })).toBeVisible();
-    if (expected) await expect(page.getByText(/^(أحسنت!|إجابة رائعة!|أنت بطل!|ممتاز!|رائع جدًا!|لقد نجحت!)$/)).toBeVisible();
+    if (expected) await expect(page.getByText(/^(أحسنت!|إجابة رائعة!|أنت بطل!|ممتاز!|رائع جدًا!|لقد نجحت!|رائع يا بطل!|إجابة صحيحة!)$/)).toBeVisible();
 
     await page.getByRole("button", { name: "دوّر مرة أخرى" }).click();
     await expect(remaining).toHaveText(String(before - 1)); // used question removed
@@ -129,7 +129,7 @@ test.describe("games", () => {
     const x = box.x + box.width - (box.width / n) * (idx + 0.5);
     const y = box.y + box.height * (n > 2 ? (idx % 2 ? 0.58 : 0.5) : 0.54) - 8;
     await page.mouse.click(x, y);
-    await expect(page.getByText(/^(أحسنت!|إجابة رائعة!|أنت بطل!|ممتاز!|رائع جدًا!|لقد نجحت!)$/)).toBeVisible();
+    await expect(page.getByText(/^(أحسنت!|إجابة رائعة!|أنت بطل!|ممتاز!|رائع جدًا!|لقد نجحت!|رائع يا بطل!|إجابة صحيحة!)$/)).toBeVisible();
 
     // Q2: pick a wrong answer first (keyboard-accessible buttons), then the right one.
     await expect(page.getByTestId("balloon-question")).not.toHaveText(prompt1, { timeout: 6000 });
@@ -180,14 +180,29 @@ test.describe("touch @touch", () => {
     const box = (await stage.boundingBox())!;
     const n = choices.length;
     await page.touchscreen.tap(box.x + box.width - (box.width / n) * (idx + 0.5), box.y + box.height * (n > 2 ? (idx % 2 ? 0.58 : 0.5) : 0.54) - 8);
-    await expect(page.getByText(/^(أحسنت!|إجابة رائعة!|أنت بطل!|ممتاز!|رائع جدًا!|لقد نجحت!)$/)).toBeVisible();
+    await expect(page.getByText(/^(أحسنت!|إجابة رائعة!|أنت بطل!|ممتاز!|رائع جدًا!|لقد نجحت!|رائع يا بطل!|إجابة صحيحة!)$/)).toBeVisible();
+  });
+});
+
+test.describe("train touch @touch", () => {
+  test("number train answers with finger taps", async ({ page }) => {
+    await freshStart(page);
+    await page.goto("/play?id=builtin_train_1_math");
+    await page.getByRole("button", { name: "ابدأ اللعب" }).tap();
+    await expect(page.getByTestId("train-tile").first()).toBeEnabled({ timeout: 20_000 });
+    const cells = (await page.locator('[aria-label="عربات القطار"] [data-testid^="train-"]').allTextContents()).map((t) => t.trim());
+    const i = cells.indexOf("؟");
+    const n = cells.map(Number);
+    const ans = String(i > 0 && !Number.isNaN(n[i - 1]) ? n[i - 1] + 1 : n[i + 1] - 1);
+    await page.getByTestId("train-tile").filter({ hasText: new RegExp(`^${ans}$`) }).tap();
+    await expect(page.getByTestId("train-slot").first()).toHaveText(ans);
   });
 });
 
 test.describe("screens @screens", () => {
   test("layout fits without horizontal scrolling and targets are touch-sized", async ({ page }) => {
     await freshStart(page);
-    for (const path of ["/", "/library", "/create", "/bank", "/settings", "/play?id=builtin_race_1_math"]) {
+    for (const path of ["/", "/library", "/create", "/bank", "/settings", "/curriculum", "/lessons", "/lessons/new?lesson=g1m-u3-l3", "/play?id=builtin_race_1_math", "/play?id=builtin_train_1_math"]) {
       await page.goto(path);
       await page.waitForTimeout(500);
       const overflow = await page.evaluate(() => document.documentElement.scrollWidth - window.innerWidth);

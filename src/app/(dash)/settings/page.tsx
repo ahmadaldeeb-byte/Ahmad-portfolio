@@ -69,7 +69,7 @@ export default function SettingsPage() {
       if (!isBackup(data)) throw new Error("bad");
       const r = await importBackup(data);
       await refresh();
-      toast(`تمت الاستعادة: ${r.games} لعبة و${r.questions} سؤالًا`);
+      toast(`تمت الاستعادة: ${r.games} لعبة و${r.questions} سؤالًا و${r.lessons} حصة`);
     } catch {
       toast("الملف غير صالح أو تالف", "error");
     }
@@ -84,7 +84,7 @@ export default function SettingsPage() {
         <Row title="كتم الصوت" hint="إيقاف جميع المؤثرات الصوتية.">
           <Toggle label="كتم الصوت" checked={s.muted} onChange={(v) => s.set({ muted: v })} />
         </Row>
-        <Row title="مستوى الصوت" hint={`${formatNum(Math.round(s.volume * 100), s.numerals)}٪`}>
+        <Row title="مستوى الصوت العام" hint={`${formatNum(Math.round(s.volume * 100), s.numerals)}٪`}>
           <div className="flex items-center gap-3">
             <input
               type="range"
@@ -101,6 +101,13 @@ export default function SettingsPage() {
             </Button>
           </div>
         </Row>
+        <Row title="مستوى المؤثرات الصوتية" hint="أصوات الأزرار والنجاح والفرقعة والقطار.">
+          <input type="range" min={0} max={1} step={0.05} value={s.sfxVolume} aria-label="مستوى المؤثرات الصوتية" onChange={(e) => s.set({ sfxVolume: Number(e.target.value) })} className="h-3 w-56 cursor-pointer accent-hero-blue" />
+        </Row>
+        <Row title="مستوى التعليق الصوتي" hint="عبارات مثل «أحسنت!» و«هيا نبدأ!» عند تفعيلها.">
+          <input type="range" min={0} max={1} step={0.05} value={s.voiceVolume} aria-label="مستوى التعليق الصوتي" onChange={(e) => s.set({ voiceVolume: Number(e.target.value) })} className="h-3 w-56 cursor-pointer accent-hero-blue" />
+        </Row>
+        <p className="py-2 text-sm text-hero-muted">الموسيقى الخلفية غير متوفرة في هذا الإصدار.</p>
         <Row
           title="العبارات التشجيعية المنطوقة"
           hint={

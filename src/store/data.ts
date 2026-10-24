@@ -1,7 +1,8 @@
 "use client";
 import { create } from "zustand";
 import { builtinGames, seedQuestions } from "@/content/seed";
-import { gamesRepo, metaRepo, questionsRepo, resultsRepo } from "@/lib/db";
+import { gamesRepo, lessonsRepo, metaRepo, questionsRepo, resultsRepo } from "@/lib/db";
+import type { LessonPlan } from "@/lib/lessons/types";
 import type { GameConfig, GameResult, Question } from "@/lib/types";
 import { uid } from "@/lib/utils";
 
@@ -12,6 +13,12 @@ interface DataState {
   questions: Question[];
   results: GameResult[];
   builtins: GameConfig[];
+  lessons: LessonPlan[];
+  /** Teacher corrections of curriculum lesson titles, by lesson id. */
+  titleOverrides: Record<string, string>;
+  saveLesson: (p: LessonPlan) => Promise<LessonPlan>;
+  deleteLesson: (id: string) => Promise<void>;
+  setTitleOverride: (lessonId: string, title: string | null) => Promise<void>;
   load: () => Promise<void>;
   /** Re-reads everything from IndexedDB (e.g. after restoring a backup). */
   refresh: () => Promise<void>;
@@ -34,6 +41,8 @@ export const useData = create<DataState>()((set, get) => ({
   games: [],
   questions: [],
   results: [],
+  lessons: [],
+  titleOverrides: {},
   builtins: builtinGames(),
 
   load: () => {
@@ -43,8 +52,14 @@ export const useData = create<DataState>()((set, get) => ({
           await questionsRepo.putMany(seedQuestions());
           await metaRepo.set("seeded", true);
         }
-        const [games, questions, results] = await Promise.all([gamesRepo.all(), questionsRepo.all(), resultsRepo.all()]);
-        set({ games, questions, results, ready: true, error: null });
+        const [games, questions, results, lessons, titleOverrides] = await Promise.all([
+          gamesRepo.all(),
+          questionsRepo.all(),
+          resultsRepo.all(),
+          lessonsRepo.all(),
+          metaRepo.get<Record<string, string>>("curriculum-titles"),
+        ]);
+        set({ games, questions, results, lessons, titleOverrides: titleOverrides ?? {}, ready: true, error: null });
       } catch (e) {
         loading = null;
         set({ ready: true, error: e instanceof Error ? e.message : "تعذّر فتح قاعدة البيانات المحلية." });
@@ -54,8 +69,8 @@ export const useData = create<DataState>()((set, get) => ({
   },
 
   refresh: async () => {
-    const [games, questions, results] = await Promise.all([gamesRepo.all(), questionsRepo.all(), resultsRepo.all()]);
-    set({ games, questions, results, ready: true, error: null });
+    const [games, questions, results, lessons] = await Promise.all([gamesRepo.all(), questionsRepo.all(), resultsRepo.all(), lessonsRepo.all()]);
+    set({ games, questions, results, lessons, ready: true, error: null });
   },
 
   saveGame: async (g) => {
@@ -103,6 +118,23 @@ export const useData = create<DataState>()((set, get) => ({
   clearResults: async () => {
     await resultsRepo.clear();
     set({ results: [] });
+  },
+  saveLesson: async (p) => {
+    const plan = { ...p, updatedAt: Date.now() };
+    await lessonsRepo.put(plan);
+    set((s) => ({ lessons: [plan, ...s.lessons.filter((x) => x.id !== plan.id)] }));
+    return plan;
+  },
+  deleteLesson: async (id) => {
+    await lessonsRepo.remove(id);
+    set((s) => ({ lessons: s.lessons.filter((x) => x.id !== id) }));
+  },
+  setTitleOverride: async (lessonId, title) => {
+    const next = { ...get().titleOverrides };
+    if (title && title.trim()) next[lessonId] = title.trim();
+    else delete next[lessonId];
+    await metaRepo.set("curriculum-titles", next);
+    set({ titleOverrides: next });
   },
   findGame: (id) => get().games.find((g) => g.id === id) ?? get().builtins.find((g) => g.id === id),
 }));

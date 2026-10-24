@@ -33,7 +33,7 @@ export function HomeView() {
     router.push(q.size ? `/?${q}` : "/", { scroll: false });
   };
 
-  const list = grade && subject ? [...games, ...builtins].filter((g) => g.grade === grade && g.subject === subject) : [];
+  const list = grade && subject ? [...games, ...builtins].filter((g) => g.grade === grade && g.subject === subject && !g.lessonId) : [];
 
   return (
     <div className="flex flex-col gap-8">
@@ -64,7 +64,10 @@ export function HomeView() {
               جاهز لحصة مليئة بالمرح والتعلم؟
             </motion.p>
             <div className={`mt-6 flex-wrap justify-center gap-3 md:justify-start ${grade ? "hidden" : "flex"}`}>
-              <Link href="/create" className="btn-3d inline-flex min-h-14 items-center gap-2 rounded-2xl bg-hero-yellow px-6 font-display text-xl font-bold text-hero-ink">
+              <Link href="/lessons/new" className="btn-3d inline-flex min-h-14 items-center gap-2 rounded-2xl bg-hero-yellow px-6 font-display text-xl font-bold text-hero-ink">
+                حضّر حصتك الآن ✨
+              </Link>
+              <Link href="/create" className="btn-3d inline-flex min-h-14 items-center gap-2 rounded-2xl bg-white/20 px-6 font-display text-xl font-bold">
                 أنشئ لعبة جديدة
               </Link>
               <Link href="/library" className="btn-3d inline-flex min-h-14 items-center gap-2 rounded-2xl bg-white/20 px-6 font-display text-xl font-bold">

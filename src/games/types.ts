@@ -7,6 +7,8 @@ export interface GameSummary {
   score: number;
   teams?: TeamScore[];
   winner?: string;
+  /** Per-skill tallies (e.g. prev / next / missing) for lesson summaries. */
+  skills?: Record<string, { correct: number; wrong: number }>;
 }
 
 export interface GameProps {
