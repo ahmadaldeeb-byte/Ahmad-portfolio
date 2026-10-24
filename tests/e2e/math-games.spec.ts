@@ -14,7 +14,7 @@ async function open(page: Page, type: string, level?: string) {
   if (type !== "raceAdd") await page.getByLabel("عدد المهام المخصص").fill(String(N));
   await page.getByRole("button", { name: /الحفظ والتشغيل/ }).click();
   await page.getByRole("button", { name: "ابدأ اللعب" }).click();
-  await page.waitForURL(/\/play\?id=/);
+  await page.waitForURL(/\/play\/?\?id=/);
   await page.getByRole("button", { name: "ابدأ اللعب" }).click();
 }
 

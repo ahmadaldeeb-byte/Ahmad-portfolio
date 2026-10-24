@@ -44,5 +44,5 @@ export async function createArithmeticGame(page: Page, opts: { type: string; tit
   await expect(page.getByText("كل شيء جاهز!")).toBeVisible();
   await page.getByRole("button", { name: "التالي", exact: true }).click(); // save & play
   await page.getByRole("button", { name: "ابدأ اللعب" }).click();
-  await page.waitForURL(/\/play\?id=/);
+  await page.waitForURL(/\/play\/?\?id=/);
 }

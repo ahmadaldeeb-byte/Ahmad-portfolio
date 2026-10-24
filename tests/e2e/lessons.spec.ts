@@ -68,7 +68,7 @@ test.describe("curriculum & number train", () => {
     await page.getByRole("radio", { name: "5", exact: true }).click();
     await page.getByRole("button", { name: /الحفظ والتشغيل/ }).click();
     await page.getByRole("button", { name: "ابدأ اللعب" }).click();
-    await page.waitForURL(/\/play\?id=/);
+    await page.waitForURL(/\/play\/?\?id=/);
     await page.getByRole("button", { name: "ابدأ اللعب" }).click();
     await expect(page.getByTestId("train-station")).toContainText("محطة السابق");
     await expect(page.locator("canvas").first()).toBeVisible({ timeout: 20_000 });
@@ -92,7 +92,7 @@ test.describe("lesson preparation", () => {
     await page.getByRole("button", { name: /مُقارَنَةُ الْأَعْدادِ/ }).click();
     await page.getByRole("button", { name: /السّابِقُ وَالْعَدَدُ التّالي/ }).click();
     await page.getByRole("button", { name: "إنشاء الحصة" }).click();
-    await page.waitForURL(/\/lessons\/edit\?id=/);
+    await page.waitForURL(/\/lessons\/edit\/?\?id=/);
     await expect(page.getByTestId("lesson-total")).toHaveText("15 دقيقة");
     await expect(page.getByTestId("seg-minutes-warmup")).toHaveText("3 د");
     await expect(page.getByTestId("seg-minutes-main")).toHaveText("7 د");

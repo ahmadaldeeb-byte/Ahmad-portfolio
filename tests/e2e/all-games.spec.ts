@@ -14,7 +14,7 @@ async function openMath(page: Page, type: string, grade: 2 | 3, level: string) {
   await page.getByLabel("عدد المهام المخصص").fill(String(N));
   await page.getByRole("button", { name: /الحفظ والتشغيل/ }).click();
   await page.getByRole("button", { name: "ابدأ اللعب" }).click();
-  await page.waitForURL(/\/play\?id=/);
+  await page.waitForURL(/\/play\/?\?id=/);
   await page.getByRole("button", { name: "ابدأ اللعب" }).click();
 }
 
@@ -180,7 +180,7 @@ test.describe("math games — grades 2 and 3", () => {
     await page.getByRole("group", { name: "المستوى" }).getByRole("radio", { name: "عددان من أربع منازل" }).click();
     await page.getByRole("button", { name: /الحفظ والتشغيل/ }).click();
     await page.getByRole("button", { name: "ابدأ اللعب" }).click();
-    await page.waitForURL(/\/play\?id=/);
+    await page.waitForURL(/\/play\/?\?id=/);
     await page.getByRole("button", { name: "ابدأ اللعب" }).click();
     await page.waitForTimeout(4500); // 3-2-1 countdown
     const text = await page.locator("[data-testid=classroom]").textContent();

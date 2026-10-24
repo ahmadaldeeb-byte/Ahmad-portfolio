@@ -69,7 +69,7 @@ test.describe("games", () => {
     await page.getByPlaceholder(/سارة/).fill("سارة\nعمر\nليان");
     await page.getByRole("button", { name: /الحفظ والتشغيل/ }).click();
     await page.getByRole("button", { name: "ابدأ اللعب" }).click();
-    await page.waitForURL(/\/play\?id=/);
+    await page.waitForURL(/\/play\/?\?id=/);
     await startClassroom(page);
     const picked = new Set<string>();
     for (let i = 0; i < 3; i++) {
