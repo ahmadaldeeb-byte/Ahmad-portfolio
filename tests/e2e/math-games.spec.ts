@@ -53,7 +53,10 @@ test.describe("Grade 1 math games", () => {
   test("جزيرة الأرقام: collect by tap and drag, wrong count is retried", async ({ page }) => {
     await open(page, "island");
     await playAll(page, async (i) => {
-      const target = nums((await page.getByTestId("math-prompt").textContent())!)[0] ?? 1;
+      // «اجمع تفاحتين (اثنان)» has no digit: read the number word in brackets.
+      const WORDS = ["صفر", "واحد", "اثنان", "ثلاثة", "أربعة", "خمسة", "ستة", "سبعة", "ثمانية", "تسعة", "عشرة", "أحد عشر", "اثنا عشر", "ثلاثة عشر", "أربعة عشر", "خمسة عشر", "ستة عشر", "سبعة عشر", "ثمانية عشر", "تسعة عشر", "عشرون"];
+      const word = /\(([^)]+)\)/.exec((await page.getByTestId("math-prompt").textContent())!)![1];
+      const target = WORDS.indexOf(word);
       const fruits = page.getByTestId("island-fruit");
       if (i === 0) {
         // too many first → friendly correction, then fix it

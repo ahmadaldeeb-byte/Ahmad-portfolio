@@ -74,7 +74,6 @@ function IslandTaskView({ t, api }: { t: IslandTask; api: MathApi }) {
               <motion.button
                 key={i}
                 type="button"
-                layoutId={`fruit-${i}`}
                 aria-label={fruit.one}
                 className="absolute grid size-14 -translate-x-1/2 -translate-y-1/2 cursor-grab touch-none select-none place-items-center text-5xl md:size-16"
                 style={{ left: `${p.left}%`, top: `${p.top}%` }}
@@ -92,7 +91,8 @@ function IslandTaskView({ t, api }: { t: IslandTask; api: MathApi }) {
           <span className="text-5xl" aria-hidden>🧺</span>
           <div className="flex flex-wrap justify-center gap-1">
             {basket.map((i) => (
-              <motion.button key={i} type="button" layoutId={`fruit-${i}`} aria-label={`أعد ${fruit.one}`} onClick={() => toggle(i)} className="cursor-pointer text-4xl">
+              // Pops into the basket (no shared fly-in: on touch screens the tap's trailing click would hit it and send it back).
+              <motion.button key={i} type="button" initial={{ scale: 0, y: -20 }} animate={{ scale: 1, y: 0 }} aria-label={`أعد ${fruit.one}`} onClick={() => toggle(i)} className="cursor-pointer text-4xl">
                 {fruit.emoji}
               </motion.button>
             ))}

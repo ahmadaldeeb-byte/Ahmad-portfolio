@@ -47,9 +47,10 @@ test.describe("curriculum & number train", () => {
     await lesson.getByRole("button", { name: /السّابِقُ/ }).click();
     await expect(lesson.getByRole("heading", { name: /قطار الأرقام/ })).toBeVisible();
     await expect(lesson.getByRole("button", { name: "حضّر حصة لهذا الدرس" })).toBeVisible();
-    // A lesson with only planned games shows them as «قيد التطوير», not as playable.
+    // Comparing numbers now links the playable crocodile game.
     await page.getByTestId("lesson-g1m-u3-l4").getByRole("button").first().click();
-    await expect(page.getByTestId("lesson-g1m-u3-l4")).toContainText("التمساح الجائع 🐊 — قيد التطوير");
+    await expect(page.getByTestId("lesson-g1m-u3-l4").getByRole("heading", { name: /التمساح الجائع/ })).toBeVisible();
+    await expect(page.getByTestId("lesson-g1m-u3-l4")).not.toContainText("قيد التطوير");
     // Teacher corrects a title; it persists after reload.
     await lesson.getByRole("button", { name: "تعديل عنوان الدرس" }).click();
     await page.getByRole("textbox", { name: "عنوان الدرس" }).fill("العدد السابق والعدد التالي");
