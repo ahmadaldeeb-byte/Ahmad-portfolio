@@ -150,7 +150,7 @@ export function MathShell<T>({ game, paused, onFinish, tasks, prompt, skill, hin
       {stage && <div className="relative shrink-0">{stage({ solved, index, celebrating })}</div>}
       <div className={cn("relative min-h-0 flex-1 overflow-y-auto", ltr && "ltr-content")}>
         <AnimatePresence mode="wait">
-          <motion.div key={index} initial={{ opacity: 0, x: -40 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: 40 }} transition={{ duration: 0.25 }} className="size-full">
+          <motion.div key={index} initial={{ opacity: 0, x: -40 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: 40 }} transition={{ duration: 0.25 }} className="size-full" data-task={index}>
             {children(task, api, index)}
           </motion.div>
         </AnimatePresence>

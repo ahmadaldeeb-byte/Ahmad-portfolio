@@ -18,9 +18,11 @@ async function open(page: Page, type: string, level?: string) {
   await page.getByRole("button", { name: "ابدأ اللعب" }).click();
 }
 
-const progress = (page: Page) => page.getByTestId("math-progress").textContent();
 async function waitTask(page: Page, i: number) {
   await expect(page.getByTestId("math-progress")).toHaveText(`${i + 1} / ${N}`, { timeout: 10_000 });
+  // The previous task animates out first; act only on the new one.
+  await expect(page.locator("[data-task]")).toHaveCount(1);
+  await expect(page.locator(`[data-task="${i}"]`)).toBeVisible();
 }
 
 /** Learning mode allows retries: try the choices until the right one turns green. */
