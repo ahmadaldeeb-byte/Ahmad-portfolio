@@ -23,6 +23,7 @@ async function waitTask(page: Page, i: number) {
   // The previous task animates out first; act only on the new one.
   await expect(page.locator("[data-task]")).toHaveCount(1);
   await expect(page.locator(`[data-task="${i}"]`)).toBeVisible();
+  await page.waitForTimeout(350); // let the slide-in animation settle before measuring positions
 }
 
 /** Learning mode allows retries: try the choices until the right one turns green. */
@@ -35,7 +36,7 @@ async function tryChoices(page: Page, testId = "math-choice") {
     if (!(await b.isEnabled())) continue;
     await b.click();
     await page.waitForTimeout(120);
-    if ((await page.locator(`[data-testid=${testId}].bg-hero-green`).count()) > 0) return;
+    if ((await page.locator(`[data-testid=${testId}].bg-hero-green, [data-testid=${testId}].border-hero-green`).count()) > 0) return;
   }
   throw new Error("no choice was correct");
 }
@@ -226,5 +227,22 @@ test.describe("Grade 1 math games", () => {
       if (await page.getByTestId("measure-capacity").isVisible()) await page.getByRole("button", { name: /نملأ الأوعية/ }).click();
       await tryChoices(page, "measure-item");
     });
+  });
+});
+
+test.describe("math games touch @touch", () => {
+  test("finger taps work in the island and the factory", async ({ page }) => {
+    await freshStart(page);
+    await page.goto("/play?id=builtin_island_1_math");
+    await page.getByRole("button", { name: "ابدأ اللعب" }).tap();
+    await expect(page.locator('[data-task="0"]')).toBeVisible();
+    await page.waitForTimeout(400);
+    await page.getByTestId("island-fruit").first().tap();
+    await expect(page.getByTestId("island-count")).toHaveText("1");
+    await page.goto("/play?id=builtin_factory_1_math");
+    await page.getByRole("button", { name: "ابدأ اللعب" }).tap();
+    await page.waitForTimeout(400);
+    await page.getByTestId("factory-machine").first().tap();
+    await expect(page.getByTestId("factory-rod")).toHaveCount(1);
   });
 });

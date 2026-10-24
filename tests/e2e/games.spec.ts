@@ -175,7 +175,7 @@ test.describe("train touch @touch", () => {
 test.describe("screens @screens", () => {
   test("layout fits without horizontal scrolling and targets are touch-sized", async ({ page }) => {
     await freshStart(page);
-    for (const path of ["/", "/library", "/create", "/bank", "/settings", "/curriculum", "/lessons", "/lessons/new?lesson=g1m-u3-l3", "/play?id=builtin_race_1_math", "/play?id=builtin_train_1_math"]) {
+    for (const path of ["/", "/library", "/create", "/bank", "/settings", "/curriculum", "/lessons", "/lessons/new?lesson=g1m-u3-l3", "/play?id=builtin_race_1_math", "/play?id=builtin_train_1_math", "/play?id=builtin_market_1_math", "/play?id=builtin_clock_1_math"]) {
       await page.goto(path);
       await page.waitForTimeout(500);
       const overflow = await page.evaluate(() => document.documentElement.scrollWidth - window.innerWidth);
