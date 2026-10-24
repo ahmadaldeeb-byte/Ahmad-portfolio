@@ -17,6 +17,7 @@ import LessonsPage from "@/app/(dash)/lessons/page";
 import LessonEditPage from "@/app/(dash)/lessons/edit/page";
 import LessonNewPage from "@/app/(dash)/lessons/new/page";
 import LessonRunPage from "@/app/lesson-run/page";
+import ImportPage from "@/app/(dash)/import/page";
 import { useRoute } from "./shims/router";
 
 const DASH: Record<string, ComponentType> = {
@@ -32,6 +33,7 @@ const DASH: Record<string, ComponentType> = {
   "/lessons": LessonsPage,
   "/lessons/new": LessonNewPage,
   "/lessons/edit": LessonEditPage,
+  "/import": ImportPage,
 };
 
 export function App() {
