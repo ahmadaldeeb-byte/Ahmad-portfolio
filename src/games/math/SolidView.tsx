@@ -1,5 +1,6 @@
 "use client";
-import { Canvas, useFrame } from "@react-three/fiber";
+import { useFrame } from "@react-three/fiber";
+import { SafeCanvas } from "@/components/SafeCanvas";
 import { useRef } from "react";
 import type * as THREE from "three";
 import type { Solid } from "@/lib/math/games";
@@ -26,10 +27,10 @@ function Spinning({ solid }: { solid: Solid }) {
 /** A real 3D solid the class can look at from every side. */
 export default function SolidView({ solid }: { solid: Solid }) {
   return (
-    <Canvas dpr={[1, 1.5]} camera={{ position: [0, 0.6, 5.5], fov: 40 }} aria-label="مجسم ثلاثي الأبعاد">
+    <SafeCanvas dpr={[1, 1.5]} camera={{ position: [0, 0.6, 5.5], fov: 40 }} aria-label="مجسم ثلاثي الأبعاد">
       <hemisphereLight args={["#ffffff", "#c5d0ff", 1.7]} />
       <directionalLight position={[3, 5, 4]} intensity={1.8} />
       <Spinning solid={solid} />
-    </Canvas>
+    </SafeCanvas>
   );
 }

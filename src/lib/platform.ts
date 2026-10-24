@@ -26,6 +26,8 @@ export interface DesktopBridge {
   /** Opens the data folder in Windows Explorer. */
   openDataDir: () => Promise<void>;
   setFullscreen: (on: boolean) => Promise<void>;
+  /** Called when the window is about to close (the app waits up to 3 s for it). */
+  onBeforeClose: (fn: (() => Promise<void>) | null) => void;
 }
 
 export function desktop(): DesktopBridge | null {

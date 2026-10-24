@@ -1,5 +1,6 @@
 "use client";
-import { Canvas, useFrame, useThree } from "@react-three/fiber";
+import { useFrame, useThree } from "@react-three/fiber";
+import { SafeCanvas } from "@/components/SafeCanvas";
 import { useEffect, useMemo, useRef } from "react";
 import * as THREE from "three";
 import { useSettings } from "@/store/settings";
@@ -116,8 +117,8 @@ function Scene({ launch, fuel }: { launch: number; fuel: number }) {
 
 export default function RocketScene({ launch, fuel }: { launch: number; fuel: number }) {
   return (
-    <Canvas dpr={[1, 1.5]} camera={{ fov: 45, position: [0, 3, 11] }}>
+    <SafeCanvas dpr={[1, 1.5]} camera={{ fov: 45, position: [0, 3, 11] }}>
       <Scene launch={launch} fuel={fuel} />
-    </Canvas>
+    </SafeCanvas>
   );
 }

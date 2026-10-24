@@ -1,6 +1,10 @@
 {
   "name": "heroes-world",
   "version": "1.0.0",
+  "productName": "HeroesWorld",
+  "description": "منصة ألعاب تعليمية عربية للصفوف الأول والثاني والثالث",
+  "author": "Ahmad Aldeeb",
+  "main": "desktop/main.cjs",
   "private": true,
   "scripts": {
     "dev": "next dev -p 3000",
@@ -10,7 +14,11 @@
     "test": "vitest run",
     "test:e2e": "playwright test",
     "build:standalone": "vite build -c vite.standalone.config.mts",
-    "serve:web": "node scripts/serve-static.mjs out 3100"
+    "serve:web": "node scripts/serve-static.mjs out 3100",
+    "desktop": "npm run build && electron .",
+    "desktop:dev": "electron .",
+    "dist:win": "npm run build && electron-builder --win portable nsis --x64",
+    "test:desktop": "playwright test -c playwright.desktop.config.ts"
   },
   "dependencies": {
     "@fontsource/cairo": "^5.3.0",
@@ -38,6 +46,8 @@
     "@types/react-dom": "^19.3.0",
     "@types/three": "^0.186.0",
     "@vitejs/plugin-react": "^6.1.2",
+    "electron": "44.7.0",
+    "electron-builder": "26.17.0",
     "fake-indexeddb": "^6.2.6",
     "jsdom": "^30.1.3",
     "tailwindcss": "^4.3.3",

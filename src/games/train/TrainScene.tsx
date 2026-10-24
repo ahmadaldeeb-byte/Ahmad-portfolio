@@ -1,6 +1,7 @@
 "use client";
 import { PerformanceMonitor } from "@react-three/drei";
-import { Canvas, useFrame, useThree } from "@react-three/fiber";
+import { useFrame, useThree } from "@react-three/fiber";
+import { SafeCanvas } from "@/components/SafeCanvas";
 import { useEffect, useMemo, useRef, useState } from "react";
 import * as THREE from "three";
 import { useSettings } from "@/store/settings";
@@ -397,7 +398,7 @@ export default function TrainScene(props: TrainSceneProps) {
   const quality = useSettings((s) => s.quality);
   const [dpr, setDpr] = useState(quality === "low" ? 1 : 1.5);
   return (
-    <Canvas
+    <SafeCanvas
       dpr={quality === "high" ? [1, 2] : quality === "low" ? 1 : dpr}
       camera={{ fov: 40, near: 0.5, far: 260, position: [14, 16, 40] }}
       gl={{ antialias: quality !== "low", powerPreference: "high-performance" }}
@@ -408,6 +409,6 @@ export default function TrainScene(props: TrainSceneProps) {
       <hemisphereLight args={["#ffffff", "#8CE99A", 1.7]} />
       <directionalLight position={[10, 20, 14]} intensity={1.6} />
       <Rig props={props} carsWidth={props.labels.length * CAR_GAP} />
-    </Canvas>
+    </SafeCanvas>
   );
 }

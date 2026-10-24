@@ -1,5 +1,6 @@
 "use client";
-import { Canvas, useFrame, useThree } from "@react-three/fiber";
+import { useFrame, useThree } from "@react-three/fiber";
+import { SafeCanvas } from "@/components/SafeCanvas";
 import { useEffect, useMemo, useRef } from "react";
 import * as THREE from "three";
 import { useSettings } from "@/store/settings";
@@ -237,7 +238,7 @@ function Rig({ color, progress }: { color: string; progress: number }) {
 export default function RaceLane({ color, progress }: { color: string; progress: number }) {
   const quality = useSettings((s) => s.quality);
   return (
-    <Canvas
+    <SafeCanvas
       // Two views render at once, so resolution is capped to keep both smooth.
       dpr={quality === "high" ? [1, 1.5] : 1}
       camera={{ fov: 55, near: 0.3, far: 160, position: [0, 3.1, 7.5] }}
@@ -248,6 +249,6 @@ export default function RaceLane({ color, progress }: { color: string; progress:
       <hemisphereLight args={["#ffffff", "#8CE99A", 1.7]} />
       <directionalLight position={[6, 12, 8]} intensity={1.5} />
       <Rig color={color} progress={progress} />
-    </Canvas>
+    </SafeCanvas>
   );
 }

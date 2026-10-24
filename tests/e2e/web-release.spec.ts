@@ -100,6 +100,21 @@ test.describe("web release", () => {
     await context.setOffline(false);
   });
 
+  test("a PC without WebGL still plays the 3D games (the picture is replaced by a note)", async ({ page }) => {
+    await page.addInitScript(() => {
+      const orig = HTMLCanvasElement.prototype.getContext;
+      HTMLCanvasElement.prototype.getContext = function (this: HTMLCanvasElement, type: string, ...rest: unknown[]) {
+        return /webgl/i.test(type) ? null : (orig as (...a: unknown[]) => unknown).call(this, type, ...rest);
+      } as typeof orig;
+    });
+    await freshStart(page);
+    await page.goto("/play/?id=builtin_rocket_1_math");
+    await page.getByRole("button", { name: "ابدأ اللعب" }).click();
+    await expect(page.getByTestId("no-webgl")).toBeVisible();
+    await expect(page.getByTestId("math-choice").first()).toBeVisible();
+    await expect(page.getByTestId("math-progress")).toHaveText(/^1 \/ /);
+  });
+
   test("responsive on tablet and phone widths @screens", async ({ page }) => {
     await freshStart(page);
     for (const path of ["/", "/library/", "/settings/", "/create/"]) {

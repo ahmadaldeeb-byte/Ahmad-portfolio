@@ -12,8 +12,9 @@ const SNAPSHOT_DELAY = 1500;
 
 /**
  * Windows app only (renders nothing on the web):
- * - writes an automatic snapshot of the teacher's data to the data folder a
- *   moment after every change, so the data does not depend on browser storage alone;
+ * - writes an automatic snapshot of the teacher's data to the data folder when
+ *   the app opens, a moment after every change and before the window closes,
+ *   so the data does not depend on browser storage alone;
  * - when the app starts with empty storage but a snapshot exists (e.g. the
  *   storage was cleared or damaged), offers to restore it.
  */
@@ -39,17 +40,27 @@ export function DesktopSync() {
   useEffect(() => {
     const bridge = desktop();
     if (!bridge || !decided) return;
-    const save = () => {
+    let dirty = false;
+    const snapshotNow = async () => {
       window.clearTimeout(timer.current);
-      timer.current = window.setTimeout(async () => {
-        try {
-          const saved = await bridge.snapshot(JSON.stringify(await buildBackup(), null, 2));
-          if (!saved) toast("تعذّر حفظ النسخة التلقائية في مجلد البيانات", "error");
-        } catch {
-          toast("تعذّر حفظ النسخة التلقائية في مجلد البيانات", "error");
-        }
-      }, SNAPSHOT_DELAY);
+      dirty = false;
+      try {
+        const saved = await bridge.snapshot(JSON.stringify(await buildBackup(), null, 2));
+        if (!saved) toast("تعذّر حفظ النسخة التلقائية في مجلد البيانات", "error");
+      } catch {
+        toast("تعذّر حفظ النسخة التلقائية في مجلد البيانات", "error");
+      }
     };
+    const save = () => {
+      dirty = true;
+      window.clearTimeout(timer.current);
+      timer.current = window.setTimeout(() => void snapshotNow(), SNAPSHOT_DELAY);
+    };
+    // A snapshot of the data as it is now, and a last one when the window closes.
+    void snapshotNow();
+    bridge.onBeforeClose(async () => {
+      if (dirty) await snapshotNow();
+    });
     const unsubData = useData.subscribe((s, p) => {
       if (s.games !== p.games || s.questions !== p.questions || s.results !== p.results || s.lessons !== p.lessons || s.titleOverrides !== p.titleOverrides) save();
     });
@@ -57,6 +68,7 @@ export function DesktopSync() {
     return () => {
       unsubData();
       unsubSettings();
+      bridge.onBeforeClose(null);
       window.clearTimeout(timer.current);
     };
   }, [decided]);

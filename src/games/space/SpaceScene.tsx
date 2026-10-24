@@ -1,5 +1,6 @@
 "use client";
-import { Canvas, useFrame, useThree } from "@react-three/fiber";
+import { useFrame, useThree } from "@react-three/fiber";
+import { SafeCanvas } from "@/components/SafeCanvas";
 import { useEffect, useMemo, useRef } from "react";
 import * as THREE from "three";
 import { useSettings } from "@/store/settings";
@@ -98,8 +99,8 @@ function Scene({ target, planets }: { target: number; planets: number }) {
 
 export default function SpaceScene({ target, planets }: { target: number; planets: number }) {
   return (
-    <Canvas dpr={[1, 1.5]} camera={{ fov: 45, position: [1.5, 2.2, 9] }}>
+    <SafeCanvas dpr={[1, 1.5]} camera={{ fov: 45, position: [1.5, 2.2, 9] }}>
       <Scene target={target} planets={planets} />
-    </Canvas>
+    </SafeCanvas>
   );
 }
