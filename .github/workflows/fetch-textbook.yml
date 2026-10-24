@@ -1,18 +1,12 @@
 # Developer helper for the curriculum import workflow (docs/CURRICULUM_IMPORT.md):
-# downloads a textbook PDF from an official URL that the development
-# environment cannot reach, and keeps it as a run artifact for a few days.
-# Nothing is committed or published.
+# when curricula/fetch-request.json changes, downloads the textbook PDF it
+# names from an official URL that the development environment cannot reach,
+# and keeps it as a run artifact for a few days. Nothing is committed or published.
 name: Fetch textbook PDF
 
 on:
-  workflow_dispatch:
-    inputs:
-      url:
-        description: Full URL of the textbook PDF (e.g. on nccd.gov.jo)
-        required: true
-      name:
-        description: Short file name, e.g. jo-g1-math-s1
-        required: true
+  push:
+    paths: [curricula/fetch-request.json]
 
 permissions:
   contents: read
@@ -21,20 +15,30 @@ jobs:
   fetch:
     runs-on: ubuntu-latest
     steps:
+      - uses: actions/checkout@v4
+        with:
+          sparse-checkout: curricula
       - name: Download
-        env:
-          URL: ${{ inputs.url }}
-          NAME: ${{ inputs.name }}
         run: |
+          NAME=$(jq -r .name curricula/fetch-request.json)
           case "$NAME" in *[!a-zA-Z0-9._-]*|"") echo "bad name"; exit 1;; esac
-          curl -fSL --retry 4 --retry-delay 5 -A "Mozilla/5.0" -o "$NAME.pdf" "$URL"
+          echo "NAME=$NAME" >> "$GITHUB_ENV"
+          ok=""
+          for URL in $(jq -r '.url, (.fallbacks // [])[]' curricula/fetch-request.json); do
+            echo "trying $URL"
+            if curl -fSL --retry 3 --retry-delay 5 -A "Mozilla/5.0" -o "$NAME.pdf" "$URL" && head -c 5 "$NAME.pdf" | grep -q '%PDF'; then ok="$URL"; break; fi
+          done
+          [ -n "$ok" ] || { echo "no URL worked"; exit 1; }
+          echo "$ok" > "$NAME.source-url"
           sudo apt-get install -y -qq poppler-utils > /dev/null
-          pdfinfo "$NAME.pdf"
+          pdfinfo "$NAME.pdf" | tee "$NAME.info"
           sha256sum "$NAME.pdf" | tee "$NAME.sha256"
       - uses: actions/upload-artifact@v4
         with:
-          name: textbook-${{ inputs.name }}
+          name: textbook-${{ env.NAME }}
           path: |
-            ${{ inputs.name }}.pdf
-            ${{ inputs.name }}.sha256
+            ${{ env.NAME }}.pdf
+            ${{ env.NAME }}.sha256
+            ${{ env.NAME }}.info
+            ${{ env.NAME }}.source-url
           retention-days: 5

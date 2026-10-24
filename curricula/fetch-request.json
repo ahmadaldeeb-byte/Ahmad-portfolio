@@ -1,0 +1,8 @@
+{
+  "name": "jo-g1-math-s1",
+  "url": "https://nccd.gov.jo/EBV4.0/Root_Storage/AR/Math/2025/G01/MA.01.ST.BOOK_WEB.pdf",
+  "fallbacks": [
+    "https://nccd.gov.jo/EBV4.0/Root_Storage/AR/2026-2027%20book/Math/G1/1/ST/MA.01.ST1_2026.pdf",
+    "https://nccd.gov.jo/EBV4.0/Root_Storage/AR/Math/2025/G1/MA.01.ST.BOOK_WEB.pdf"
+  ]
+}
