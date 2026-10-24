@@ -31,6 +31,7 @@ import { playHref, questionCount } from "./GameCard";
 import { QuestionEditor } from "./QuestionEditor";
 import { TrainSettingsForm } from "./TrainSettingsForm";
 import { TRAIN_DEFAULTS } from "@/lib/train";
+import { RACE_DEFAULTS } from "@/lib/race";
 import { toast } from "./Toast";
 import { Badge, Button, Card, EmptyState, Field, IconButton, Loading, Modal, Segmented, inputClass } from "./ui";
 
@@ -385,6 +386,32 @@ export function CreateWizard() {
                   <Segmented value={game.settings.shuffle ? 1 : 0} onChange={(v) => updateSettings({ shuffle: v === 1 })} options={[{ value: 1, label: "عشوائي" }, { value: 0, label: "بالترتيب" }]} />
                 </Field>
 
+                {game.type === "race" && (
+                  <>
+                    <Field label="مدة السباق الافتراضية (بالدقائق)" hint="يمكن تغييرها قبل كل سباق.">
+                      <input
+                        type="number"
+                        min={0.5}
+                        max={60}
+                        step={0.5}
+                        className={inputClass}
+                        value={(game.settings.race?.durationSec ?? RACE_DEFAULTS.durationSec) / 60}
+                        onChange={(e) => updateSettings({ race: { ...RACE_DEFAULTS, ...game.settings.race, durationSec: Math.round((Number(e.target.value) || 0) * 60) } })}
+                      />
+                    </Field>
+                    <Field label="عدد الإجابات الصحيحة للوصول إلى خط النهاية">
+                      <input
+                        type="number"
+                        min={2}
+                        max={30}
+                        className={inputClass}
+                        value={game.settings.race?.finishSteps ?? RACE_DEFAULTS.finishSteps}
+                        onChange={(e) => updateSettings({ race: { ...RACE_DEFAULTS, ...game.settings.race, finishSteps: Math.round(Number(e.target.value) || 0) } })}
+                      />
+                    </Field>
+                  </>
+                )}
+
                 {game.type === "wheel" && (
                   <>
                     <Field label="محتوى العجلة" group>
@@ -411,17 +438,7 @@ export function CreateWizard() {
                   <div className="flex flex-col gap-3 md:col-span-2">
                     <div className="flex flex-wrap items-center justify-between gap-3">
                       <span className="font-display text-lg font-bold">الفرق</span>
-                      {game.type === "race" && (
-                        <Segmented
-                          value={game.settings.teams.length}
-                          onChange={(n) =>
-                            updateSettings({
-                              teams: Array.from({ length: n }, (_, i) => game.settings.teams[i] ?? { name: DEFAULT_TEAM_NAMES[i], color: TEAM_COLORS[i] }),
-                            })
-                          }
-                          options={[2, 3, 4].map((n) => ({ value: n, label: `${n} فرق` }))}
-                        />
-                      )}
+                      {game.type === "race" && <span className="text-hero-muted">فريقان يلعبان معًا: الأحمر يمين الشاشة والأزرق يسارها.</span>}
                       {game.type === "wheel" && (
                         <Segmented
                           value={game.settings.teams.length}
@@ -435,7 +452,7 @@ export function CreateWizard() {
                       )}
                     </div>
                     <div className="grid gap-3 sm:grid-cols-2">
-                      {game.settings.teams.map((t, i) => (
+                      {(game.type === "race" ? game.settings.teams.slice(0, 2) : game.settings.teams).map((t, i) => (
                         <div key={i} className="flex items-center gap-3 rounded-2xl border-2 p-2" style={{ borderColor: t.color }}>
                           <span className="size-10 shrink-0 rounded-xl" style={{ background: t.color }} />
                           <input

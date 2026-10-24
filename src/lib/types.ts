@@ -48,6 +48,7 @@ export interface Team {
   color: string;
 }
 
+import type { RaceSettings } from "./race";
 import type { TrainSettings } from "./train";
 
 export interface GameSettings {
@@ -62,6 +63,8 @@ export interface GameSettings {
   removeUsed?: boolean;
   /** Number train: generator settings (the game makes its own questions). */
   train?: TrainSettings;
+  /** Smart race: match length and finish line (teacher can change them before each match). */
+  race?: RaceSettings;
 }
 
 export interface GameConfig {

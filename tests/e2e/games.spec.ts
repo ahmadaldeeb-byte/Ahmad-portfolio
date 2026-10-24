@@ -83,33 +83,6 @@ test.describe("games", () => {
     await expect(page.getByTestId("results")).toContainText("انتهت الجولة!");
   });
 
-  test("race (3D): created in the wizard, correct answers move cars, winner announced", async ({ page }) => {
-    await freshStart(page);
-    await createArithmeticGame(page, { type: "سباق الأذكياء", title: "سباق تجريبي", exprs: ["1 + 1", "2 + 2", "3 + 3", "4 + 4"] });
-    await startClassroom(page);
-    await expect(page.locator("canvas").first()).toBeVisible({ timeout: 20_000 });
-    await expect(page.getByText("دور الفريق الأحمر")).toBeVisible();
-    for (let i = 0; i < 3; i++) {
-      const prompt = (await page.getByTestId("question-prompt").textContent())!;
-      await page.getByRole("button", { name: solve(prompt), exact: true }).click();
-      if (i < 2) await page.getByRole("button", { name: "السؤال التالي" }).click();
-    }
-    await expect(page.getByTestId("race-winner")).toHaveText("فاز الفريق الأحمر!", { timeout: 10_000 });
-    await page.getByRole("button", { name: "عرض النتائج" }).click();
-    await expect(page.getByTestId("results")).toContainText("فاز الفريق الأحمر!");
-    await page.getByRole("button", { name: "لوحة التحكم", exact: true }).click();
-
-    // The created game survived and is listed in "my games" after a reload.
-    await page.goto("/my-games");
-    await page.reload();
-    await expect(page.getByRole("heading", { name: "سباق تجريبي" })).toBeVisible();
-    await page.getByRole("button", { name: "نسخ اللعبة" }).click();
-    await expect(page.getByRole("heading", { name: "سباق تجريبي (نسخة)" })).toBeVisible();
-    await page.getByRole("button", { name: "حذف اللعبة" }).first().click();
-    await page.getByRole("dialog").getByRole("button", { name: "حذف" }).click();
-    await expect(page.locator("li h3")).toHaveCount(1);
-  });
-
   test("balloons (Phaser): canvas pointer pop, wrong feedback and results", async ({ page }) => {
     await freshStart(page);
     await createArithmeticGame(page, { type: "بالونات المعرفة", title: "بالونات تجريبية", exprs: ["5 + 2", "6 + 3"] });

@@ -1,5 +1,6 @@
 import { gameMeta, KIND_LABELS } from "./constants";
 import type { GameConfig, Question, QuestionKind } from "./types";
+import { validateRaceSettings } from "./race";
 import { TRAIN_DEFAULTS, validateTrainSettings } from "./train";
 import { normalizeDigits, shuffle } from "./utils";
 
@@ -159,6 +160,7 @@ export function validateGame(game: GameConfig): ValidationIssue[] {
   } else if (playable.length < meta.minQuestions) {
     issues.push({ message: `تحتاج هذه اللعبة إلى ${meta.minQuestions} أسئلة صالحة على الأقل.` });
   }
+  if (game.type === "race" && game.settings.race) for (const message of validateRaceSettings(game.settings.race)) issues.push({ message });
   if (game.settings.timePerQuestion < 0 || game.settings.timePerQuestion > 300)
     issues.push({ message: "الوقت لكل سؤال يجب أن يكون بين ٠ و٣٠٠ ثانية." });
   if (game.settings.pointsPerCorrect <= 0) issues.push({ message: "النقاط لكل إجابة يجب أن تكون أكبر من صفر." });
