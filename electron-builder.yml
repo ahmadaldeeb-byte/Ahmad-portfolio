@@ -1,0 +1,43 @@
+# Windows packaging for Heroes World (electron-builder).
+#   npm run dist:win   → dist-desktop/HeroesWorld-Portable.exe and HeroesWorld-Setup.exe
+appId: edu.heroesworld.app
+productName: HeroesWorld
+copyright: "© Heroes World"
+directories:
+  output: dist-desktop
+  buildResources: build
+# The app shell only; the games are the prebuilt static release (out/), copied as resources.
+files:
+  - desktop/**/*
+  - package.json
+  - "!**/node_modules/**/*"
+extraResources:
+  - from: out
+    to: web
+asar: true
+electronLanguages: [ar, en-US]
+win:
+  icon: build/icon.png
+  target:
+    - target: portable
+      arch: [x64]
+    - target: nsis
+      arch: [x64]
+  executableName: HeroesWorld
+portable:
+  artifactName: HeroesWorld-Portable.exe
+  # Show a splash while the portable exe unpacks on slow USB sticks.
+  splashImage: build/portable-splash.bmp
+nsis:
+  artifactName: HeroesWorld-Setup.exe
+  oneClick: false
+  perMachine: false
+  allowToChangeInstallationDirectory: true
+  createDesktopShortcut: always
+  createStartMenuShortcut: true
+  shortcutName: عالم الأبطال
+  uninstallDisplayName: عالم الأبطال التعليمي
+  # Teacher data in %APPDATA%\HeroesWorld is kept when the app is uninstalled.
+  deleteAppDataOnUninstall: false
+  installerLanguages: [ar_SA, en_US]
+  language: "1025"

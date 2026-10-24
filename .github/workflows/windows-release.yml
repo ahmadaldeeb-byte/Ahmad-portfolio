@@ -1,0 +1,65 @@
+# Builds and checks the Windows releases on real Windows runners, then
+# uploads HeroesWorld-Portable.exe and HeroesWorld-Setup.exe as artifacts
+# (Actions → this run → Artifacts). Nothing is published anywhere.
+name: Windows release
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [claude/heroes-world-educational-platform-27pxa0]
+
+permissions:
+  contents: read
+
+jobs:
+  windows:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [windows-2022, windows-2025]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - name: Type check and unit tests
+        run: |
+          npm run lint
+          npm test
+      - name: Static release (out/)
+        run: npm run build
+      - name: Desktop shell tests (Electron, development mode)
+        run: |
+          npx playwright install chromium
+          npx playwright test -c playwright.desktop.config.ts tests/desktop/desktop.spec.ts
+      - name: Package (portable + installer)
+        run: npx electron-builder --win portable nsis --x64 --publish never
+      - name: Check the packaged app
+        shell: pwsh
+        run: |
+          $env:HEROES_EXE = "$PWD\dist-desktop\win-unpacked\HeroesWorld.exe"
+          npx playwright test -c playwright.desktop.config.ts tests/desktop/packaged.spec.ts -g "packaged app"
+      - name: Silent install, run, uninstall (data must stay)
+        shell: pwsh
+        run: |
+          Start-Process -Wait -FilePath "dist-desktop\HeroesWorld-Setup.exe" -ArgumentList "/S"
+          $exe = "$env:LOCALAPPDATA\Programs\HeroesWorld\HeroesWorld.exe"
+          if (!(Test-Path $exe)) { throw "not installed at $exe" }
+          if (!(Test-Path "$env:USERPROFILE\Desktop\*.lnk")) { Write-Warning "no desktop shortcut found" }
+          $env:HEROES_INSTALLED_EXE = $exe
+          npx playwright test -c playwright.desktop.config.ts tests/desktop/packaged.spec.ts -g "installed app"
+          Start-Process -Wait -FilePath "$env:LOCALAPPDATA\Programs\HeroesWorld\Uninstall HeroesWorld.exe" -ArgumentList "/S"
+          Start-Sleep -Seconds 5
+          if (Test-Path $exe) { throw "uninstall left the program" }
+          if (!(Test-Path "$env:APPDATA\HeroesWorld\backups")) { throw "uninstall removed teacher data" }
+      - uses: actions/upload-artifact@v4
+        if: matrix.os == 'windows-2022'
+        with:
+          name: HeroesWorld-Windows
+          path: |
+            dist-desktop/HeroesWorld-Portable.exe
+            dist-desktop/HeroesWorld-Setup.exe
+          retention-days: 30

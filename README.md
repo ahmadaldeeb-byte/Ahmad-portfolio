@@ -9,8 +9,14 @@
 ```bash
 npm install
 npm run dev          # خادم التطوير على http://localhost:3000
-npm run build && npm start   # نسخة الإنتاج
+npm run build && npm start   # نسخة الويب الثابتة (out/) على http://localhost:3000
+npm run desktop              # تطبيق ويندوز/لينكس (Electron) من المصدر نفسه
+npm run dist:win             # HeroesWorld-Portable.exe و HeroesWorld-Setup.exe في dist-desktop/
 ```
+
+## الإصدارات: محمولة (USB)، مثبّتة، ويب
+
+ثلاثة إصدارات من مصدر واحد، بصيغة نسخ احتياطية واحدة تنتقل بينها. التفاصيل وقائمة فحص ويندوز ١٠/١١ في [docs/RELEASES.md](docs/RELEASES.md).
 
 ## نسخة ملف واحد (بدون خادم)
 
@@ -25,6 +31,7 @@ node scripts/make-artifact.mjs dist-standalone/index.html heroes-world.html   # 
 npm run lint         # فحص الأنواع (TypeScript)
 npm test             # اختبارات الوحدات (Vitest)
 npm run build && npm run test:e2e   # اختبارات المتصفح (Playwright)
+xvfb-run -a npm run test:desktop    # اختبارات تطبيق ويندوز (Electron)؛ على ويندوز بدون xvfb-run
 ```
 
 ## حالة المشروع (الإصدار ٠٫١)
