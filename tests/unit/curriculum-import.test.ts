@@ -74,6 +74,7 @@ describe("curriculum file validation", () => {
     (l.questions[0] as { origin?: string }).origin = undefined;
     l.questions[1].id = "q1";
     l.questions.push({ id: "m1", origin: "generated", kind: "mcq", prompt: "3 + 4 = ؟", choices: ["6", "7"], correctIndex: 0 });
+    l.questions.push({ id: "c1", origin: "generated", kind: "mcq", prompt: "45 ؟ 56", choices: ["<", ">", "="], correctIndex: 1 });
     l.games = [{ template: "nope" as never }];
     const r = validateCurriculumFile(f);
     expect(r.file).toBeNull();
@@ -81,6 +82,7 @@ describe("curriculum file validation", () => {
     expect(msgs).toContain("حدّد مصدر السؤال");
     expect(msgs).toContain("مكرر");
     expect(msgs).toContain("الناتج الصحيح 7");
+    expect(msgs).toContain("الصحيح 45 < 56");
     expect(msgs).toContain("غير موجود");
   });
 

@@ -172,6 +172,14 @@ export function validateCurriculumFile(raw: unknown): { file: CurriculumFile | n
           const chosen = asQuestion.choices[asQuestion.correctIndex];
           if (v !== null && chosen !== undefined && Number(normalizeDigits(chosen.trim())) !== v) err(qw, `الإجابة المحددة «${chosen}» خاطئة؛ الناتج الصحيح ${v}.`);
         }
+        // Comparison: "a ؟ b" with the symbols < > = as choices.
+        const cmp = /^\s*([0-9٠-٩]+)\s*[؟?○]\s*([0-9٠-٩]+)\s*$/.exec(asQuestion.prompt);
+        if (q.kind === "mcq" && cmp && asQuestion.correctIndex >= 0) {
+          const [x, y] = [Number(normalizeDigits(cmp[1])), Number(normalizeDigits(cmp[2]))];
+          const right = x > y ? ">" : x < y ? "<" : "=";
+          if (!asQuestion.choices.includes(right)) err(qw, `خيارات المقارنة لا تحتوي الرمز الصحيح «${right}».`);
+          else if (asQuestion.choices[asQuestion.correctIndex] !== right) err(qw, `الرمز المحدد «${asQuestion.choices[asQuestion.correctIndex]}» خاطئ؛ الصحيح ${x} ${right} ${y}.`);
+        }
         if (q.page !== undefined && (typeof q.page !== "number" || q.page < 1)) warn(qw, "رقم الصفحة غير صالح.");
       });
       if (l.games !== undefined && !Array.isArray(l.games)) err(lw, "قائمة الألعاب يجب أن تكون مصفوفة.");

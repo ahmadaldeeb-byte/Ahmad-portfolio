@@ -1,0 +1,256 @@
+{
+  "app": "heroes-world",
+  "kind": "curriculum",
+  "version": 1,
+  "curriculum": {
+    "id": "jo-g1-math-s1-2026",
+    "country": "الأردن",
+    "title": "الرياضيات — الصف الأول — الفصل الأول (تجربة: مقارنة الأعداد)",
+    "grade": 1,
+    "subject": "math",
+    "semester": 1,
+    "textbook": {
+      "title": "الرياضيات، الصف الأول، كتاب الطالب، الفصل الدراسي الأول",
+      "publisher": "المركز الوطني لتطوير المناهج",
+      "isbn": "978-9923-41-344-9",
+      "pages": 103,
+      "sha256": "875b5dedd1cdd9121ade6794f7af4e2cd5b1a3f77b59cbfc533b86f1fe29d55c"
+    },
+    "generatedBy": "Claude Code from the textbook PDF (textbook-to-curriculum), first test: one lesson",
+    "generatedAt": "2026-10-24",
+    "units": [
+      {
+        "id": "u2",
+        "number": 2,
+        "title": "مُقارَنَةُ الْأَعْدادِ وَتَرْتيبُها",
+        "semester": 1,
+        "pages": [
+          43,
+          56
+        ],
+        "lessons": [
+          {
+            "id": "u2-l4",
+            "number": 4,
+            "title": "مُقارَنَةُ الْأَعْدادِ",
+            "pages": [
+              50,
+              51
+            ],
+            "questions": [
+              {
+                "id": "u2-l4-t01",
+                "origin": "textbook",
+                "page": 50,
+                "kind": "mcq",
+                "prompt": "مع علا 75 خرزة، ومع حنين 85 خرزة. أيّهما تملك عددًا أكبر من الخرزات؟",
+                "choices": [
+                  "حنين",
+                  "علا"
+                ],
+                "correctIndex": 0,
+                "difficulty": 1
+              },
+              {
+                "id": "u2-l4-t02",
+                "origin": "textbook",
+                "page": 50,
+                "kind": "mcq",
+                "prompt": "36 ؟ 42",
+                "choices": [
+                  "<",
+                  ">",
+                  "="
+                ],
+                "correctIndex": 0,
+                "difficulty": 1
+              },
+              {
+                "id": "u2-l4-t03",
+                "origin": "textbook",
+                "page": 51,
+                "kind": "mcq",
+                "prompt": "36 ؟ 15",
+                "choices": [
+                  "<",
+                  ">",
+                  "="
+                ],
+                "correctIndex": 1,
+                "difficulty": 1
+              },
+              {
+                "id": "u2-l4-t04",
+                "origin": "textbook",
+                "page": 51,
+                "kind": "mcq",
+                "prompt": "42 ؟ 36",
+                "choices": [
+                  "<",
+                  ">",
+                  "="
+                ],
+                "correctIndex": 1,
+                "difficulty": 1
+              },
+              {
+                "id": "u2-l4-t05",
+                "origin": "textbook",
+                "page": 51,
+                "kind": "mcq",
+                "prompt": "45 ؟ 56",
+                "choices": [
+                  "<",
+                  ">",
+                  "="
+                ],
+                "correctIndex": 0,
+                "difficulty": 1
+              },
+              {
+                "id": "u2-l4-t06",
+                "origin": "textbook",
+                "page": 51,
+                "kind": "mcq",
+                "prompt": "96 ؟ 69",
+                "choices": [
+                  "<",
+                  ">",
+                  "="
+                ],
+                "correctIndex": 1,
+                "difficulty": 2
+              },
+              {
+                "id": "u2-l4-t07",
+                "origin": "textbook",
+                "page": 51,
+                "kind": "mcq",
+                "prompt": "21 ؟ 33",
+                "choices": [
+                  "<",
+                  ">",
+                  "="
+                ],
+                "correctIndex": 0,
+                "difficulty": 1
+              },
+              {
+                "id": "u2-l4-t08",
+                "origin": "textbook",
+                "page": 51,
+                "kind": "mcq",
+                "prompt": "81 ؟ 81",
+                "choices": [
+                  "<",
+                  ">",
+                  "="
+                ],
+                "correctIndex": 2,
+                "difficulty": 1
+              },
+              {
+                "id": "u2-l4-t09",
+                "origin": "textbook",
+                "page": 51,
+                "kind": "mcq",
+                "prompt": "أيّ بالون يحمل عددًا أكبر من 59؟",
+                "choices": [
+                  "74",
+                  "58",
+                  "46",
+                  "26"
+                ],
+                "correctIndex": 0,
+                "difficulty": 1
+              },
+              {
+                "id": "u2-l4-t10",
+                "origin": "textbook",
+                "page": 51,
+                "kind": "mcq",
+                "prompt": "أيّ بالون يحمل عددًا أصغر من 59؟",
+                "choices": [
+                  "58",
+                  "90",
+                  "74"
+                ],
+                "correctIndex": 0,
+                "difficulty": 1
+              },
+              {
+                "id": "u2-l4-g01",
+                "origin": "generated",
+                "page": 50,
+                "kind": "truefalse",
+                "prompt": "العدد 67 أكبر من العدد 76.",
+                "correctIndex": 1,
+                "difficulty": 2
+              },
+              {
+                "id": "u2-l4-g02",
+                "origin": "generated",
+                "page": 50,
+                "kind": "mcq",
+                "prompt": "أيّ العددين أصغر: 48 أم 84؟",
+                "choices": [
+                  "48",
+                  "84"
+                ],
+                "correctIndex": 0,
+                "difficulty": 2
+              },
+              {
+                "id": "u2-l4-g03",
+                "origin": "generated",
+                "page": 50,
+                "kind": "mcq",
+                "prompt": "العشرات متساوية في العددين 53 و57. أيّهما أكبر؟",
+                "choices": [
+                  "57",
+                  "53"
+                ],
+                "correctIndex": 0,
+                "difficulty": 2
+              },
+              {
+                "id": "u2-l4-g04",
+                "origin": "generated",
+                "page": 50,
+                "kind": "mcq",
+                "prompt": "70 ؟ 70",
+                "choices": [
+                  "<",
+                  ">",
+                  "="
+                ],
+                "correctIndex": 2,
+                "difficulty": 1
+              },
+              {
+                "id": "u2-l4-g05",
+                "origin": "generated",
+                "page": 50,
+                "kind": "truefalse",
+                "prompt": "العدد 19 أصغر من العدد 91.",
+                "correctIndex": 0,
+                "difficulty": 1
+              }
+            ],
+            "games": [
+              {
+                "template": "quiz"
+              },
+              {
+                "template": "balloons"
+              },
+              {
+                "template": "race"
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  }
+}
