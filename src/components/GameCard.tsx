@@ -11,7 +11,9 @@ import { Badge } from "./ui";
 
 /** Number of questions a game will ask (generated games use their settings). */
 export function questionCount(game: GameConfig) {
-  return game.type === "train" ? (game.settings.train?.count ?? 0) : game.questions.length;
+  if (game.type === "train") return game.settings.train?.count ?? 0;
+  if (game.settings.math) return game.settings.math.count;
+  return game.questions.length;
 }
 
 export function playHref(id: string) {

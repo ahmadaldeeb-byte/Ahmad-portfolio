@@ -13,7 +13,19 @@ export type GameType =
   | "puzzle"
   | "space"
   | "teams"
-  | "train";
+  | "train"
+  | "island"
+  | "crocodile"
+  | "rocket"
+  | "appleBasket"
+  | "factory"
+  | "raceAdd"
+  | "pirates"
+  | "shapes"
+  | "pizza"
+  | "market"
+  | "clock"
+  | "measure";
 
 /** Question kinds supported by the editor and the question bank. */
 export type QuestionKind = "mcq" | "truefalse" | "order" | "match" | "arithmetic";
@@ -48,6 +60,7 @@ export interface Team {
   color: string;
 }
 
+import type { MathSettings } from "./math/common";
 import type { RaceSettings } from "./race";
 import type { TrainSettings } from "./train";
 
@@ -65,6 +78,8 @@ export interface GameSettings {
   train?: TrainSettings;
   /** Smart race: match length and finish line (teacher can change them before each match). */
   race?: RaceSettings;
+  /** Grade 1 math games that generate their own tasks. */
+  math?: MathSettings;
 }
 
 export interface GameConfig {

@@ -30,6 +30,8 @@ export interface GameMeta {
   generated?: boolean;
   /** Subjects the game belongs to; all subjects when omitted. */
   subjects?: Subject[];
+  /** Grades the ready-made versions are prepared for; all grades when omitted. */
+  grades?: Grade[];
 }
 
 const CHOICE_KINDS: QuestionKind[] = ["mcq", "truefalse", "arithmetic"];
@@ -45,6 +47,18 @@ export const GAMES: GameMeta[] = [
   { type: "puzzle", name: "أبطال الألغاز", description: "ركّب أجزاء الصورة التعليمية في مكانها.", genre: "ألغاز", dimension: "2D", ready: false, kinds: ["mcq"], minQuestions: 1, teamBased: false, accent: "#E64980" },
   { type: "space", name: "رحلة إلى النجوم", description: "سافر بمركبتك بين الكواكب بالإجابة عن الأسئلة.", genre: "مغامرة فضائية", dimension: "3D", ready: false, kinds: CHOICE_KINDS, minQuestions: 3, teamBased: false, accent: "#5C3FD9" },
   { type: "train", name: "قطار الأرقام السحري", description: "أكمل الأعداد الناقصة في عربات القطار: السابق والتالي والعدد الناقص.", genre: "أعداد متتالية", dimension: "3D", ready: true, kinds: [], minQuestions: 0, teamBased: false, accent: "#E8590C", generated: true, subjects: ["math"] },
+  { type: "island", name: "جزيرة الأرقام", description: "اجمع العدد المطلوب من الثمار في السلة وتعلّم العد.", genre: "العد والأعداد", dimension: "2D", ready: true, kinds: [], minQuestions: 0, teamBased: false, accent: "#20A4C9", generated: true, subjects: ["math"], grades: [1] },
+  { type: "crocodile", name: "التمساح الجائع", description: "قارن بين المجموعات والأعداد بالرموز > و< و=.", genre: "مقارنة الأعداد", dimension: "2D", ready: true, kinds: [], minQuestions: 0, teamBased: false, accent: "#2F9E44", generated: true, subjects: ["math"], grades: [1] },
+  { type: "rocket", name: "صاروخ الجمع", description: "املأ خزان الوقود بإجابات الجمع لينطلق الصاروخ إلى كوكب جديد.", genre: "الجمع", dimension: "3D", ready: true, kinds: [], minQuestions: 0, teamBased: false, accent: "#5C3FD9", generated: true, subjects: ["math"], grades: [1] },
+  { type: "appleBasket", name: "سلة التفاح", description: "خذ التفاحات من الشجرة إلى السلة وعدّ الباقي.", genre: "الطرح", dimension: "2D", ready: true, kinds: [], minQuestions: 0, teamBased: false, accent: "#E03131", generated: true, subjects: ["math"], grades: [1] },
+  { type: "factory", name: "مصنع الأعداد", description: "ابنِ الأعداد بحزم العشرات ومكعبات الآحاد.", genre: "الآحاد والعشرات", dimension: "2D", ready: true, kinds: [], minQuestions: 0, teamBased: false, accent: "#E67700", generated: true, subjects: ["math"], grades: [1] },
+  { type: "raceAdd", name: "سباق الجمع", description: "سباق فريقين على شاشة مقسومة بعمليات جمع ضمن منزلتين.", genre: "الجمع ضمن منزلتين", dimension: "3D", ready: true, kinds: [], minQuestions: 0, teamBased: true, accent: "#1C7ED6", generated: true, subjects: ["math"], grades: [1] },
+  { type: "pirates", name: "كنز القراصنة", description: "حلّ مسائل الطرح لتحصل على المفاتيح وتفتح الأبواب حتى الكنز.", genre: "الطرح", dimension: "2D", ready: true, kinds: [], minQuestions: 0, teamBased: false, accent: "#862E9C", generated: true, subjects: ["math"], grades: [1] },
+  { type: "shapes", name: "مدينة الأشكال", description: "تعرّف على الأشكال والمجسمات وابنِ مدينة ملوّنة.", genre: "الهندسة", dimension: "3D", ready: true, kinds: [], minQuestions: 0, teamBased: false, accent: "#0CA678", generated: true, subjects: ["math"], grades: [1] },
+  { type: "pizza", name: "مطعم البيتزا", description: "قسّم البيتزا إلى أجزاء متساوية وقدّم النصف والربع.", genre: "الكسور", dimension: "2D", ready: true, kinds: [], minQuestions: 0, teamBased: false, accent: "#F76707", generated: true, subjects: ["math"], grades: [1] },
+  { type: "market", name: "السوق الصغير", description: "اشترِ المنتجات وادفع ثمنها بالقطع النقدية الأردنية.", genre: "النقود", dimension: "2D", ready: true, kinds: [], minQuestions: 0, teamBased: false, accent: "#D6336C", generated: true, subjects: ["math"], grades: [1] },
+  { type: "clock", name: "ساعة المغامرات", description: "اقرأ الساعة واضبط عقاربها لتنظيم يوم فارس.", genre: "الزمن", dimension: "2D", ready: true, kinds: [], minQuestions: 0, teamBased: false, accent: "#3B5BDB", generated: true, subjects: ["math"], grades: [1] },
+  { type: "measure", name: "مختبر القياس", description: "قارن الأطوال والكتل والسعات بالميزان والأدوات.", genre: "القياس", dimension: "2D", ready: true, kinds: [], minQuestions: 0, teamBased: false, accent: "#495057", generated: true, subjects: ["math"], grades: [1] },
   { type: "teams", name: "معركة الأبطال", description: "منافسة مباشرة بين الفريق الأحمر والفريق الأزرق.", genre: "تحدي فرق", dimension: "2D", ready: true, kinds: CHOICE_KINDS, minQuestions: 4, teamBased: true, accent: "#FA5252" },
 ];
 

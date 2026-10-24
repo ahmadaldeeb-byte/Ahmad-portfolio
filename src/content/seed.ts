@@ -2,6 +2,8 @@ import type { Difficulty, GameConfig, GameType, Grade, Question, Subject } from 
 import { DEFAULT_TEAM_NAMES, GAMES, TEAM_COLORS, gradeLabel, subjectLabel } from "@/lib/constants";
 import { TRAIN_DEFAULTS, type TrainSettings } from "@/lib/train";
 import { BOOKS } from "./curriculum";
+import { MATH_DEFAULTS } from "@/lib/math/common";
+import { isMathGame } from "@/lib/math/meta";
 
 /*
  * Sample classroom content for grades 1–3. It is written to suit the age group
@@ -251,6 +253,7 @@ export function defaultSettings(type: GameType) {
     wheelNames: [] as string[],
     removeUsed: true,
     ...(type === "train" ? { train: { ...TRAIN_DEFAULTS } } : {}),
+    ...(isMathGame(type) ? { math: { ...MATH_DEFAULTS } } : {}),
   };
 }
 
@@ -262,7 +265,7 @@ export function builtinGames(): GameConfig[] {
   const out: GameConfig[] = [];
   for (const grade of [1, 2, 3] as Grade[]) {
     for (const subject of ["arabic", "math", "science", "english"] as Subject[]) {
-      for (const meta of GAMES.filter((g) => g.ready && (!g.subjects || g.subjects.includes(subject)))) {
+      for (const meta of GAMES.filter((g) => g.ready && (!g.subjects || g.subjects.includes(subject)) && (!g.grades || g.grades.includes(grade)))) {
         const questions = meta.generated ? [] : qs.filter((q) => q.grade === grade && q.subject === subject && meta.kinds.includes(q.kind));
         const settings = defaultSettings(meta.type);
         if (meta.type === "train") settings.train = { ...TRAIN_DEFAULTS, ...TRAIN_RANGES[grade] };

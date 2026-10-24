@@ -150,6 +150,8 @@ export function validateGame(game: GameConfig): ValidationIssue[] {
   });
   if (meta.generated) {
     if (game.type === "train") for (const message of validateTrainSettings(game.settings.train ?? TRAIN_DEFAULTS)) issues.push({ message });
+    const m = game.settings.math;
+    if (game.type !== "train" && m && (!Number.isInteger(m.count) || m.count < 1 || m.count > 30)) issues.push({ message: "عدد المهام يجب أن يكون بين ١ و٣٠." });
     return issues;
   }
   const playable = game.questions.filter((q) => meta.kinds.includes(q.kind) && validateQuestion(q).length === 0);
