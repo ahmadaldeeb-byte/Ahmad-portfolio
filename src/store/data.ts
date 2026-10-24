@@ -2,6 +2,8 @@
 import { create } from "zustand";
 import { SEED_VERSION, builtinGames, seedQuestions, seedQuestionsSince } from "@/content/seed";
 import { dataStore } from "@/lib/datastore";
+import type { CurriculumBook } from "@/content/curriculum/types";
+import type { ImportPlan } from "@/lib/curriculum/import";
 import type { LessonPlan } from "@/lib/lessons/types";
 import type { GameConfig, GameResult, Question } from "@/lib/types";
 import { uid } from "@/lib/utils";
@@ -16,6 +18,12 @@ interface DataState {
   lessons: LessonPlan[];
   /** Teacher corrections of curriculum lesson titles, by lesson id. */
   titleOverrides: Record<string, string>;
+  /** Curricula imported from JSON files («📚 استيراد منهج»). */
+  curricula: CurriculumBook[];
+  /** Saves an import plan: the curriculum, its questions and its games (new records only). */
+  importCurriculum: (plan: ImportPlan) => Promise<void>;
+  /** Removes an imported curriculum with the questions and games it created. */
+  removeCurriculum: (id: string) => Promise<void>;
   /** The local database was empty when the app started (first run, or storage was cleared). */
   firstRun: boolean;
   saveLesson: (p: LessonPlan) => Promise<LessonPlan>;
@@ -46,6 +54,7 @@ export const useData = create<DataState>()((set, get) => ({
   lessons: [],
   titleOverrides: {},
   firstRun: false,
+  curricula: [],
   builtins: builtinGames(),
 
   load: () => {
@@ -64,14 +73,15 @@ export const useData = create<DataState>()((set, get) => ({
             await dataStore().meta.set("seed-version", SEED_VERSION);
           }
         }
-        const [games, questions, results, lessons, titleOverrides] = await Promise.all([
+        const [games, questions, results, lessons, titleOverrides, curricula] = await Promise.all([
           dataStore().games.all(),
           dataStore().questions.all(),
           dataStore().results.all(),
           dataStore().lessons.all(),
           dataStore().meta.get<Record<string, string>>("curriculum-titles"),
+          dataStore().curricula.all(),
         ]);
-        set({ games, questions, results, lessons, titleOverrides: titleOverrides ?? {}, ready: true, error: null });
+        set({ games, questions, results, lessons, curricula, titleOverrides: titleOverrides ?? {}, ready: true, error: null });
       } catch (e) {
         loading = null;
         set({ ready: true, error: e instanceof Error ? e.message : "تعذّر فتح قاعدة البيانات المحلية." });
@@ -80,9 +90,25 @@ export const useData = create<DataState>()((set, get) => ({
     return loading;
   },
 
+  importCurriculum: async (plan) => {
+    await dataStore().questions.putMany(plan.questions);
+    for (const g of plan.games) await dataStore().games.put(g);
+    await dataStore().curricula.put(plan.book);
+    await get().refresh();
+  },
+  removeCurriculum: async (id) => {
+    const book = get().curricula.find((b) => b.id === id);
+    if (!book) return;
+    const importId = book.imported?.importId ?? id;
+    for (const g of get().games.filter((x) => x.importId === importId)) await dataStore().games.remove(g.id);
+    for (const q of get().questions.filter((x) => x.importId === importId)) await dataStore().questions.remove(q.id);
+    await dataStore().curricula.remove(id);
+    await get().refresh();
+  },
+
   refresh: async () => {
-    const [games, questions, results, lessons, titleOverrides] = await Promise.all([dataStore().games.all(), dataStore().questions.all(), dataStore().results.all(), dataStore().lessons.all(), dataStore().meta.get<Record<string, string>>("curriculum-titles")]);
-    set({ games, questions, results, lessons, titleOverrides: titleOverrides ?? {}, ready: true, error: null });
+    const [games, questions, results, lessons, titleOverrides, curricula] = await Promise.all([dataStore().games.all(), dataStore().questions.all(), dataStore().results.all(), dataStore().lessons.all(), dataStore().meta.get<Record<string, string>>("curriculum-titles"), dataStore().curricula.all()]);
+    set({ games, questions, results, lessons, curricula, titleOverrides: titleOverrides ?? {}, ready: true, error: null });
   },
 
   saveGame: async (g) => {

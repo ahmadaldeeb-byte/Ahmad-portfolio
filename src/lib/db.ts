@@ -1,4 +1,5 @@
 import { openDB, type DBSchema, type IDBPDatabase } from "idb";
+import type { CurriculumBook } from "@/content/curriculum/types";
 import type { LessonPlan } from "./lessons/types";
 import type { GameConfig, GameResult, Question } from "./types";
 
@@ -8,10 +9,11 @@ interface HeroesDB extends DBSchema {
   results: { key: string; value: GameResult; indexes: { byStarted: number } };
   meta: { key: string; value: { key: string; value: unknown } };
   lessons: { key: string; value: LessonPlan };
+  curricula: { key: string; value: CurriculumBook };
 }
 
 const DB_NAME = "heroes-world";
-const DB_VERSION = 2;
+const DB_VERSION = 3;
 let dbPromise: Promise<IDBPDatabase<HeroesDB>> | null = null;
 
 export function getDB() {
@@ -19,6 +21,7 @@ export function getDB() {
   dbPromise ??= openDB<HeroesDB>(DB_NAME, DB_VERSION, {
     upgrade(db, oldVersion) {
       if (oldVersion < 2 && !db.objectStoreNames.contains("lessons")) db.createObjectStore("lessons", { keyPath: "id" });
+      if (oldVersion < 3 && !db.objectStoreNames.contains("curricula")) db.createObjectStore("curricula", { keyPath: "id" });
       if (oldVersion >= 1) return;
       const games = db.createObjectStore("games", { keyPath: "id" });
       games.createIndex("byUpdated", "updatedAt");
@@ -102,6 +105,19 @@ export const lessonsRepo = {
   },
   async remove(id: string) {
     await (await getDB()).delete("lessons", id);
+  },
+};
+
+/** Curricula imported from JSON files (the built-in index lives in the code). */
+export const curriculaRepo = {
+  async all() {
+    return (await getDB()).getAll("curricula");
+  },
+  async put(book: CurriculumBook) {
+    await (await getDB()).put("curricula", book);
+  },
+  async remove(id: string) {
+    await (await getDB()).delete("curricula", id);
   },
 };
 

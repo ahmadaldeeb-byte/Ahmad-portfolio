@@ -4,7 +4,7 @@
  * accounts can provide another implementation (e.g. one that syncs with a
  * server) with the same shape, without touching the games or the pages.
  */
-import { gamesRepo, lessonsRepo, metaRepo, questionsRepo, resultsRepo } from "./db";
+import { curriculaRepo, gamesRepo, lessonsRepo, metaRepo, questionsRepo, resultsRepo } from "./db";
 
 export interface DataStore {
   /** Identifies the store, e.g. "local" or a future "cloud:<teacher id>". */
@@ -14,9 +14,10 @@ export interface DataStore {
   results: typeof resultsRepo;
   lessons: typeof lessonsRepo;
   meta: typeof metaRepo;
+  curricula: typeof curriculaRepo;
 }
 
-export const localStore: DataStore = { id: "local", games: gamesRepo, questions: questionsRepo, results: resultsRepo, lessons: lessonsRepo, meta: metaRepo };
+export const localStore: DataStore = { id: "local", games: gamesRepo, questions: questionsRepo, results: resultsRepo, lessons: lessonsRepo, meta: metaRepo, curricula: curriculaRepo };
 
 let active: DataStore = localStore;
 export const dataStore = () => active;

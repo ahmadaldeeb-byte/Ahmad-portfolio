@@ -6,6 +6,7 @@ import {
   BookOpen,
   Presentation,
   Database,
+  FileUp,
   Gamepad2,
   GraduationCap,
   Home,
@@ -24,6 +25,7 @@ export const NAV = [
   { href: "/library", label: "مكتبة الألعاب", icon: Gamepad2 },
   { href: "/lessons", label: "تحضير الحصص", icon: Presentation },
   { href: "/curriculum", label: "المنهاج والدروس", icon: BookOpen },
+  { href: "/import", label: "📚 استيراد منهج", icon: FileUp },
   { href: "/create", label: "إنشاء لعبة جديدة", icon: PlusCircle },
   { href: "/bank", label: "بنك الأسئلة", icon: Database },
   { href: "/my-games", label: "ألعابي المحفوظة", icon: Save },
@@ -32,7 +34,7 @@ export const NAV = [
   { href: "/settings", label: "الإعدادات", icon: Settings },
 ];
 
-const MOBILE_NAV = [NAV[0], NAV[1], NAV[2], NAV[3], NAV[9]];
+const MOBILE_NAV = ["/", "/library", "/lessons", "/curriculum", "/settings"].map((h) => NAV.find((n) => n.href === h)!);
 
 function isActive(pathname: string, href: string) {
   return href === "/" ? pathname === "/" : pathname.startsWith(href);

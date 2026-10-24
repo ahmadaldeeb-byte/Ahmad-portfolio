@@ -8,7 +8,8 @@
  * validated on import; damaged records are skipped and reported.
  */
 import { GAMES } from "./constants";
-import { gamesRepo, getDB, lessonsRepo, metaRepo, questionsRepo, resultsRepo } from "./db";
+import type { CurriculumBook } from "@/content/curriculum/types";
+import { curriculaRepo, gamesRepo, getDB, lessonsRepo, metaRepo, questionsRepo, resultsRepo } from "./db";
 import type { LessonPlan } from "./lessons/types";
 import type { Platform } from "./platform";
 import type { GameConfig, GameResult, Question } from "./types";
@@ -36,6 +37,8 @@ export interface BackupData {
   settings?: BackupSettings;
   /** Lesson id → title corrected by the teacher. */
   curriculumTitles?: Record<string, string>;
+  /** Curricula imported from JSON files (their questions and games are in the lists above). */
+  curricula?: CurriculumBook[];
 }
 
 export interface Backup extends BackupData {
@@ -83,6 +86,10 @@ export function isValidLesson(l: unknown): l is LessonPlan {
   if (!isObj(l) || !str(l.id) || !Array.isArray(l.segments) || l.segments.length !== 3) return false;
   return l.segments.map((s) => (isObj(s) ? s.kind : "")).join(",") === "warmup,main,challenge";
 }
+export function isValidCurriculum(b: unknown): b is CurriculumBook {
+  if (!isObj(b) || !str(b.id) || !GRADES.includes(b.grade as number) || !SUBJECTS.includes(b.subject as string) || !Array.isArray(b.units)) return false;
+  return b.units.every((u) => isObj(u) && str(u.id) && typeof u.title === "string" && Array.isArray(u.lessons) && u.lessons.every((l) => isObj(l) && str(l.id) && typeof l.title === "string"));
+}
 export function isValidResult(r: unknown): r is GameResult {
   return isObj(r) && str(r.id) && typeof r.gameId === "string" && typeof r.startedAt === "number" && GAME_TYPES.has(r.type as never);
 }
@@ -108,6 +115,7 @@ export interface ParsedBackup {
 /** Reads a backup of any version (1, 2 or newer). Throws an Arabic message when the file is not a backup at all. */
 export function parseBackup(raw: unknown): ParsedBackup {
   if (!isObj(raw) || raw.app !== "heroes-world" || !Array.isArray(raw.games) || !Array.isArray(raw.questions)) {
+    if (isObj(raw) && raw.app === "heroes-world" && raw.kind === "curriculum") throw new Error("هذا ملف منهج، وليس نسخة احتياطية. استورده من صفحة «📚 استيراد منهج».");
     if (isObj(raw) && raw.app === "heroes-world" && typeof raw.kind === "string" && raw.kind !== "backup")
       throw new Error("هذا ملف لعبة أو أسئلة أو حصة مفردة، وليس نسخة احتياطية كاملة. استورده من صفحة «ألعابي» أو «بنك الأسئلة» أو «تحضير الحصص».");
     throw new Error("هذا الملف ليس نسخة احتياطية من عالم الأبطال.");
@@ -125,6 +133,7 @@ export function parseBackup(raw: unknown): ParsedBackup {
     questions: pick(raw.questions, isValidQuestion, "الأسئلة"),
     results: pick(raw.results, isValidResult, "النتائج"),
     lessons: pick(raw.lessons, isValidLesson, "الحصص"),
+    curricula: pick(raw.curricula, isValidCurriculum, "المناهج المستوردة"),
     settings: cleanSettings(raw.settings),
     curriculumTitles: isObj(raw.curriculumTitles) ? Object.fromEntries(Object.entries(raw.curriculumTitles).filter(([, v]) => typeof v === "string")) as Record<string, string> : undefined,
   };
@@ -137,14 +146,15 @@ export function parseBackup(raw: unknown): ParsedBackup {
 
 /** Collects everything the teacher made. Settings live outside the database, so the caller passes them in. */
 export async function collectBackupData(extra: { settings?: BackupSettings } = {}): Promise<BackupData> {
-  const [games, questions, results, lessons, curriculumTitles] = await Promise.all([
+  const [games, questions, results, lessons, curriculumTitles, curricula] = await Promise.all([
     gamesRepo.all(),
     questionsRepo.all(),
     resultsRepo.all(),
     lessonsRepo.all(),
     metaRepo.get<Record<string, string>>("curriculum-titles"),
+    curriculaRepo.all(),
   ]);
-  return { games, questions, results, lessons, settings: extra.settings, curriculumTitles: curriculumTitles ?? {} };
+  return { games, questions, results, lessons, settings: extra.settings, curriculumTitles: curriculumTitles ?? {}, curricula };
 }
 
 export type RestoreMode = "merge" | "replace";
@@ -152,14 +162,15 @@ export type RestoreMode = "merge" | "replace";
 /**
  * Restores a parsed backup. "merge" adds and updates records (same id →
  * replaced by the backup's copy) and deletes nothing; "replace" first empties
- * games, questions, results and lessons. Settings are returned for the caller to apply.
+ * games, questions, results, lessons and imported curricula. Settings are returned for the caller to apply.
  */
 export async function restoreBackup(parsed: ParsedBackup, mode: RestoreMode = "merge") {
   const { data } = parsed;
   const db = await getDB();
-  const tx = db.transaction(["games", "questions", "results", "lessons", "meta"], "readwrite");
+  const tx = db.transaction(["games", "questions", "results", "lessons", "meta", "curricula"], "readwrite");
   const ops: Promise<unknown>[] = [];
-  if (mode === "replace") for (const s of ["games", "questions", "results", "lessons"] as const) ops.push(tx.objectStore(s).clear());
+  if (mode === "replace") for (const s of ["games", "questions", "results", "lessons", "curricula"] as const) ops.push(tx.objectStore(s).clear());
+  for (const b of data.curricula ?? []) ops.push(tx.objectStore("curricula").put(b));
   for (const g of data.games) ops.push(tx.objectStore("games").put({ ...g, builtin: false }));
   for (const q of data.questions) ops.push(tx.objectStore("questions").put(q));
   for (const r of data.results) ops.push(tx.objectStore("results").put(r));

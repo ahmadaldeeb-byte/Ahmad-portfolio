@@ -51,6 +51,14 @@ export interface Question {
   /** Target word or sentence for "order" questions. */
   answer?: string;
   pairs?: MatchPair[];
+  /** Imported from a curriculum file: "textbook" = from the book, "generated" = written by AI, needs a teacher's look. */
+  origin?: "textbook" | "generated";
+  /** Curriculum lesson the question belongs to (imported curricula). */
+  lessonId?: string;
+  /** The curriculum import that created it (so the import can be undone). */
+  importId?: string;
+  /** Textbook page, when known. */
+  page?: number;
   createdAt: number;
   updatedAt: number;
 }
@@ -95,6 +103,8 @@ export interface GameConfig {
   builtin?: boolean;
   /** Curriculum lesson this game was prepared for. */
   lessonId?: string;
+  /** The curriculum import that created it. */
+  importId?: string;
   createdAt: number;
   updatedAt: number;
 }

@@ -15,17 +15,23 @@ import { Badge, Button, EmptyState, IconButton, PageHeader, Segmented, inputClas
 export function CurriculumView() {
   const params = useSearchParams();
   const router = useRouter();
-  const { builtins, titleOverrides, setTitleOverride } = useData();
+  const { builtins, games: saved, curricula, titleOverrides, setTitleOverride } = useData();
   const [grade, setGrade] = useState(Number(params.get("grade")) || 1);
   const [subject, setSubject] = useState(params.get("subject") || "math");
-  const book = BOOKS.find((b) => b.grade === grade && b.subject === subject);
+  // The built-in index and the curricula imported from files («📚 استيراد منهج»).
+  const books = [...BOOKS, ...curricula].filter((b) => b.grade === grade && b.subject === subject);
+  const [bookId, setBookId] = useState(params.get("book"));
+  const book = books.find((b) => b.id === bookId) ?? books[0];
   const [semester, setSemester] = useState<1 | 2>(1);
   const [openUnit, setOpenUnit] = useState<string | null>(params.get("unit"));
   const [openLesson, setOpenLesson] = useState<string | null>(params.get("lesson"));
   const [editing, setEditing] = useState<string | null>(null);
   const [draft, setDraft] = useState("");
 
-  const lessonGames = (l: CurriculumLesson) => builtins.filter((g) => g.lessonId === l.id);
+  // A book for one semester only shows that semester without a switch.
+  const semesters = [...new Set(book?.units.map((u) => u.semester) ?? [])];
+  const shownSemester = semesters.includes(semester) ? semester : (semesters[0] ?? 1);
+  const lessonGames = (l: CurriculumLesson) => [...builtins, ...saved].filter((g) => g.lessonId === l.id);
 
   return (
     <div className="flex flex-col gap-6">
@@ -44,9 +50,16 @@ export function CurriculumView() {
       </div>
 
       {!book ? (
-        <EmptyState title="لا يوجد فهرس لهذا الاختيار بعد" hint="الفهرس المتوفر حاليًا: رياضيات الصف الأول الأساسي (الأردن)." />
+        <EmptyState
+          title="لا يوجد فهرس لهذا الاختيار بعد"
+          hint="الفهرس المدمج: رياضيات الصف الأول الأساسي (الأردن). يمكنك إضافة كتب أخرى من «📚 استيراد منهج»."
+          action={<Link href="/import" className="btn-3d inline-flex min-h-12 items-center rounded-2xl bg-hero-blue px-5 font-bold text-white">📚 استيراد منهج</Link>}
+        />
       ) : (
         <>
+          {books.length > 1 && (
+            <Segmented value={book.id} onChange={setBookId} options={books.map((b) => ({ value: b.id, label: b.imported ? `📚 ${b.imported.title}` : `الفهرس المدمج — ${b.source.name}` }))} />
+          )}
           <div className={cn("flex gap-3 rounded-3xl p-4", book.source.status === "verified" ? "bg-hero-green/10" : "bg-hero-yellow/25")} data-testid="curriculum-source">
             <TriangleAlert className="size-6 shrink-0 text-[#E67700]" />
             <div className="flex flex-col gap-1">
@@ -57,24 +70,26 @@ export function CurriculumView() {
               <p className="text-sm text-hero-muted">
                 المصدر: {book.source.name} • تاريخ المراجعة: {book.source.checkedOn}
               </p>
-              <a href={book.source.url} target="_blank" rel="noreferrer" className="inline-flex min-h-11 w-fit items-center gap-2 rounded-xl bg-white px-4 font-bold text-hero-blue">
+              {book.source.url && <a href={book.source.url} target="_blank" rel="noreferrer" className="inline-flex min-h-11 w-fit items-center gap-2 rounded-xl bg-white px-4 font-bold text-hero-blue">
                 فتح المصدر <ExternalLink className="size-4" />
-              </a>
+              </a>}
             </div>
           </div>
 
-          <Segmented
-            value={semester}
-            onChange={setSemester}
-            options={[
-              { value: 1 as const, label: "الفصل الدراسي الأول" },
-              { value: 2 as const, label: "الفصل الدراسي الثاني" },
-            ]}
-          />
+          {semesters.length > 1 && (
+            <Segmented
+              value={shownSemester}
+              onChange={setSemester}
+              options={[
+                { value: 1 as const, label: "الفصل الدراسي الأول" },
+                { value: 2 as const, label: "الفصل الدراسي الثاني" },
+              ]}
+            />
+          )}
 
           <div className="flex flex-col gap-3">
             {book.units
-              .filter((u) => u.semester === semester)
+              .filter((u) => u.semester === shownSemester)
               .map((u) => {
                 const open = openUnit === u.id;
                 const readyCount = u.lessons.filter((l) => l.games.length).length;

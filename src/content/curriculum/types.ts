@@ -45,8 +45,21 @@ export interface CurriculumSource {
   note: string;
 }
 
+/** Set on curricula imported from a JSON file (stored in IndexedDB, not in the code). */
+export interface CurriculumImportInfo {
+  importId: string;
+  importedAt: number;
+  /** Detects importing the same book twice. */
+  fingerprint: string;
+  title: string;
+  semester?: Semester;
+  textbook: { title: string; publisher?: string; edition?: string; isbn?: string; pages?: number; sha256?: string };
+  counts: { units: number; lessons: number; questions: number; games: number };
+}
+
 export interface CurriculumBook {
   id: string;
+  imported?: CurriculumImportInfo;
   grade: Grade;
   subject: Subject;
   country: string;
