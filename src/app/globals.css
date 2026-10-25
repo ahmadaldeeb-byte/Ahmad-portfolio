@@ -1,0 +1,106 @@
+@import "tailwindcss";
+/* Scan all of src (the standalone Vite build has a different root). */
+@source "..";
+@import "@fontsource/cairo/arabic-600.css";
+@import "@fontsource/cairo/arabic-800.css";
+@import "@fontsource/cairo/latin-800.css";
+@import "@fontsource/cairo/latin-600.css";
+@import "@fontsource/tajawal/arabic-400.css";
+@import "@fontsource/tajawal/arabic-500.css";
+@import "@fontsource/tajawal/arabic-700.css";
+@import "@fontsource/tajawal/latin-400.css";
+@import "@fontsource/tajawal/latin-700.css";
+
+@theme {
+  --color-hero-blue: #4361ee;
+  --color-hero-purple: #7950f2;
+  --color-hero-yellow: #ffd43b;
+  --color-hero-green: #40c057;
+  --color-hero-pink: #ff6b9a;
+  --color-hero-orange: #ff922b;
+  --color-hero-red: #fa5252;
+  --color-hero-bg: #f8f9ff;
+  --color-hero-ink: #25304b;
+  --color-hero-muted: #6b7493;
+  --font-display: "Cairo", "Tajawal", system-ui, sans-serif;
+  --font-body: "Tajawal", "Cairo", system-ui, sans-serif;
+  --shadow-soft: 0 10px 30px -12px rgb(37 48 75 / 0.25);
+  --shadow-pop: 0 6px 0 0 rgb(37 48 75 / 0.18);
+  --radius-4xl: 2rem;
+}
+
+html {
+  background: var(--color-hero-bg);
+  color: var(--color-hero-ink);
+  font-family: var(--font-body);
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* Safe area (Android app, notched phones): 0 on the web and in the Windows app. */
+:root {
+  --safe-top: var(--safe-area-inset-top, env(safe-area-inset-top, 0px));
+  --safe-right: var(--safe-area-inset-right, env(safe-area-inset-right, 0px));
+  --safe-bottom: var(--safe-area-inset-bottom, env(safe-area-inset-bottom, 0px));
+  --safe-left: var(--safe-area-inset-left, env(safe-area-inset-left, 0px));
+}
+
+body {
+  padding: var(--safe-top) var(--safe-right) var(--safe-bottom) var(--safe-left);
+  min-height: 100dvh;
+  background:
+    radial-gradient(1200px 600px at 100% -10%, rgb(121 80 242 / 0.08), transparent 60%),
+    radial-gradient(900px 500px at -10% 110%, rgb(67 97 238 / 0.08), transparent 60%),
+    var(--color-hero-bg);
+}
+
+h1, h2, h3, h4, .font-display {
+  font-family: var(--font-display);
+}
+
+/* English educational content keeps LTR direction inside the RTL interface. */
+.ltr-content {
+  direction: ltr;
+  unicode-bidi: isolate;
+}
+
+:focus-visible {
+  outline: 3px solid var(--color-hero-yellow);
+  outline-offset: 3px;
+  border-radius: 12px;
+}
+
+.btn-3d {
+  box-shadow: 0 6px 0 0 rgb(0 0 0 / 0.18);
+  transition: transform 120ms ease, box-shadow 120ms ease, filter 120ms ease;
+}
+.btn-3d:hover { filter: brightness(1.06); }
+.btn-3d:active { transform: translateY(4px); box-shadow: 0 2px 0 0 rgb(0 0 0 / 0.18); }
+
+.dots-bg {
+  background-image: radial-gradient(rgb(255 255 255 / 0.25) 1.5px, transparent 1.5px);
+  background-size: 22px 22px;
+}
+
+.no-scrollbar::-webkit-scrollbar { display: none; }
+.no-scrollbar { scrollbar-width: none; }
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; scroll-behavior: auto !important; }
+}
+
+html[data-reduced-motion="true"] *, html[data-reduced-motion="true"] *::before, html[data-reduced-motion="true"] *::after {
+  animation-duration: 0.01ms !important;
+  animation-iteration-count: 1 !important;
+}
+
+@keyframes float-y { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
+@keyframes drift { 0% { transform: translate(0, 0) rotate(0); } 50% { transform: translate(14px, -10px) rotate(8deg); } 100% { transform: translate(0, 0) rotate(0); } }
+@keyframes blink { 0%, 92%, 100% { transform: scaleY(1); } 95% { transform: scaleY(0.1); } }
+.anim-float { animation: float-y 4s ease-in-out infinite; }
+.anim-drift { animation: drift 9s ease-in-out infinite; }
+.anim-blink { animation: blink 4.5s infinite; transform-origin: center; transform-box: fill-box; }
+
+/* Full-screen pages (games, lessons) fit between the system bars. */
+body .h-dvh {
+  height: calc(100dvh - var(--safe-top) - var(--safe-bottom));
+}

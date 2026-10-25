@@ -1,0 +1,345 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://heroes-world.local/curriculum.schema.json",
+  "title": "Heroes World curriculum file (version 1)",
+  "description": "Imported from «📚 استيراد منهج». The app also checks answers and game compatibility: run node scripts/curriculum/check.mjs <file>.",
+  "type": "object",
+  "required": [
+    "app",
+    "kind",
+    "version",
+    "curriculum"
+  ],
+  "properties": {
+    "app": {
+      "const": "heroes-world"
+    },
+    "kind": {
+      "const": "curriculum"
+    },
+    "version": {
+      "const": 1
+    },
+    "curriculum": {
+      "type": "object",
+      "required": [
+        "id",
+        "country",
+        "title",
+        "grade",
+        "subject",
+        "textbook",
+        "units"
+      ],
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "stable id, e.g. jo-g1-math-s1-2022"
+        },
+        "country": {
+          "type": "string"
+        },
+        "title": {
+          "type": "string"
+        },
+        "grade": {
+          "enum": [
+            1,
+            2,
+            3
+          ]
+        },
+        "subject": {
+          "enum": [
+            "arabic",
+            "math",
+            "science",
+            "english"
+          ]
+        },
+        "semester": {
+          "enum": [
+            1,
+            2
+          ]
+        },
+        "textbook": {
+          "type": "object",
+          "required": [
+            "title"
+          ],
+          "properties": {
+            "title": {
+              "type": "string"
+            },
+            "publisher": {
+              "type": "string"
+            },
+            "edition": {
+              "type": "string"
+            },
+            "isbn": {
+              "type": "string"
+            },
+            "pages": {
+              "type": "integer"
+            },
+            "sha256": {
+              "type": "string",
+              "description": "hash of the PDF; prevents importing the same book twice"
+            },
+            "url": {
+              "type": "string"
+            }
+          }
+        },
+        "generatedBy": {
+          "type": "string"
+        },
+        "generatedAt": {
+          "type": "string"
+        },
+        "units": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "object",
+            "required": [
+              "id",
+              "number",
+              "title",
+              "lessons"
+            ],
+            "properties": {
+              "id": {
+                "type": "string"
+              },
+              "number": {
+                "type": "integer"
+              },
+              "title": {
+                "type": "string",
+                "description": "exactly as printed in the textbook"
+              },
+              "semester": {
+                "enum": [
+                  1,
+                  2
+                ]
+              },
+              "pages": {
+                "type": "array",
+                "items": {
+                  "type": "integer"
+                },
+                "minItems": 2,
+                "maxItems": 2
+              },
+              "lessons": {
+                "type": "array",
+                "minItems": 1,
+                "items": {
+                  "type": "object",
+                  "required": [
+                    "id",
+                    "title",
+                    "questions"
+                  ],
+                  "properties": {
+                    "id": {
+                      "type": "string"
+                    },
+                    "number": {
+                      "type": "integer"
+                    },
+                    "title": {
+                      "type": "string",
+                      "description": "exactly as printed in the textbook"
+                    },
+                    "pages": {
+                      "type": "array",
+                      "items": {
+                        "type": "integer"
+                      },
+                      "minItems": 2,
+                      "maxItems": 2
+                    },
+                    "questions": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "required": [
+                          "id",
+                          "origin",
+                          "kind",
+                          "prompt"
+                        ],
+                        "properties": {
+                          "id": {
+                            "type": "string",
+                            "minLength": 1
+                          },
+                          "origin": {
+                            "enum": [
+                              "textbook",
+                              "generated"
+                            ],
+                            "description": "textbook = exercise from the book; generated = written by AI, must be reviewed"
+                          },
+                          "page": {
+                            "type": "integer",
+                            "minimum": 1
+                          },
+                          "kind": {
+                            "enum": [
+                              "mcq",
+                              "truefalse",
+                              "arithmetic",
+                              "order",
+                              "match"
+                            ]
+                          },
+                          "prompt": {
+                            "type": "string"
+                          },
+                          "choices": {
+                            "type": "array",
+                            "items": {
+                              "type": "string"
+                            },
+                            "description": "mcq choices (truefalse: omit, it is always صح/خطأ)"
+                          },
+                          "correctIndex": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "description": "mcq: index of the right choice; truefalse: 0 = صح, 1 = خطأ"
+                          },
+                          "answer": {
+                            "type": "string",
+                            "description": "order: the word or sentence"
+                          },
+                          "pairs": {
+                            "type": "array",
+                            "items": {
+                              "type": "object",
+                              "required": [
+                                "a",
+                                "b"
+                              ],
+                              "properties": {
+                                "a": {
+                                  "type": "string"
+                                },
+                                "b": {
+                                  "type": "string"
+                                }
+                              }
+                            }
+                          },
+                          "difficulty": {
+                            "enum": [
+                              1,
+                              2,
+                              3
+                            ]
+                          }
+                        }
+                      }
+                    },
+                    "games": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "required": [
+                          "template"
+                        ],
+                        "properties": {
+                          "template": {
+                            "enum": [
+                              "wheel",
+                              "race",
+                              "balloons",
+                              "memory",
+                              "quiz",
+                              "words",
+                              "numbers",
+                              "puzzle",
+                              "space",
+                              "teams",
+                              "train",
+                              "island",
+                              "crocodile",
+                              "rocket",
+                              "appleBasket",
+                              "factory",
+                              "raceAdd",
+                              "pirates",
+                              "shapes",
+                              "pizza",
+                              "market",
+                              "clock",
+                              "measure"
+                            ]
+                          },
+                          "title": {
+                            "type": "string"
+                          },
+                          "level": {
+                            "enum": [
+                              1,
+                              2,
+                              3
+                            ]
+                          },
+                          "count": {
+                            "type": "integer",
+                            "minimum": 1,
+                            "maximum": 30
+                          }
+                        }
+                      },
+                      "description": "empty or missing: the app picks suitable templates"
+                    },
+                    "guide": {
+                      "type": "object",
+                      "description": "Teacher notes written by the platform from the lesson's concepts (not quoted from the book).",
+                      "required": [
+                        "objectives",
+                        "explanation"
+                      ],
+                      "properties": {
+                        "objectives": {
+                          "type": "array",
+                          "items": {
+                            "type": "string",
+                            "minLength": 1
+                          },
+                          "minItems": 1
+                        },
+                        "explanation": {
+                          "type": "string",
+                          "minLength": 1,
+                          "description": "Simple explanation for the teacher."
+                        },
+                        "examples": {
+                          "type": "array",
+                          "items": {
+                            "type": "string"
+                          }
+                        },
+                        "warmup": {
+                          "type": "string",
+                          "description": "Warm-up activity instructions for the teacher."
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

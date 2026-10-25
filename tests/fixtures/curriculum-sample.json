@@ -1,0 +1,43 @@
+{
+  "app": "heroes-world",
+  "kind": "curriculum",
+  "version": 1,
+  "curriculum": {
+    "id": "sample-g2-arabic",
+    "country": "الأردن",
+    "title": "منهج تجريبي — اللغة العربية للصف الثاني",
+    "grade": 2,
+    "subject": "arabic",
+    "semester": 1,
+    "textbook": { "title": "كتاب تجريبي للاختبارات (ليس كتابًا رسميًا)" },
+    "generatedBy": "ملف اختبار مكتوب يدويًا",
+    "units": [
+      {
+        "id": "u1",
+        "number": 1,
+        "title": "الوحدة التجريبية الأولى",
+        "lessons": [
+          {
+            "id": "u1-l1",
+            "title": "الأضداد",
+            "questions": [
+              { "id": "q1", "origin": "textbook", "page": 8, "kind": "mcq", "prompt": "ما عكس «كبير»؟", "choices": ["صغير", "طويل", "جميل"], "correctIndex": 0 },
+              { "id": "q2", "origin": "textbook", "page": 8, "kind": "mcq", "prompt": "ما عكس «حار»؟", "choices": ["بارد", "دافئ", "ساخن"], "correctIndex": 0 },
+              { "id": "q3", "origin": "generated", "kind": "truefalse", "prompt": "عكس «طويل» هو «قصير».", "correctIndex": 0 },
+              { "id": "q4", "origin": "generated", "kind": "match", "prompt": "طابق الكلمة مع عكسها", "pairs": [{ "a": "فوق", "b": "تحت" }, { "a": "ليل", "b": "نهار" }, { "a": "سعيد", "b": "حزين" }] }
+            ]
+          },
+          {
+            "id": "u1-l2",
+            "title": "تكوين الكلمات",
+            "questions": [
+              { "id": "q5", "origin": "textbook", "page": 12, "kind": "order", "prompt": "رتّب الحروف لتكوّن كلمة", "answer": "بَيْت" },
+              { "id": "q6", "origin": "generated", "kind": "order", "prompt": "رتّب الحروف لتكوّن كلمة", "answer": "شَمْس" }
+            ],
+            "games": [{ "template": "words" }]
+          }
+        ]
+      }
+    ]
+  }
+}
