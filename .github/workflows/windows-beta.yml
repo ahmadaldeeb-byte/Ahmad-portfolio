@@ -49,10 +49,11 @@ jobs:
           npx playwright install chromium
           npx playwright test -c playwright.desktop.config.ts tests/desktop/desktop.spec.ts
       - name: Package (installer + portable)
+        shell: bash
         run: >-
           npx electron-builder --win nsis portable --x64 --publish never
-          -c.nsis.artifactName=Heroes-World-Setup-1.0.0-Beta.exe
-          -c.portable.artifactName=Heroes-World-Portable-1.0.0-Beta.exe
+          "--config.nsis.artifactName=Heroes-World-Setup-1.0.0-Beta.exe"
+          "--config.portable.artifactName=Heroes-World-Portable-1.0.0-Beta.exe"
       - name: Check the packaged app (portable mode, offline, data kept across restarts)
         shell: pwsh
         run: |
