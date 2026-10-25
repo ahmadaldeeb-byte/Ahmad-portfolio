@@ -12,7 +12,10 @@ const ORIGIN = "https://localhost";
 const SHOTS = "test-results/android";
 let device: AndroidDevice;
 
+/** A fresh start of the app (closed first, so every test begins on the home page). */
 async function open(): Promise<Page> {
+  await device.shell(`am force-stop ${PKG}`);
+  await new Promise((r) => setTimeout(r, 1000));
   await device.shell(`am start -n ${PKG}/.MainActivity`);
   const webview = await device.webView({ pkg: PKG }, { timeout: 60_000 });
   const page = await webview.page();
@@ -20,11 +23,7 @@ async function open(): Promise<Page> {
   return page;
 }
 
-async function restart(): Promise<Page> {
-  await device.shell(`am force-stop ${PKG}`);
-  await new Promise((r) => setTimeout(r, 1500));
-  return open();
-}
+const restart = open;
 
 /** Nothing sticks out sideways (no horizontal scrolling). */
 async function fits(page: Page, what: string) {
