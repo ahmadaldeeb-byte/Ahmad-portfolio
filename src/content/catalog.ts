@@ -32,6 +32,8 @@ function bundle(raw: unknown): ImportPlan {
     },
   };
   for (const g of plan.games) g.builtin = true;
+  // The «السابق والتالي» template (number line, number train, skills review) belongs to this textbook lesson.
+  for (const u of plan.book.units) for (const l of u.lessons) if (plan.book.subject === "math" && l.title.replace(/[\u064B-\u0652]/g, "") === "العدد السابق والعدد التالي") l.template = "prev-next";
   return plan;
 }
 

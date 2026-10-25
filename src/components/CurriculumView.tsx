@@ -313,6 +313,11 @@ function LessonPanel({
                 <Eye className="size-5" /> معاينة وتعديل
               </Link>
             </div>
+            {lesson.template && (
+              <Button variant="secondary" className="w-fit" icon={<Sparkles className="size-5" />} onClick={onPrepare}>
+                حضّر حصة بقالب «السابق والتالي»
+              </Button>
+            )}
             {myPlans.length > 0 && (
               <ul className="flex flex-col gap-2">
                 {myPlans.map((m) => (

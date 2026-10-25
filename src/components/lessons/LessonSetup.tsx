@@ -160,6 +160,11 @@ export function LessonSetup() {
                   <Eye className="size-6" /> معاينة المراحل وتعديلها
                 </Link>
               </div>
+              {lesson.template && (
+                <Button variant="secondary" icon={<Sparkles className="size-5" />} disabled={busy} onClick={create}>
+                  إنشاء حصة بقالب «السابق والتالي» (خط الأعداد وقطار الأرقام)
+                </Button>
+              )}
               {mine.length > 0 && (
                 <div className="w-full max-w-2xl text-start">
                   <p className="font-bold">حصصك المحفوظة لهذا الدرس:</p>

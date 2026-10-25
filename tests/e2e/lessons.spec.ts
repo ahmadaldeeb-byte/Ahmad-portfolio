@@ -38,19 +38,22 @@ async function answerTrain(page: Page, count: number, opts: { wrongFirst?: boole
 }
 
 test.describe("curriculum & number train", () => {
-  test("curriculum index: source status, lessons, linked games, title correction", async ({ page }) => {
+  test("curriculum: textbook source, lessons, linked games, title correction", async ({ page }) => {
     await freshStart(page);
     await page.goto("/curriculum");
-    await expect(page.getByTestId("curriculum-source")).toContainText("فهرس مؤقت غير متحقَّق منه");
+    await expect(page.getByTestId("curriculum-source")).toContainText("متحقَّق منه");
     await page.getByRole("button", { name: /مُقارَنَةُ الْأَعْدادِ وَتَرْتيبُها/ }).click();
-    const lesson = page.getByTestId("lesson-g1m-u3-l3");
+    const lesson = page.getByTestId("lesson-imp_jo-g1-math-s1-2026__u2-l3");
     await lesson.getByRole("button", { name: /السّابِقُ/ }).click();
+    await lesson.getByRole("tab", { name: "🎮 الألعاب الجاهزة" }).click();
     await expect(lesson.getByRole("heading", { name: /قطار الأرقام/ })).toBeVisible();
-    await expect(lesson.getByRole("button", { name: "حضّر حصة لهذا الدرس" })).toBeVisible();
-    // Comparing numbers now links the playable crocodile game.
-    await page.getByTestId("lesson-g1m-u3-l4").getByRole("button").first().click();
-    await expect(page.getByTestId("lesson-g1m-u3-l4").getByRole("heading", { name: /التمساح الجائع/ })).toBeVisible();
-    await expect(page.getByTestId("lesson-g1m-u3-l4")).not.toContainText("قيد التطوير");
+    await lesson.getByRole("tab", { name: "✨ الحصة الجاهزة" }).click();
+    await expect(lesson.getByRole("button", { name: "حضّر حصة بقالب «السابق والتالي»" })).toBeVisible();
+    // Comparing numbers links the playable crocodile game.
+    const compare = page.getByTestId("lesson-imp_jo-g1-math-s1-2026__u2-l4");
+    await compare.getByRole("button").first().click();
+    await compare.getByRole("tab", { name: "🎮 الألعاب الجاهزة" }).click();
+    await expect(compare.getByRole("heading", { name: /التمساح الجائع/ })).toBeVisible();
     // Teacher corrects a title; it persists after reload.
     await lesson.getByRole("button", { name: "تعديل عنوان الدرس" }).click();
     await page.getByRole("textbox", { name: "عنوان الدرس" }).fill("العدد السابق والعدد التالي");
@@ -58,7 +61,7 @@ test.describe("curriculum & number train", () => {
     await expect(lesson).toContainText("عدّله المعلم");
     await page.reload();
     await page.getByRole("button", { name: /مُقارَنَةُ الْأَعْدادِ وَتَرْتيبُها/ }).click();
-    await expect(page.getByTestId("lesson-g1m-u3-l3")).toContainText("عدّله المعلم");
+    await expect(page.getByTestId("lesson-imp_jo-g1-math-s1-2026__u2-l3")).toContainText("عدّله المعلم");
   });
 
   test("number train: wrong try without deduction, hint, drag & drop, tap, results", async ({ page }) => {
@@ -91,7 +94,7 @@ test.describe("lesson preparation", () => {
     await page.getByRole("button", { name: "الفصل الأول" }).click();
     await page.getByRole("button", { name: /مُقارَنَةُ الْأَعْدادِ/ }).click();
     await page.getByRole("button", { name: /السّابِقُ وَالْعَدَدُ التّالي/ }).click();
-    await page.getByRole("button", { name: "إنشاء الحصة" }).click();
+    await page.getByRole("button", { name: /إنشاء حصة بقالب «السابق والتالي»/ }).click();
     await page.waitForURL(/\/lessons\/edit\/?\?id=/);
     await expect(page.getByTestId("lesson-total")).toHaveText("15 دقيقة");
     await expect(page.getByTestId("seg-minutes-warmup")).toHaveText("3 د");
@@ -159,8 +162,8 @@ test.describe("lesson preparation", () => {
 
   test("teacher can move on mid-activity; duplicate and delete lessons", async ({ page }) => {
     await freshStart(page);
-    await page.goto("/lessons/new?lesson=g1m-u3-l3");
-    await page.getByRole("button", { name: "إنشاء الحصة" }).click();
+    await page.goto("/lessons/new?lesson=imp_jo-g1-math-s1-2026__u2-l3");
+    await page.getByRole("button", { name: /إنشاء حصة بقالب «السابق والتالي»/ }).click();
     await page.waitForURL(/\/lessons\/edit/);
     await page.getByRole("button", { name: "ابدأ الحصة الآن" }).click();
     await page.waitForURL(/\/lesson-run/);
