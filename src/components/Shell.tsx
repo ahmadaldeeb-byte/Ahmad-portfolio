@@ -1,4 +1,5 @@
 "use client";
+import { UpdateNotice } from "./DesktopUpdates";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import {
@@ -104,7 +105,10 @@ export function Shell({ children }: { children: ReactNode }) {
             {muted ? <VolumeX /> : <Volume2 />}
           </button>
         </header>
-        <main className="mx-auto w-full max-w-[1500px] flex-1 px-4 pb-28 pt-6 md:px-8 lg:pb-10">{children}</main>
+        <main className="mx-auto w-full max-w-[1500px] flex-1 px-4 pb-28 pt-6 md:px-8 lg:pb-10">
+          <UpdateNotice />
+          {children}
+        </main>
       </div>
 
       <nav

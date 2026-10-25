@@ -146,6 +146,49 @@ test.describe("Windows app shell (Electron)", () => {
     }
   });
 
+  test("a new version backs up the browser storage before opening it; data stays; update status is shown", async () => {
+    const dir = tmp("upgrade");
+    let { app, page } = await launch(dir);
+    await makeGame(page, "لعبة قبل الإصدار الجديد");
+    await app.close();
+    const version = JSON.parse(fs.readFileSync(path.join(ROOT, "package.json"), "utf8")).version;
+    expect(JSON.parse(fs.readFileSync(path.join(dir, "last-version.json"), "utf8")).version).toBe(version);
+
+    // Pretend the data was last opened by an older version.
+    fs.writeFileSync(path.join(dir, "last-version.json"), JSON.stringify({ version: "0.9.0" }));
+    ({ app, page } = await launch(dir));
+    const backups = fs.readdirSync(path.join(dir, "backups")).filter((f) => f.startsWith(`before-${version}-from-0.9.0-`));
+    expect(backups).toHaveLength(1);
+    expect(fs.existsSync(path.join(dir, "backups", backups[0], "IndexedDB"))).toBe(true);
+    await page.goto(`${ORIGIN}/my-games/`);
+    await expect(page.getByText("لعبة قبل الإصدار الجديد")).toBeVisible();
+
+    // The same version again: no new backup.
+    await app.close();
+    ({ app, page } = await launch(dir));
+    expect(fs.readdirSync(path.join(dir, "backups")).filter((f) => f.startsWith("before-"))).toHaveLength(1);
+
+    // Settings: version and update status (this copy does not update itself).
+    await page.goto(`${ORIGIN}/settings/`);
+    await expect(page.getByTestId("update-version")).toContainText(version);
+    await expect(page.getByTestId("update-status")).toHaveAttribute("data-state", "unsupported");
+    await expect(page.getByTestId("update-status")).toContainText("النسخة المحمولة لا تُحدَّث تلقائيًا");
+    await app.close();
+  });
+
+  test("textbook curricula, games and ready lessons work offline in the app", async () => {
+    const { app, page } = await launch(tmp("curriculum"));
+    await page.goto(`${ORIGIN}/curriculum/?grade=1&subject=arabic`);
+    await expect(page.getByText("الْوَحْدَةُ الْخامِسَةُ: لُعْبَتي الْمُفَضَّلَةُ")).toBeVisible();
+    await page.goto(`${ORIGIN}/lesson-run/?id=plan_imp_jo-g1-math-s1-2026__u3-l1`);
+    await page.getByRole("button", { name: "ابدأ الحصة الآن" }).click();
+    await expect(page.getByTestId("warmup-prompt")).toBeVisible({ timeout: 15_000 });
+    await page.goto(`${ORIGIN}/play/?id=imp_jo-g1-math-s1-2026__u3-l1__rocket`);
+    await page.getByRole("button", { name: "ابدأ اللعب" }).click();
+    await expect(page.getByTestId("classroom")).toBeVisible();
+    await app.close();
+  });
+
   test("a data folder that cannot be written is reported to the teacher", async () => {
     const parent = tmp("ro");
     const blocker = path.join(parent, "not-a-folder");

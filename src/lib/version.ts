@@ -1,2 +1,4 @@
-/** App version shown to teachers and written into backups (kept equal to package.json by a unit test). */
-export const APP_VERSION = "1.0.0";
+import pkg from "../../package.json";
+
+/** App version shown to teachers and written into backups (the version in package.json). */
+export const APP_VERSION: string = pkg.version;

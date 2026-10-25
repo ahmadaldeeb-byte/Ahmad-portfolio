@@ -1,23 +1,36 @@
-# Builds and checks the Windows releases on real Windows runners, then
-# uploads HeroesWorld-Portable.exe and HeroesWorld-Setup.exe as artifacts
-# (Actions → this run → Artifacts). Nothing is published anywhere.
+# Heroes World — Windows release.
+# 1. checks (Linux): type check, unit tests, content audit, production build,
+#    all browser tests, desktop shell tests.
+# 2. windows (real Windows runners): package the installer + portable copy,
+#    install silently, open from the Start menu, run the installed app, update it
+#    to a newer test build from a local feed and check the teacher's data
+#    survived, then uninstall (data must stay). Uploads the release files,
+#    update feed files, SHA256SUMS.txt and the release documents as an artifact.
+# 3. draft-release (manual only): attaches the files to a DRAFT GitHub Release.
+#    A draft is not public; the owner publishes it, which starts the updates.
 name: Windows release
 
 on:
   workflow_dispatch:
+    inputs:
+      draft_release:
+        description: "Create a DRAFT GitHub Release with the files (not public until the owner publishes it)"
+        type: boolean
+        default: false
   push:
     branches: [claude/heroes-world-educational-platform-27pxa0]
 
 permissions:
   contents: read
 
+concurrency:
+  group: windows-release-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
-  windows:
-    strategy:
-      fail-fast: false
-      matrix:
-        os: [windows-2022, windows-2025]
-    runs-on: ${{ matrix.os }}
+  checks:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 60
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
@@ -25,41 +38,161 @@ jobs:
           node-version: 22
           cache: npm
       - run: npm ci
-      - name: Type check and unit tests
-        run: |
-          npm run lint
-          npm test
-      - name: Static release (out/)
+      - name: Type check
+        run: npm run lint
+      - name: Unit tests
+        run: npx vitest run --reporter=default --reporter=junit --outputFile.junit=reports/unit.xml
+      - name: Content audit (curricula, guides, games, ready lessons, math answers)
+        run: node scripts/release/audit.mjs reports/content-audit.md
+      - name: Production build (static release)
         run: npm run build
-      - name: Desktop shell tests (Electron, development mode)
+      - name: Browser tests (all games, lessons, import, storage, smartboard and tablet screens)
+        run: |
+          npx playwright install --with-deps chromium
+          PLAYWRIGHT_JUNIT_OUTPUT_NAME=reports/e2e.xml npx playwright test --reporter=list,junit
+      - name: Desktop shell tests (Electron)
+        run: PLAYWRIGHT_JUNIT_OUTPUT_NAME=reports/desktop-linux.xml xvfb-run -a npx playwright test -c playwright.desktop.config.ts tests/desktop/desktop.spec.ts --reporter=list,junit
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: test-reports-linux
+          path: reports/
+          retention-days: 30
+
+  windows:
+    needs: checks
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [windows-2022, windows-2025]
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 90
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - name: Production build (static release)
+        run: npm run build
+      - name: Desktop shell tests (development mode)
         run: |
           npx playwright install chromium
           npx playwright test -c playwright.desktop.config.ts tests/desktop/desktop.spec.ts
-      - name: Package (portable + installer)
-        run: npx electron-builder --win portable nsis --x64 --publish never
-      - name: Check the packaged app
+      - name: Package the release (installer + portable + update feed)
+        run: npx electron-builder --win nsis portable --x64 --publish never
+      - name: Check the packaged app (portable mode)
         shell: pwsh
         run: |
           $env:HEROES_EXE = "$PWD\dist-desktop\win-unpacked\HeroesWorld.exe"
           npx playwright test -c playwright.desktop.config.ts tests/desktop/packaged.spec.ts -g "packaged app"
-      - name: Silent install, run, uninstall (data must stay)
+      - name: Install silently, open from the Start menu, run the installed app
         shell: pwsh
         run: |
-          Start-Process -Wait -FilePath "dist-desktop\HeroesWorld-Setup.exe" -ArgumentList "/S"
+          $version = (Get-Content package.json | ConvertFrom-Json).version
+          Start-Process -Wait -FilePath "dist-desktop\Heroes-World-Setup-$version.exe" -ArgumentList "/S"
           $exe = "$env:LOCALAPPDATA\Programs\HeroesWorld\HeroesWorld.exe"
           if (!(Test-Path $exe)) { throw "not installed at $exe" }
-          if (!(Test-Path "$env:USERPROFILE\Desktop\*.lnk")) { Write-Warning "no desktop shortcut found" }
+          $shell = New-Object -ComObject WScript.Shell
+          $lnk = Get-ChildItem "$env:APPDATA\Microsoft\Windows\Start Menu\Programs" -Filter *.lnk -Recurse | Where-Object { $shell.CreateShortcut($_.FullName).TargetPath -like "*HeroesWorld.exe" } | Select-Object -First 1
+          if (!$lnk) { throw "no Start menu shortcut" }
+          Write-Host "Start menu shortcut: $($lnk.Name)"
+          Start-Process $lnk.FullName
+          Start-Sleep -Seconds 15
+          if (!(Get-Process HeroesWorld -ErrorAction SilentlyContinue)) { throw "the app did not start from the Start menu" }
+          Stop-Process -Name HeroesWorld -Force
+          Start-Sleep -Seconds 3
           $env:HEROES_INSTALLED_EXE = $exe
           npx playwright test -c playwright.desktop.config.ts tests/desktop/packaged.spec.ts -g "installed app"
+      - name: Update test — build the next version (test feed only, never uploaded)
+        shell: pwsh
+        run: |
+          $version = (Get-Content package.json | ConvertFrom-Json).version
+          $p = $version.Split("."); $next = "$($p[0]).$($p[1]).$([int]$p[2] + 1)"
+          "NEXT_VERSION=$next" >> $env:GITHUB_ENV
+          npm pkg set version=$next
+          npm run build
+          npx electron-builder --win nsis --x64 --publish never -c.directories.output=dist-next
+          git checkout -- package.json
+      - name: Update test — create data, update from the app, check the data
+        shell: pwsh
+        run: |
+          $exe = "$env:LOCALAPPDATA\Programs\HeroesWorld\HeroesWorld.exe"
+          $server = Start-Process node -ArgumentList "scripts/serve-static.mjs", "dist-next", "8765" -PassThru
+          Start-Sleep -Seconds 3
+          $env:HEROES_INSTALLED_EXE = $exe
+          $env:HEROES_UPDATE_URL = "http://127.0.0.1:8765/"
+          $env:HEROES_NEXT_VERSION = $env:NEXT_VERSION
+          $env:HEROES_UPDATE_PHASE = "before"
+          npx playwright test -c playwright.desktop.config.ts tests/desktop/update.spec.ts
+          if ($LASTEXITCODE -ne 0) { throw "update (before) failed" }
+          # The installer runs silently after the app closes, then reopens the app.
+          $deadline = (Get-Date).AddMinutes(5)
+          while ((Get-Item $exe -ErrorAction SilentlyContinue).VersionInfo.ProductVersion -ne $env:NEXT_VERSION) {
+            if ((Get-Date) -gt $deadline) { throw "the update was not installed" }
+            Start-Sleep -Seconds 3
+          }
+          Start-Sleep -Seconds 10
+          Stop-Process -Name HeroesWorld -Force -ErrorAction SilentlyContinue
+          Start-Sleep -Seconds 3
+          Write-Host "Installed version is now $env:NEXT_VERSION"
+          $env:HEROES_UPDATE_PHASE = "after"
+          Remove-Item Env:HEROES_UPDATE_URL
+          npx playwright test -c playwright.desktop.config.ts tests/desktop/update.spec.ts
+          if ($LASTEXITCODE -ne 0) { throw "update (after) failed" }
+          Stop-Process -Id $server.Id -Force
+          Get-Content "$env:APPDATA\HeroesWorld\logs\updates.log" -ErrorAction SilentlyContinue | Select-Object -Last 20
+      - name: Uninstall (program removed, teacher data kept)
+        shell: pwsh
+        run: |
+          $exe = "$env:LOCALAPPDATA\Programs\HeroesWorld\HeroesWorld.exe"
           Start-Process -Wait -FilePath "$env:LOCALAPPDATA\Programs\HeroesWorld\Uninstall HeroesWorld.exe" -ArgumentList "/S"
           Start-Sleep -Seconds 5
           if (Test-Path $exe) { throw "uninstall left the program" }
-          if (!(Test-Path "$env:APPDATA\HeroesWorld\backups")) { throw "uninstall removed teacher data" }
+          $shell = New-Object -ComObject WScript.Shell
+          $left = Get-ChildItem "$env:APPDATA\Microsoft\Windows\Start Menu\Programs" -Filter *.lnk -Recurse | Where-Object { $shell.CreateShortcut($_.FullName).TargetPath -like "*HeroesWorld.exe" }
+          if ($left) { throw "uninstall left a Start menu shortcut" }
+          if (!(Test-Path "$env:APPDATA\HeroesWorld\IndexedDB")) { throw "uninstall removed teacher data" }
+          if (!(Test-Path "$env:APPDATA\HeroesWorld\backups")) { throw "uninstall removed the backups" }
+          Write-Host "Uninstalled; data kept in $env:APPDATA\HeroesWorld"
+      - name: Release files and checksums
+        if: matrix.os == 'windows-2022'
+        shell: pwsh
+        run: |
+          $version = (Get-Content package.json | ConvertFrom-Json).version
+          New-Item -ItemType Directory -Force release | Out-Null
+          Copy-Item "dist-desktop\Heroes-World-Setup-$version.exe", "dist-desktop\Heroes-World-Setup-$version.exe.blockmap", "dist-desktop\Heroes-World-Portable-$version.exe", "dist-desktop\latest.yml" release\
+          Copy-Item "docs\release\$version\*.md" release\
+          $lines = Get-ChildItem release -File -Exclude *.md | ForEach-Object { "$((Get-FileHash $_.FullName -Algorithm SHA256).Hash.ToLower())  $($_.Name)" }
+          $lines | Set-Content -Encoding ascii release\SHA256SUMS.txt
+          Get-Content release\SHA256SUMS.txt
+          Get-ChildItem release | Format-Table Name, Length
       - uses: actions/upload-artifact@v4
         if: matrix.os == 'windows-2022'
         with:
-          name: HeroesWorld-Windows
-          path: |
-            dist-desktop/HeroesWorld-Portable.exe
-            dist-desktop/HeroesWorld-Setup.exe
+          name: Heroes-World-Windows
+          path: release/
           retention-days: 30
+
+  draft-release:
+    needs: windows
+    if: github.event_name == 'workflow_dispatch' && inputs.draft_release
+    runs-on: ubuntu-24.04
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/download-artifact@v4
+        with:
+          name: Heroes-World-Windows
+          path: release
+      - name: Draft GitHub Release (not public until published by the owner)
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          version=$(node -p "require('./package.json').version")
+          gh release create "v$version" --draft --target "$GITHUB_SHA" --title "عالم الأبطال التعليمي $version" \
+            --notes-file "release/RELEASE_NOTES.md" \
+            release/Heroes-World-Setup-$version.exe release/Heroes-World-Setup-$version.exe.blockmap \
+            release/Heroes-World-Portable-$version.exe release/latest.yml release/SHA256SUMS.txt

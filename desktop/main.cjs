@@ -6,7 +6,14 @@
  * inside a data folder chosen here, and automatic JSON snapshots are written
  * next to it so the data never depends on browser storage alone:
  *   - portable (HeroesWorld-Portable.exe): <folder of the exe>\HeroesWorld-Data
- *   - installed (HeroesWorld-Setup.exe):   %APPDATA%\HeroesWorld
+ *   - installed (Heroes-World-Setup-<version>.exe): %APPDATA%\HeroesWorld
+ * The data folder is never inside the program folder, so installing an update
+ * or uninstalling never touches it. Before a new version opens the data for
+ * the first time, the browser storage folders are copied to backups/.
+ *
+ * Updates (installed app only): electron-updater reads the public GitHub
+ * Releases feed set in electron-builder.yml; nothing is downloaded or
+ * installed without the teacher's click. The app itself stays offline.
  */
 const { app, BrowserWindow, dialog, ipcMain, net, protocol, session, shell } = require("electron");
 const fs = require("node:fs");
@@ -38,6 +45,8 @@ function canWrite(dir) {
   }
 }
 
+// Pinned, so a future change of the product name can never move the teacher's data.
+if (!wantedDataDir) app.setPath("userData", path.join(app.getPath("appData"), "HeroesWorld"));
 let dataDir = wantedDataDir ?? app.getPath("userData");
 let writable = canWrite(dataDir);
 if (wantedDataDir && writable) {
@@ -50,6 +59,123 @@ if (wantedDataDir && writable) {
   app.setPath("userData", path.join(dataDir, "app"));
 }
 const backupsDir = () => path.join(dataDir, "backups");
+
+/* ---------- backup before a new version opens the data ---------- */
+
+const KEEP_UPGRADE_BACKUPS = 3;
+
+/**
+ * When this version runs for the first time on this data (an update, or the
+ * first start after older builds), copy IndexedDB and Local Storage to
+ * backups/before-<version>-… first: a new version may upgrade the database.
+ */
+function backupBeforeUpgrade() {
+  const marker = path.join(dataDir, "last-version.json");
+  let last = null;
+  try {
+    last = JSON.parse(fs.readFileSync(marker, "utf8")).version ?? null;
+  } catch {
+    /* first start */
+  }
+  const current = app.getVersion();
+  const storage = ["IndexedDB", "Local Storage"].map((d) => path.join(app.getPath("userData"), d)).filter((d) => fs.existsSync(d));
+  // Only when there is a database to protect (Chromium creates empty folders on a first start).
+  const idb = path.join(app.getPath("userData"), "IndexedDB");
+  const hasData = fs.existsSync(idb) && fs.readdirSync(idb).some((f) => f.includes("heroes"));
+  if (last !== current && hasData) {
+    const dest = path.join(backupsDir(), `before-${current}-from-${last ?? "older"}-${Date.now()}`);
+    for (const src of storage) fs.cpSync(src, path.join(dest, path.basename(src)), { recursive: true });
+    const old = fs
+      .readdirSync(backupsDir())
+      .filter((f) => f.startsWith("before-"))
+      .map((f) => ({ f, t: Number(f.split("-").pop()) }))
+      .sort((a, b) => b.t - a.t)
+      .slice(KEEP_UPGRADE_BACKUPS);
+    for (const o of old) fs.rmSync(path.join(backupsDir(), o.f), { recursive: true, force: true });
+  }
+  fs.writeFileSync(marker, JSON.stringify({ version: current, at: Date.now() }));
+}
+
+/* ---------- updates ---------- */
+
+/** Network failures shown as "no internet" rather than as an error. */
+const OFFLINE = /ERR_INTERNET_DISCONNECTED|ERR_NAME_NOT_RESOLVED|ERR_NETWORK_CHANGED|ERR_NETWORK_IO_SUSPENDED|ERR_ADDRESS_UNREACHABLE|ENOTFOUND|EAI_AGAIN|ENETUNREACH/;
+const UNREACHABLE = /ERR_CONNECTION_REFUSED|ERR_CONNECTION_TIMED_OUT|ERR_TIMED_OUT|ECONNREFUSED|ETIMEDOUT|ECONNRESET/;
+
+function setupUpdates(win) {
+  // Only the installed app updates itself. HEROES_UPDATE_URL points a test at a local feed (localhost only).
+  const testFeed = /^http:\/\/(127\.0\.0\.1|localhost)(:\d+)?\//.test(process.env.HEROES_UPDATE_URL ?? "") ? process.env.HEROES_UPDATE_URL : null;
+  const supported = app.isPackaged && !isPortable;
+  let status = { state: supported ? "idle" : "unsupported", reason: isPortable ? "portable" : app.isPackaged ? undefined : "development" };
+  const send = (next) => {
+    status = { ...next, current: app.getVersion() };
+    if (!win.isDestroyed()) win.webContents.send("heroes:update-status", status);
+  };
+  status.current = app.getVersion();
+  ipcMain.handle("heroes:update-status", () => status);
+  if (!supported) {
+    for (const ch of ["heroes:update-check", "heroes:update-download", "heroes:update-install"]) ipcMain.handle(ch, () => status);
+    return;
+  }
+
+  const { autoUpdater } = require("electron-updater");
+  const logFile = path.join(dataDir, "logs", "updates.log");
+  const log = (level) => (...args) => {
+    try {
+      fs.mkdirSync(path.dirname(logFile), { recursive: true });
+      fs.appendFileSync(logFile, `${new Date().toISOString()} [${level}] ${args.map(String).join(" ")}\n`);
+    } catch {
+      /* logging must never break updates */
+    }
+  };
+  autoUpdater.logger = { info: log("info"), warn: log("warn"), error: log("error"), debug: () => {} };
+  autoUpdater.autoDownload = false; // the teacher decides
+  autoUpdater.autoInstallOnAppQuit = false; // and approves the restart
+  autoUpdater.allowPrerelease = false;
+  autoUpdater.allowDowngrade = false;
+  if (testFeed) autoUpdater.setFeedURL({ provider: "generic", url: testFeed });
+
+  let manual = false;
+  let pending = null;
+  autoUpdater.on("checking-for-update", () => send({ state: "checking", manual }));
+  autoUpdater.on("update-available", (info) => {
+    pending = info.version;
+    send({ state: "available", version: info.version, notes: typeof info.releaseNotes === "string" ? info.releaseNotes.replace(/<[^>]+>/g, "").slice(0, 2000) : undefined });
+  });
+  autoUpdater.on("update-not-available", () => send({ state: "latest", manual }));
+  autoUpdater.on("download-progress", (p) => send({ state: "downloading", version: pending, percent: Math.round(p.percent), transferred: p.transferred, total: p.total }));
+  autoUpdater.on("update-downloaded", (info) => send({ state: "downloaded", version: info.version }));
+  autoUpdater.on("error", (err) => {
+    const msg = String(err?.message ?? err);
+    const kind = OFFLINE.test(msg) ? "offline" : UNREACHABLE.test(msg) ? "unreachable" : "error";
+    // A quiet check at start-up that finds no internet just says so; it never interrupts the lesson.
+    send({ state: kind, manual, version: pending ?? undefined, message: msg.split("\n")[0].slice(0, 300) });
+  });
+
+  const check = (isManual) => {
+    manual = !!isManual;
+    return autoUpdater.checkForUpdates().catch(() => null);
+  };
+  ipcMain.handle("heroes:update-check", async () => {
+    await check(true);
+    return status;
+  });
+  ipcMain.handle("heroes:update-download", async () => {
+    // After «available», or to retry a download that failed.
+    if (!pending || ["checking", "downloading", "downloaded", "installing"].includes(status.state)) return status;
+    send({ state: "downloading", version: pending, percent: 0 });
+    await autoUpdater.downloadUpdate().catch(() => null);
+    return status;
+  });
+  ipcMain.handle("heroes:update-install", () => {
+    if (status.state !== "downloaded") return status;
+    // The window's close handler writes a last snapshot first; then the installer runs silently and reopens the app.
+    setImmediate(() => autoUpdater.quitAndInstall(true, true));
+    return { ...status, state: "installing" };
+  });
+  // A quiet check shortly after start (skipped when there is no connection).
+  setTimeout(() => void check(false), 8000);
+}
 
 /* ---------- the static release ---------- */
 
@@ -159,6 +285,7 @@ function createWindow() {
   });
   win.removeMenu();
   registerIpc(win);
+  setupUpdates(win);
   win.once("ready-to-show", () => {
     if (!win.isFullScreen()) win.maximize();
     win.show();
@@ -226,6 +353,11 @@ if (!app.requestSingleInstanceLock()) {
     // Offline by design: nothing leaves the computer.
     ses.webRequest.onBeforeRequest((details, cb) => cb({ cancel: /^(https?|wss?|ftp):/i.test(details.url) }));
     ses.setPermissionRequestHandler((_wc, permission, cb) => cb(permission === "fullscreen" || permission === "clipboard-sanitized-write"));
+    try {
+      backupBeforeUpgrade();
+    } catch (e) {
+      console.error("backup before upgrade failed", e);
+    }
     createWindow();
   });
   app.on("window-all-closed", () => app.quit());

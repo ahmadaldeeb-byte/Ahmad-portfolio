@@ -7,6 +7,7 @@ import { hasArabicVoice, sound } from "@/lib/audio";
 import type { RestoreMode } from "@/lib/backup";
 import { PLATFORM_LABELS, currentPlatform, desktop, type DesktopBridge } from "@/lib/platform";
 import { APP_VERSION } from "@/lib/version";
+import { UpdatesCard } from "@/components/DesktopUpdates";
 import { formatNum, readFileAsText } from "@/lib/utils";
 import { exportTeacherBackup, restoreTeacherBackup } from "@/store/backup";
 import { useSettings } from "@/store/settings";
@@ -141,6 +142,8 @@ export default function SettingsPage() {
         </Row>
       </Card>
 
+      <UpdatesCard />
+
       <Card>
         <h2 className="mb-2 text-2xl font-extrabold">البيانات والنسخ الاحتياطي</h2>
         <div className="mb-4 flex gap-3 rounded-2xl bg-hero-yellow/25 p-4">
@@ -158,7 +161,7 @@ export default function SettingsPage() {
           )}
         </div>
         <p className="mb-3 text-sm text-hero-muted" data-testid="platform-info">
-          {PLATFORM_LABELS[platform]} • الإصدار {APP_VERSION}
+          {PLATFORM_LABELS[platform]} • الإصدار {bridge?.appVersion ?? APP_VERSION}
           {bridge && (
             <>
               {" • "}مجلد البيانات: <span dir="ltr" className="font-mono">{bridge.dataDir}</span>

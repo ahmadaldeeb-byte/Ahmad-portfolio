@@ -62,7 +62,7 @@ export function DesktopSync() {
       if (dirty) await snapshotNow();
     });
     const unsubData = useData.subscribe((s, p) => {
-      if (s.games !== p.games || s.questions !== p.questions || s.results !== p.results || s.lessons !== p.lessons || s.titleOverrides !== p.titleOverrides) save();
+      if (s.games !== p.games || s.questions !== p.questions || s.results !== p.results || s.lessons !== p.lessons || s.titleOverrides !== p.titleOverrides || s.curricula !== p.curricula) save();
     });
     const unsubSettings = useSettings.subscribe(save);
     return () => {

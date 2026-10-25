@@ -28,6 +28,36 @@ export interface DesktopBridge {
   setFullscreen: (on: boolean) => Promise<void>;
   /** Called when the window is about to close (the app waits up to 3 s for it). */
   onBeforeClose: (fn: (() => Promise<void>) | null) => void;
+  /** Updates of the installed app (missing in builds older than 1.0.0). */
+  updates?: DesktopUpdates;
+}
+
+export type UpdateState = "unsupported" | "idle" | "checking" | "latest" | "available" | "downloading" | "downloaded" | "installing" | "offline" | "unreachable" | "error";
+
+export interface UpdateStatus {
+  state: UpdateState;
+  /** Installed version. */
+  current: string;
+  /** The new version (available, downloading, downloaded). */
+  version?: string;
+  percent?: number;
+  transferred?: number;
+  total?: number;
+  notes?: string;
+  message?: string;
+  /** The teacher pressed «فحص التحديثات» (vs. the quiet check at start-up). */
+  manual?: boolean;
+  /** Why updates are off: the portable copy or a development run. */
+  reason?: "portable" | "development";
+}
+
+export interface DesktopUpdates {
+  status: () => Promise<UpdateStatus>;
+  check: () => Promise<UpdateStatus>;
+  download: () => Promise<UpdateStatus>;
+  /** Closes the app, installs the downloaded update and opens the app again. */
+  install: () => Promise<UpdateStatus>;
+  onStatus: (fn: (s: UpdateStatus) => void) => () => void;
 }
 
 export function desktop(): DesktopBridge | null {

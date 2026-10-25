@@ -30,4 +30,15 @@ contextBridge.exposeInMainWorld("heroesDesktop", {
   onBeforeClose: (fn) => {
     flushHandler = typeof fn === "function" ? fn : null;
   },
+  updates: {
+    status: () => ipcRenderer.invoke("heroes:update-status"),
+    check: () => ipcRenderer.invoke("heroes:update-check"),
+    download: () => ipcRenderer.invoke("heroes:update-download"),
+    install: () => ipcRenderer.invoke("heroes:update-install"),
+    onStatus: (fn) => {
+      const listener = (_e, s) => fn(s);
+      ipcRenderer.on("heroes:update-status", listener);
+      return () => ipcRenderer.removeListener("heroes:update-status", listener);
+    },
+  },
 });
