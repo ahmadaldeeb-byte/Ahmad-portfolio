@@ -12,6 +12,9 @@ export default defineConfig({
   workers: 1,
   reporter: [["list"]],
   use: {
+    // The full Chromium in its new headless mode (as on teachers' PCs), not the
+    // stripped "headless shell": the 3D and Phaser games need its frame scheduling.
+    channel: executablePath ? undefined : "chromium",
     baseURL: "http://localhost:3100",
     locale: "ar",
     screenshot: "only-on-failure",
