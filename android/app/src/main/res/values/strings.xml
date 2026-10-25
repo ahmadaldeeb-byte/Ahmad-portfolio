@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">عالم الأبطال</string>
+    <string name="title_activity_main">عالم الأبطال</string>
+    <string name="package_name">edu.heroesworld.app</string>
+    <string name="custom_url_scheme">edu.heroesworld.app</string>
+</resources>

@@ -3,7 +3,9 @@
  * typed bridge on `window.heroesDesktop` from its preload script; the web
  * build has none. Everything else in the app is the same code.
  */
-export type Platform = "web" | "desktop" | "portable";
+import { Capacitor } from "@capacitor/core";
+
+export type Platform = "web" | "desktop" | "portable" | "android";
 
 export interface DesktopSnapshotInfo {
   file: string;
@@ -65,8 +67,13 @@ export function desktop(): DesktopBridge | null {
   return (window as unknown as { heroesDesktop?: DesktopBridge }).heroesDesktop ?? null;
 }
 
+/** The Android app (Capacitor): the same pages, served from inside the APK. */
+export function isAndroid() {
+  return typeof window !== "undefined" && Capacitor.getPlatform() === "android";
+}
+
 export function currentPlatform(): Platform {
-  return desktop()?.platform ?? "web";
+  return desktop()?.platform ?? (isAndroid() ? "android" : "web");
 }
 
 /** Shown in the settings page next to the data controls. */
@@ -74,4 +81,5 @@ export const PLATFORM_LABELS: Record<Platform, string> = {
   web: "نسخة الويب",
   desktop: "نسخة ويندوز المثبّتة",
   portable: "النسخة المحمولة (USB)",
+  android: "تطبيق أندرويد",
 };

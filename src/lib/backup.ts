@@ -138,7 +138,7 @@ export function parseBackup(raw: unknown): ParsedBackup {
     curriculumTitles: isObj(raw.curriculumTitles) ? Object.fromEntries(Object.entries(raw.curriculumTitles).filter(([, v]) => typeof v === "string")) as Record<string, string> : undefined,
   };
   if (version > BACKUP_VERSION) warnings.push("النسخة الاحتياطية من إصدار أحدث من التطبيق؛ استُعيدت البيانات المعروفة فقط.");
-  const platform = raw.platform === "web" || raw.platform === "desktop" || raw.platform === "portable" ? raw.platform : "unknown";
+  const platform = raw.platform === "web" || raw.platform === "desktop" || raw.platform === "portable" || raw.platform === "android" ? raw.platform : "unknown";
   return { data, version, platform, exportedAt: typeof raw.exportedAt === "number" ? raw.exportedAt : undefined, warnings };
 }
 

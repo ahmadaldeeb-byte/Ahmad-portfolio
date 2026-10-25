@@ -62,7 +62,7 @@ export function Shell({ children }: { children: ReactNode }) {
 
   return (
     <div className="flex min-h-dvh">
-      <aside className="sticky top-0 hidden h-dvh w-72 shrink-0 flex-col gap-6 overflow-y-auto bg-gradient-to-b from-hero-blue to-hero-purple p-5 text-white lg:flex">
+      <aside className="sticky top-[var(--safe-top)] hidden h-dvh w-72 shrink-0 flex-col gap-6 overflow-y-auto bg-gradient-to-b from-hero-blue to-hero-purple p-5 text-white lg:flex">
         <Logo />
         <nav className="flex flex-col gap-1.5" aria-label="القائمة الرئيسية">
           {NAV.map((item) => {
@@ -94,7 +94,7 @@ export function Shell({ children }: { children: ReactNode }) {
       </aside>
 
       <div className="flex min-w-0 flex-1 flex-col">
-        <header className="sticky top-0 z-30 flex items-center justify-between gap-3 bg-gradient-to-l from-hero-blue to-hero-purple px-4 py-3 text-white lg:hidden">
+        <header className="sticky top-[var(--safe-top)] z-30 flex items-center justify-between gap-3 bg-gradient-to-l from-hero-blue to-hero-purple px-4 py-3 text-white lg:hidden">
           <Logo />
           <button
             type="button"
@@ -112,7 +112,7 @@ export function Shell({ children }: { children: ReactNode }) {
       </div>
 
       <nav
-        className="fixed inset-x-0 bottom-0 z-40 grid grid-cols-5 border-t border-hero-ink/10 bg-white/95 backdrop-blur lg:hidden"
+        className="fixed inset-x-0 bottom-0 z-40 grid grid-cols-5 border-t pb-[var(--safe-bottom)] ps-[var(--safe-left)] pe-[var(--safe-right)] border-hero-ink/10 bg-white/95 backdrop-blur lg:hidden"
         aria-label="التنقل السريع"
       >
         {MOBILE_NAV.map((item) => {

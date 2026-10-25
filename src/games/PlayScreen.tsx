@@ -33,6 +33,9 @@ const HOW_TO: Partial<Record<GameType, string[]>> = {
   balloons: ["اقرأ السؤال في أعلى الشاشة.", "افقع البالون الذي يحمل الإجابة الصحيحة باللمس أو بالفأرة.", "الإجابة من المحاولة الأولى تمنح النقاط كاملة."],
 };
 
+/** Two teams side by side: best played with the phone turned sideways. */
+const WIDE_GAMES: GameType[] = ["race", "raceAdd", "teams"];
+
 type Phase = "intro" | "playing" | "results";
 
 export function PlayScreen() {
@@ -190,6 +193,11 @@ export function PlayScreen() {
               <RobotBuddy size={130} className="-ms-4" />
             </div>
             <h2 className="font-display text-4xl font-extrabold md:text-6xl">{meta.name}</h2>
+            {WIDE_GAMES.includes(game.type) && (
+              <p className="hidden rounded-2xl bg-hero-yellow/30 px-4 py-2 text-lg font-bold [@media(orientation:portrait)_and_(max-width:760px)]:block" data-testid="rotate-hint">
+                📱↻ أدِر الجهاز أفقيًا ليتّسع الملعب للفريقين
+              </p>
+            )}
             <p className="text-xl text-hero-muted md:text-2xl">{game.lesson}</p>
             <ol className="flex max-w-2xl flex-col gap-2 rounded-3xl bg-white p-5 text-start text-lg shadow-soft md:text-xl">
               {howTo.map((t, i) => (

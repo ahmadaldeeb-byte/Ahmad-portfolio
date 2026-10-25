@@ -148,7 +148,12 @@ export default function SettingsPage() {
         <h2 className="mb-2 text-2xl font-extrabold">البيانات والنسخ الاحتياطي</h2>
         <div className="mb-4 flex gap-3 rounded-2xl bg-hero-yellow/25 p-4">
           <AlertTriangle className="size-6 shrink-0 text-[#E67700]" />
-          {platform === "web" ? (
+          {platform === "android" ? (
+            <p>
+              تُحفظ بياناتك داخل التطبيق على هذا الجهاز، وتبقى بعد تحديث التطبيق. <b>حذف التطبيق يحذفها</b>؛ صدّر نسخة احتياطية بانتظام
+              (تُفتح قائمة المشاركة فتحفظها في «الملفات» أو Google Drive أو ترسلها لنفسك).
+            </p>
+          ) : platform === "web" ? (
             <p>
               تُحفظ الألعاب والأسئلة والنتائج <b>على هذا المتصفح فقط</b>. حذف بيانات المتصفح أو استخدام التصفح الخفي قد يؤدي إلى فقدانها.
               صدّر نسخة احتياطية بانتظام واحتفظ بها في مكان آمن.

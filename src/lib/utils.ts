@@ -1,4 +1,5 @@
-import { desktop } from "./platform";
+import { desktop, isAndroid } from "./platform";
+import { shareFileAndroid } from "./android";
 export function uid(prefix = ""): string {
   const rnd =
     typeof crypto !== "undefined" && "randomUUID" in crypto
@@ -74,6 +75,8 @@ export async function downloadJSON(filename: string, data: unknown): Promise<boo
   // Windows app: the native "Save as" dialog (the teacher picks the folder, e.g. the USB stick).
   const bridge = desktop();
   if (bridge) return bridge.saveFile(filename, text);
+  // Android app: the WebView cannot download; save the file and open the share sheet (Files, Drive, WhatsApp…).
+  if (isAndroid()) return shareFileAndroid(filename, text);
   const host = (window as unknown as { claude?: ClaudeHost }).claude;
   if (host?.use) {
     try {
