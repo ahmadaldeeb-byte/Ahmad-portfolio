@@ -1,0 +1,99 @@
+# Heroes World 1.0.0 Beta — Windows installer and portable copy, now.
+# A separate path from windows-release.yml: it does NOT wait for the full
+# browser suite or the automatic-update test, but keeps the basic checks
+# (type check, unit tests, content audit, build, desktop shell tests, the
+# packaged app, a real silent install / Start menu / uninstall on Windows).
+# The app version is 1.0.0-beta.1 so the final 1.0.0 is offered as an update.
+# Nothing is published: the files are an artifact of the run (login required).
+name: Windows beta
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [claude/heroes-world-educational-platform-27pxa0]
+    paths: [.github/workflows/windows-beta.yml]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: windows-beta-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  BETA_VERSION: 1.0.0-beta.1
+
+jobs:
+  beta:
+    runs-on: windows-2022
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - name: Type check
+        run: npm run lint
+      - name: Unit tests
+        run: npm test
+      - name: Content audit (curricula, guides, games, ready lessons)
+        run: node scripts/release/audit.mjs
+      - name: Beta version
+        run: npm pkg set version=${{ env.BETA_VERSION }}
+      - name: Production build (static release)
+        run: npm run build
+      - name: Desktop shell tests (offline app, data folder, snapshots, curricula, games)
+        run: |
+          npx playwright install chromium
+          npx playwright test -c playwright.desktop.config.ts tests/desktop/desktop.spec.ts
+      - name: Package (installer + portable)
+        run: >-
+          npx electron-builder --win nsis portable --x64 --publish never
+          -c.nsis.artifactName=Heroes-World-Setup-1.0.0-Beta.exe
+          -c.portable.artifactName=Heroes-World-Portable-1.0.0-Beta.exe
+      - name: Check the packaged app (portable mode, offline, data kept across restarts)
+        shell: pwsh
+        run: |
+          $env:HEROES_EXE = "$PWD\dist-desktop\win-unpacked\HeroesWorld.exe"
+          npx playwright test -c playwright.desktop.config.ts tests/desktop/packaged.spec.ts -g "packaged app"
+      - name: Install silently, open from the Start menu, run the installed app, uninstall (data kept)
+        shell: pwsh
+        run: |
+          Start-Process -Wait -FilePath "dist-desktop\Heroes-World-Setup-1.0.0-Beta.exe" -ArgumentList "/S"
+          $exe = "$env:LOCALAPPDATA\Programs\HeroesWorld\HeroesWorld.exe"
+          if (!(Test-Path $exe)) { throw "not installed at $exe" }
+          $shell = New-Object -ComObject WScript.Shell
+          $lnk = Get-ChildItem "$env:APPDATA\Microsoft\Windows\Start Menu\Programs" -Filter *.lnk -Recurse | Where-Object { $shell.CreateShortcut($_.FullName).TargetPath -like "*HeroesWorld.exe" } | Select-Object -First 1
+          if (!$lnk) { throw "no Start menu shortcut" }
+          Write-Host "Start menu shortcut: $($lnk.Name)"
+          Start-Process $lnk.FullName
+          Start-Sleep -Seconds 15
+          if (!(Get-Process HeroesWorld -ErrorAction SilentlyContinue)) { throw "the app did not start from the Start menu" }
+          Stop-Process -Name HeroesWorld -Force
+          Start-Sleep -Seconds 3
+          $env:HEROES_INSTALLED_EXE = $exe
+          npx playwright test -c playwright.desktop.config.ts tests/desktop/packaged.spec.ts -g "installed app"
+          if ($LASTEXITCODE -ne 0) { throw "installed app test failed" }
+          Start-Process -Wait -FilePath "$env:LOCALAPPDATA\Programs\HeroesWorld\Uninstall HeroesWorld.exe" -ArgumentList "/S"
+          Start-Sleep -Seconds 5
+          if (Test-Path $exe) { throw "uninstall left the program" }
+          if (!(Test-Path "$env:APPDATA\HeroesWorld\backups")) { throw "uninstall removed teacher data" }
+          Write-Host "Uninstalled; data kept in $env:APPDATA\HeroesWorld"
+      - name: Files and checksums
+        shell: pwsh
+        run: |
+          New-Item -ItemType Directory -Force beta | Out-Null
+          Copy-Item "dist-desktop\Heroes-World-Setup-1.0.0-Beta.exe", "dist-desktop\Heroes-World-Portable-1.0.0-Beta.exe" beta\
+          Copy-Item "docs\release\1.0.0\INSTALL.md", "docs\release\1.0.0\content-audit.md" beta\
+          $lines = Get-ChildItem beta -Filter *.exe | ForEach-Object { "$((Get-FileHash $_.FullName -Algorithm SHA256).Hash.ToLower())  $($_.Name)" }
+          $lines | Set-Content -Encoding ascii beta\SHA256SUMS.txt
+          Get-Content beta\SHA256SUMS.txt
+          Get-ChildItem beta | Format-Table Name, Length
+      - uses: actions/upload-artifact@v4
+        with:
+          name: Heroes-World-1.0.0-Beta-Windows
+          path: beta/
+          retention-days: 30
+          compression-level: 0
