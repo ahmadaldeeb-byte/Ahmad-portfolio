@@ -5,7 +5,7 @@
  * support. Screenshots go to test-results/android/.
  */
 import fs from "node:fs";
-import { _android, expect, test, type AndroidDevice, type Page } from "@playwright/test";
+import { _android, expect, test, type AndroidDevice, type Locator, type Page } from "@playwright/test";
 
 const PKG = "edu.heroesworld.app";
 const ORIGIN = "https://localhost";
@@ -24,6 +24,22 @@ async function open(): Promise<Page> {
 }
 
 const restart = open;
+
+/**
+ * A finger tap: real touch events (touchstart/touchend) sent through DevTools.
+ * Playwright's own tap() refuses WebView pages ("hasTouch" is a browser-context option).
+ */
+async function tap(target: Locator) {
+  await expect(target).toBeEnabled({ timeout: 20_000 });
+  await target.scrollIntoViewIfNeeded();
+  const box = await target.boundingBox();
+  expect(box, "the element to tap is on screen").toBeTruthy();
+  const point = { x: box!.x + box!.width / 2, y: box!.y + box!.height / 2 };
+  const cdp = await target.page().context().newCDPSession(target.page());
+  await cdp.send("Input.dispatchTouchEvent", { type: "touchStart", touchPoints: [point] });
+  await cdp.send("Input.dispatchTouchEvent", { type: "touchEnd", touchPoints: [] });
+  await cdp.detach();
+}
 
 /** Taps the visible menu link to a page (the bottom bar on phones, the side menu on wide screens). */
 async function go(page: Page, href: string) {
@@ -110,8 +126,8 @@ test("the Android back button goes back inside the app", async () => {
 test("games play with touch; the race asks to turn the phone, and fits in landscape", async () => {
   const page = await open();
   await page.goto(`${ORIGIN}/play/?id=builtin_quiz_1_math`);
-  await page.getByRole("button", { name: "ابدأ اللعب" }).tap();
-  await page.getByRole("button", { name: "انطلق!" }).tap();
+  await tap(page.getByRole("button", { name: "ابدأ اللعب" }));
+  await tap(page.getByRole("button", { name: "انطلق!" }));
   await expect(page.getByTestId("question-prompt")).toBeVisible({ timeout: 20_000 });
   await fits(page, "quiz");
   await shot(page, "phone-quiz");
@@ -120,9 +136,9 @@ test("games play with touch; the race asks to turn the phone, and fits in landsc
   await expect(page.getByTestId("rotate-hint")).toBeVisible();
   await rotate(true);
   await expect(page.getByTestId("rotate-hint")).toBeHidden();
-  await page.getByRole("button", { name: "ابدأ اللعب" }).tap();
-  await page.getByRole("radio", { name: "دقيقة واحدة" }).tap();
-  await page.getByRole("button", { name: "ابدأ السباق" }).tap();
+  await tap(page.getByRole("button", { name: "ابدأ اللعب" }));
+  await tap(page.getByRole("radio", { name: "دقيقة واحدة" }));
+  await tap(page.getByRole("button", { name: "ابدأ السباق" }));
   await expect(page.getByTestId("race-choice-red").first()).toBeEnabled({ timeout: 30_000 });
   await fits(page, "race landscape");
   await shot(page, "phone-landscape-race");
@@ -132,25 +148,25 @@ test("games play with touch; the race asks to turn the phone, and fits in landsc
 test("teacher data: a saved game, an edited question and a customised lesson survive a restart", async () => {
   let page = await open();
   await page.goto(`${ORIGIN}/create/?from=builtin_quiz_1_math`);
-  await page.getByRole("button", { name: "الدرس" }).first().tap();
+  await tap(page.getByRole("button", { name: "الدرس" }).first());
   await page.getByPlaceholder("مثال: سباق الجمع الكبير").fill("لعبة على أندرويد");
-  await page.getByRole("button", { name: /الحفظ والتشغيل/ }).tap();
-  await page.getByRole("button", { name: "حفظ والعودة" }).tap();
+  await tap(page.getByRole("button", { name: /الحفظ والتشغيل/ }));
+  await tap(page.getByRole("button", { name: "حفظ والعودة" }));
   await page.waitForURL((u) => !u.pathname.startsWith("/create"));
   await page.goto(`${ORIGIN}/bank/?grade=1&subject=math&lessonId=imp_jo-g1-math-s1-2026__u3-l1`);
-  await page.getByRole("button", { name: "تعديل السؤال" }).first().tap();
+  await tap(page.getByRole("button", { name: "تعديل السؤال" }).first());
   await page.getByPlaceholder("اكتب السؤال هنا...").fill("سؤال عدّلته على أندرويد");
-  await page.getByRole("button", { name: "حفظ السؤال" }).tap();
-  await expect(page.getByText("سؤال عدّلته على أندرويد")).toBeVisible();
+  await tap(page.getByRole("button", { name: "حفظ السؤال" }));
+  await expect(page.getByRole("list").getByText("سؤال عدّلته على أندرويد")).toBeVisible();
   await page.goto(`${ORIGIN}/lessons/edit/?id=plan_imp_jo-g1-math-s1-2026__u4-l1`);
-  await page.getByRole("button", { name: "زيادة دقيقة" }).tap();
+  await tap(page.getByRole("button", { name: "زيادة دقيقة" }));
   await expect(page).toHaveURL(/id=ls_/);
 
   page = await restart();
   await page.goto(`${ORIGIN}/my-games/`);
   await expect(page.getByText("لعبة على أندرويد")).toBeVisible();
   await page.goto(`${ORIGIN}/bank/?grade=1&subject=math&lessonId=imp_jo-g1-math-s1-2026__u3-l1`);
-  await expect(page.getByText("سؤال عدّلته على أندرويد")).toBeVisible();
+  await expect(page.getByRole("list").getByText("سؤال عدّلته على أندرويد")).toBeVisible();
   await page.goto(`${ORIGIN}/lessons/`);
   await expect(page.getByText("(نسختي)")).toBeVisible();
 });
@@ -158,7 +174,7 @@ test("teacher data: a saved game, an edited question and a customised lesson sur
 test("backup export opens the Android share sheet", async () => {
   const page = await open();
   await page.goto(`${ORIGIN}/settings/`);
-  await page.getByRole("button", { name: "تصدير نسخة احتياطية" }).tap();
+  await tap(page.getByRole("button", { name: "تصدير نسخة احتياطية" }));
   await expect.poll(async () => (await device.shell("dumpsys activity activities")).toString().match(/Chooser|Resolver|Sharesheet/i) !== null, { timeout: 20_000 }).toBe(true);
   await device.shell("input keyevent KEYCODE_BACK");
 });
@@ -172,7 +188,7 @@ test("tablet size: dashboard, curriculum and a game fit", async () => {
   await go(page, "/curriculum");
   await fits(page, "tablet curriculum");
   await page.goto(`${ORIGIN}/play/?id=builtin_balloons_1_math`);
-  await page.getByRole("button", { name: "ابدأ اللعب" }).tap();
+  await tap(page.getByRole("button", { name: "ابدأ اللعب" }));
   await expect(page.getByTestId("balloon-stage").locator("canvas")).toBeVisible({ timeout: 30_000 });
   await fits(page, "tablet balloons");
   await shot(page, "tablet-balloons");
