@@ -25,6 +25,12 @@ async function open(): Promise<Page> {
 
 const restart = open;
 
+/** Taps the visible menu link to a page (the bottom bar on phones, the side menu on wide screens). */
+async function go(page: Page, href: string) {
+  await page.locator(`a[href^="${href}"]`).filter({ visible: true }).first().click();
+  await expect(page).toHaveURL(new RegExp(href));
+}
+
 /** Nothing sticks out sideways (no horizontal scrolling). */
 async function fits(page: Page, what: string) {
   const over = await page.evaluate(() => document.documentElement.scrollWidth - window.innerWidth);
@@ -72,7 +78,7 @@ test("starts offline as the Android app, Arabic RTL, fits the phone screen", asy
 
 test("curricula: math and Arabic units and lessons, explanation, games, ready lesson", async () => {
   const page = await open();
-  await page.getByRole("link", { name: "المنهاج والدروس" }).first().click();
+  await go(page, "/curriculum");
   for (const u of ["الْجَمْعُ", "الطَّرْحُ", "مُعالَجَةُ الْبَياناتِ"]) await expect(page.getByText(u, { exact: true })).toBeVisible();
   await page.getByText("الْجَمْعُ", { exact: true }).click();
   await page.getByRole("button", { name: "مُكَوِّناتُ الْعَدَدِ 10", exact: true }).click();
@@ -88,15 +94,14 @@ test("curricula: math and Arabic units and lessons, explanation, games, ready le
   // Arabic book.
   await page.goBack();
   await page.goto(`${ORIGIN}/`);
-  await page.getByRole("link", { name: "المنهاج والدروس" }).first().click();
+  await go(page, "/curriculum");
   await page.getByRole("radio", { name: "اللغة العربية" }).click();
   await expect(page.getByText("الْوَحْدَةُ الْخامِسَةُ: لُعْبَتي الْمُفَضَّلَةُ")).toBeVisible();
 });
 
 test("the Android back button goes back inside the app", async () => {
   const page = await open();
-  await page.getByRole("link", { name: "المنهاج والدروس" }).first().click();
-  await expect(page).toHaveURL(/curriculum/);
+  await go(page, "/curriculum");
   await device.shell("input keyevent KEYCODE_BACK");
   await expect(page.getByRole("heading", { name: "مرحبًا بك في عالم الأبطال!" })).toBeVisible();
   expect((await device.shell("dumpsys window")).toString()).toContain(PKG);
@@ -164,7 +169,7 @@ test("tablet size: dashboard, curriculum and a game fit", async () => {
   const page = await restart();
   await fits(page, "tablet home");
   await shot(page, "tablet-home");
-  await page.getByRole("link", { name: "المنهاج والدروس" }).first().click();
+  await go(page, "/curriculum");
   await fits(page, "tablet curriculum");
   await page.goto(`${ORIGIN}/play/?id=builtin_balloons_1_math`);
   await page.getByRole("button", { name: "ابدأ اللعب" }).tap();
