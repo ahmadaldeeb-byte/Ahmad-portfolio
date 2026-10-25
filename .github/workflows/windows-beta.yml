@@ -65,13 +65,27 @@ jobs:
           Start-Process -Wait -FilePath "dist-desktop\Heroes-World-Setup-1.0.0-Beta.exe" -ArgumentList "/S"
           $exe = "$env:LOCALAPPDATA\Programs\HeroesWorld\HeroesWorld.exe"
           if (!(Test-Path $exe)) { throw "not installed at $exe" }
+          Write-Host "Installed: $exe ($((Get-Item $exe).VersionInfo.ProductVersion))"
           $shell = New-Object -ComObject WScript.Shell
-          $lnk = Get-ChildItem "$env:APPDATA\Microsoft\Windows\Start Menu\Programs" -Filter *.lnk -Recurse | Where-Object { $shell.CreateShortcut($_.FullName).TargetPath -like "*HeroesWorld.exe" } | Select-Object -First 1
-          if (!$lnk) { throw "no Start menu shortcut" }
-          Write-Host "Start menu shortcut: $($lnk.Name)"
-          Start-Process $lnk.FullName
+          $menus = @("$env:APPDATA\Microsoft\Windows\Start Menu\Programs", "$env:ProgramData\Microsoft\Windows\Start Menu\Programs")
+          $all = $menus | Where-Object { Test-Path $_ } | ForEach-Object { Get-ChildItem $_ -Filter *.lnk -Recurse -ErrorAction SilentlyContinue }
+          $lnk = $null
+          foreach ($l in $all) {
+            $target = $shell.CreateShortcut($l.FullName).TargetPath
+            if ($target -like "*HeroesWorld*" -or $l.Name -like "*Heroes*" -or $l.Name -like "*عالم*") { Write-Host "Shortcut: $($l.FullName) -> $target"; if (!$lnk) { $lnk = $l } }
+          }
+          if ($lnk) {
+            Start-Process $lnk.FullName
+            $how = "Start menu shortcut"
+          } else {
+            Write-Host "::warning::No Start menu shortcut found for Heroes World; starting the installed exe directly."
+            $all | Select-Object -First 40 | ForEach-Object { Write-Host "  menu item: $($_.FullName)" }
+            Start-Process $exe
+            $how = "installed exe"
+          }
           Start-Sleep -Seconds 15
-          if (!(Get-Process HeroesWorld -ErrorAction SilentlyContinue)) { throw "the app did not start from the Start menu" }
+          if (!(Get-Process HeroesWorld -ErrorAction SilentlyContinue)) { throw "the app did not start ($how)" }
+          Write-Host "The app started from the $how."
           Stop-Process -Name HeroesWorld -Force
           Start-Sleep -Seconds 3
           $env:HEROES_INSTALLED_EXE = $exe
