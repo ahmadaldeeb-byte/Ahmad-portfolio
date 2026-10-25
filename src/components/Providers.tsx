@@ -6,7 +6,7 @@ import { useData } from "@/store/data";
 import { useSettings } from "@/store/settings";
 import { DesktopSync } from "./DesktopSync";
 import { Toaster } from "./Toast";
-import { usePathname, useRouter } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { isAndroid } from "@/lib/platform";
 
 export function Providers({ children }: { children: ReactNode }) {
@@ -20,12 +20,11 @@ export function Providers({ children }: { children: ReactNode }) {
 
   // Android app: the WebView answers every page address with the home page file, so open the page that was asked for.
   const router = useRouter();
-  const pathname = usePathname();
   useEffect(() => {
     const w = window as unknown as { __heroesEntry?: string };
     const entry = w.__heroesEntry;
     delete w.__heroesEntry;
-    if (isAndroid() && entry && !/^\/(\?|$)/.test(entry) && pathname === "/") router.replace(entry);
+    if (isAndroid() && entry && !/^\/(\?|$)/.test(entry)) router.replace(entry);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
