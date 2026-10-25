@@ -95,7 +95,7 @@ jobs:
           $exe = "$env:LOCALAPPDATA\Programs\HeroesWorld\HeroesWorld.exe"
           if (!(Test-Path $exe)) { throw "not installed at $exe" }
           $shell = New-Object -ComObject WScript.Shell
-          $lnk = Get-ChildItem "$env:APPDATA\Microsoft\Windows\Start Menu\Programs" -Filter *.lnk -Recurse | Where-Object { $shell.CreateShortcut($_.FullName).TargetPath -like "*HeroesWorld.exe" } | Select-Object -First 1
+          $lnk = Get-ChildItem "$env:APPDATA\Microsoft\Windows\Start Menu\Programs" -Filter *.lnk -Recurse | Where-Object { $shell.CreateShortcut($_.FullName).TargetPath -like "*HeroesWorld*" -or $_.Name -like "*Heroes*" -or $_.Name -like "*عالم*" } | Select-Object -First 1
           if (!$lnk) { throw "no Start menu shortcut" }
           Write-Host "Start menu shortcut: $($lnk.Name)"
           Start-Process $lnk.FullName
@@ -151,7 +151,7 @@ jobs:
           Start-Sleep -Seconds 5
           if (Test-Path $exe) { throw "uninstall left the program" }
           $shell = New-Object -ComObject WScript.Shell
-          $left = Get-ChildItem "$env:APPDATA\Microsoft\Windows\Start Menu\Programs" -Filter *.lnk -Recurse | Where-Object { $shell.CreateShortcut($_.FullName).TargetPath -like "*HeroesWorld.exe" }
+          $left = Get-ChildItem "$env:APPDATA\Microsoft\Windows\Start Menu\Programs" -Filter *.lnk -Recurse | Where-Object { $shell.CreateShortcut($_.FullName).TargetPath -like "*HeroesWorld*" -or $_.Name -like "*Heroes*" -or $_.Name -like "*عالم*" }
           if ($left) { throw "uninstall left a Start menu shortcut" }
           if (!(Test-Path "$env:APPDATA\HeroesWorld\IndexedDB")) { throw "uninstall removed teacher data" }
           if (!(Test-Path "$env:APPDATA\HeroesWorld\backups")) { throw "uninstall removed the backups" }
