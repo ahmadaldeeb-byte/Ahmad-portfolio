@@ -1,6 +1,7 @@
 "use client";
 import { Download, Pencil, Plus, Search, Trash2, Upload } from "lucide-react";
-import { useMemo, useRef, useState } from "react";
+import { useSearchParams } from "next/navigation";
+import { Suspense, useMemo, useRef, useState } from "react";
 import { QuestionEditor } from "@/components/QuestionEditor";
 import { toast } from "@/components/Toast";
 import { Badge, Button, ConfirmDialog, EmptyState, Field, IconButton, Loading, Modal, PageHeader, Segmented, inputClass } from "@/components/ui";
@@ -13,9 +14,20 @@ import { useData } from "@/store/data";
 import { QuestionMetaFields } from "@/components/QuestionMetaFields";
 
 export default function BankPage() {
+  return (
+    <Suspense fallback={<Loading />}>
+      <Bank />
+    </Suspense>
+  );
+}
+
+function Bank() {
+  const params = useSearchParams();
   const { questions, ready, saveQuestion, saveQuestions, deleteQuestion } = useData();
-  const [grade, setGrade] = useState<Grade | 0>(0);
-  const [subject, setSubject] = useState<Subject | "all">("all");
+  const [grade, setGrade] = useState<Grade | 0>((Number(params.get("grade")) || 0) as Grade | 0);
+  const [subject, setSubject] = useState<Subject | "all">((params.get("subject") as Subject) || "all");
+  // Opened from a curriculum lesson («✏️ تعديل المحتوى»): only that lesson's questions.
+  const [lessonId, setLessonId] = useState(params.get("lessonId"));
   const [kind, setKind] = useState<QuestionKind | "all">("all");
   const [difficulty, setDifficulty] = useState<Difficulty | 0>(0);
   const [lesson, setLesson] = useState("all");
@@ -40,9 +52,10 @@ export default function BankPage() {
         (kind === "all" || q.kind === kind) &&
         (difficulty === 0 || q.difficulty === difficulty) &&
         (lesson === "all" || q.lesson === lesson) &&
+        (!lessonId || q.lessonId === lessonId) &&
         (!t || q.prompt.toLowerCase().includes(t) || q.lesson.toLowerCase().includes(t) || q.choices.some((c) => c.toLowerCase().includes(t))),
     );
-  }, [questions, grade, subject, kind, difficulty, lesson, query]);
+  }, [questions, grade, subject, kind, difficulty, lesson, lessonId, query]);
 
   const save = async () => {
     if (!editing) return;
@@ -100,7 +113,7 @@ export default function BankPage() {
           <Segmented value={subject} onChange={(v) => { setSubject(v); setLesson("all"); }} options={[{ value: "all" as const, label: "كل المواد" }, ...SUBJECTS.map((s) => ({ value: s.id, label: s.label }))]} />
         </div>
         <div className="grid gap-3 sm:grid-cols-3">
-          <select aria-label="الدرس" className={inputClass} value={lesson} onChange={(e) => setLesson(e.target.value)}>
+          <select aria-label="الدرس" className={inputClass} value={lesson} onChange={(e) => { setLesson(e.target.value); setLessonId(null); }}>
             <option value="all">كل الدروس</option>
             {lessons.map((l) => <option key={l} value={l}>{l}</option>)}
           </select>
@@ -121,7 +134,10 @@ export default function BankPage() {
         <EmptyState title="لا توجد أسئلة مطابقة" hint="غيّر خيارات التصفية أو أضف سؤالًا جديدًا." />
       ) : (
         <>
-          <p className="mb-3 text-hero-muted">{filtered.length} سؤالًا</p>
+          <p className="mb-3 flex flex-wrap items-center gap-2 text-hero-muted">
+            {filtered.length} سؤالًا
+            {lessonId && <Button variant="secondary" size="sm" onClick={() => setLessonId(null)}>أسئلة درس واحد — عرض الكل</Button>}
+          </p>
           <ul className="flex flex-col gap-3">
             {filtered.slice(0, limit).map((q) => (
               <li key={q.id} className="flex flex-wrap items-center gap-3 rounded-3xl bg-white p-4 shadow-soft">
@@ -137,6 +153,7 @@ export default function BankPage() {
                     {q.lesson && <Badge color="#E67700" className={q.subject === "english" ? "ltr-content" : ""}>{q.lesson}</Badge>}
                     <Badge color="#40C057">{KIND_LABELS[q.kind]}</Badge>
                     <Badge color="#868E96">{DIFFICULTY_LABELS[q.difficulty]}</Badge>
+                    {q.origin && <Badge color={q.origin === "textbook" ? "#4361EE" : "#E67700"}>{q.origin === "textbook" ? `📘 من الكتاب${q.page ? ` ص${q.page}` : ""}` : "✨ مولّد"}</Badge>}
                   </div>
                 </div>
                 <div className="flex gap-2">

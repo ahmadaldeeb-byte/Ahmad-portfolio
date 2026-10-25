@@ -3,6 +3,7 @@ import { CheckCircle2, ChevronDown, FileUp, Trash2, TriangleAlert, XCircle } fro
 import Link from "next/link";
 import { useMemo, useRef, useState } from "react";
 import { GAMES, gameMetaFor, gradeLabel, subjectLabel } from "@/lib/constants";
+import { BUNDLED_BOOKS } from "@/content/catalog";
 import { duplicateOf, planImport, slug, suggestGames } from "@/lib/curriculum/import";
 import { validateCurriculumFile, type CurriculumFile, type CurriculumFileLesson, type CurriculumFileQuestion, type Issue } from "@/lib/curriculum/schema";
 import type { GameType } from "@/lib/types";
@@ -62,7 +63,8 @@ export function CurriculumImport() {
   // Every edit is re-checked, and the games are rebuilt from the edited lessons.
   const check = useMemo(() => (draft ? validateCurriculumFile(clone(draft)) : null), [draft]);
   const plan = useMemo(() => (check?.file ? planImport(check.file) : null), [check]);
-  const duplicate = plan ? duplicateOf(plan, curricula) : null;
+  // Built-in textbooks count too: importing one of them again is refused.
+  const duplicate = plan ? duplicateOf(plan, [...BUNDLED_BOOKS, ...curricula]) : null;
   const errors = (check?.issues ?? []).filter((i) => i.level === "error");
   const warnings = [...(check?.issues ?? []).filter((i) => i.level === "warning"), ...(plan?.issues ?? [])];
 
@@ -118,7 +120,7 @@ export function CurriculumImport() {
       <Card>
         <h2 className="mb-3 text-2xl font-extrabold">المناهج المستوردة</h2>
         {curricula.length === 0 ? (
-          <p className="text-hero-muted">لم يُستورد أي منهج بعد. الفهرس المدمج في التطبيق (رياضيات الصف الأول) يبقى كما هو.</p>
+          <p className="text-hero-muted">لم يُستورد أي منهج بعد. الكتب المدمجة في المنصة (رياضيات الصف الأول والعربية لغتي للصف الأول، الفصل الأول) متاحة دائمًا في «المنهاج والدروس».</p>
         ) : (
           <ul className="flex flex-col gap-2" data-testid="imported-list">
             {curricula.map((b) => (
@@ -128,6 +130,9 @@ export function CurriculumImport() {
                   <span className="block text-sm text-hero-muted">
                     {gradeLabel(b.grade)} • {subjectLabel(b.subject)} • {b.imported?.counts.lessons} درسًا • {b.imported?.counts.questions} سؤالًا • {b.imported?.counts.games} لعبة
                   </span>
+                  {BUNDLED_BOOKS.some((x) => x.id === b.id) && (
+                    <span className="block text-sm font-bold text-[#E67700]">نسخة مستوردة سابقًا من كتاب أصبح مدمجًا في المنصة؛ النسخة المدمجة هي المعروضة، ويمكنك حذف هذه دون فقدان أسئلة الكتاب.</span>
+                  )}
                 </span>
                 <Link href={`/curriculum?grade=${b.grade}&subject=${b.subject}&book=${encodeURIComponent(b.id)}`} className="btn-3d inline-flex min-h-11 items-center rounded-2xl bg-white px-4 font-bold">
                   عرض في المنهاج
@@ -180,7 +185,9 @@ export function CurriculumImport() {
             </div>
             {duplicate && (
               <p className="mt-3 rounded-2xl bg-hero-red/10 p-3 font-bold text-hero-red" data-testid="import-duplicate">
-                هذا المنهج مستورد من قبل («{duplicate.imported?.title ?? duplicate.source.name}»). لن يُستورد مرتين؛ احذف النسخة السابقة أولًا إن أردت استبدالها.
+                {duplicate.bundled
+                  ? `هذا الكتاب مدمج في المنصة («${duplicate.imported?.title ?? duplicate.source.name}») وتجده في «المنهاج والدروس»؛ لا حاجة لاستيراده.`
+                  : `هذا المنهج مستورد من قبل («${duplicate.imported?.title ?? duplicate.source.name}»). لن يُستورد مرتين؛ احذف النسخة السابقة أولًا إن أردت استبدالها.`}
               </p>
             )}
             {errors.length > 0 && <p className="mt-3 font-bold text-hero-red">يوجد {errors.length} خطأ يجب إصلاحه قبل الاستيراد:</p>}

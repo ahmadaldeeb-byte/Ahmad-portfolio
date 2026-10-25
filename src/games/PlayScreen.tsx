@@ -1,10 +1,9 @@
 "use client";
 import { AnimatePresence, motion } from "motion/react";
 import { Home, Maximize, Minimize, Pause, Play, RotateCcw, Volume2, VolumeX } from "lucide-react";
-import dynamic from "next/dynamic";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
-import { useCallback, useEffect, useMemo, useRef, useState, type ComponentType } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { HeroKid, RobotBuddy } from "@/components/Characters";
 import { Button, Loading } from "@/components/ui";
 import { sound } from "@/lib/audio";
@@ -15,47 +14,10 @@ import type { GameType } from "@/lib/types";
 import { uid } from "@/lib/utils";
 import { useData } from "@/store/data";
 import { useSettings } from "@/store/settings";
+import { BankWorldGame, GAME_COMPONENTS, GameLoading } from "./registry";
 import { ResultsView } from "./ResultsView";
 import { useFullscreen } from "./shared/useFullscreen";
 import type { GameProps, GameSummary } from "./types";
-
-function GameLoading() {
-  return (
-    <div className="flex size-full flex-col items-center justify-center gap-4">
-      <RobotBuddy size={140} mood="think" />
-      <Loading label="نجهّز اللعبة..." />
-    </div>
-  );
-}
-
-// Each game is code-split and only loaded when played.
-const GAME_COMPONENTS: Partial<Record<GameType, ComponentType<GameProps>>> = {
-  wheel: dynamic(() => import("./wheel/WheelGame"), { ssr: false, loading: GameLoading }),
-  race: dynamic(() => import("./race/RaceGame"), { ssr: false, loading: GameLoading }),
-  balloons: dynamic(() => import("./balloons/BalloonsGame"), { ssr: false, loading: GameLoading }),
-  quiz: dynamic(() => import("./quiz/QuizGame"), { ssr: false, loading: GameLoading }),
-  teams: dynamic(() => import("./teams/TeamsGame"), { ssr: false, loading: GameLoading }),
-  train: dynamic(() => import("./train/TrainGame"), { ssr: false, loading: GameLoading }),
-  island: dynamic(() => import("./math/IslandGame"), { ssr: false, loading: GameLoading }),
-  crocodile: dynamic(() => import("./math/CrocodileGame"), { ssr: false, loading: GameLoading }),
-  rocket: dynamic(() => import("./math/RocketGame"), { ssr: false, loading: GameLoading }),
-  appleBasket: dynamic(() => import("./math/AppleBasketGame"), { ssr: false, loading: GameLoading }),
-  factory: dynamic(() => import("./math/FactoryGame"), { ssr: false, loading: GameLoading }),
-  raceAdd: dynamic(() => import("./math/RaceAddGame"), { ssr: false, loading: GameLoading }),
-  pirates: dynamic(() => import("./math/PiratesGame"), { ssr: false, loading: GameLoading }),
-  shapes: dynamic(() => import("./math/ShapesGame"), { ssr: false, loading: GameLoading }),
-  pizza: dynamic(() => import("./math/PizzaGame"), { ssr: false, loading: GameLoading }),
-  market: dynamic(() => import("./math/MarketGame"), { ssr: false, loading: GameLoading }),
-  clock: dynamic(() => import("./math/ClockGame"), { ssr: false, loading: GameLoading }),
-  measure: dynamic(() => import("./math/MeasureGame"), { ssr: false, loading: GameLoading }),
-  memory: dynamic(() => import("./memory/MemoryGame"), { ssr: false, loading: GameLoading }),
-  words: dynamic(() => import("./words/WordsGame"), { ssr: false, loading: GameLoading }),
-  numbers: dynamic(() => import("./numbers/NumbersGame"), { ssr: false, loading: GameLoading }),
-  puzzle: dynamic(() => import("./puzzle/PuzzleGame"), { ssr: false, loading: GameLoading }),
-  space: dynamic(() => import("./space/SpaceGame"), { ssr: false, loading: GameLoading }),
-};
-/** Math game worlds playing question-bank questions in the other subjects. */
-const BankWorldGame = dynamic(() => import("./math/BankWorldGame"), { ssr: false, loading: GameLoading });
 
 const HOW_TO: Partial<Record<GameType, string[]>> = {
   wheel: ["اضغط «دوّر العجلة» لتختار العجلة سؤالًا أو اسمًا بعدل تام.", "يجيب الطالب أو الفريق عن السؤال الظاهر.", "تُزال الخانة المستخدمة إن كان هذا الخيار مفعّلًا."],

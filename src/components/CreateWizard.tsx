@@ -85,7 +85,8 @@ export function CreateWizard() {
       setStep(4);
     } else if (src) {
       const now = Date.now();
-      setGame({ ...structuredClone(src), id: uid("g_"), builtin: false, title: `${src.title} (مخصّصة)`, createdAt: now, updatedAt: now });
+      // A custom copy keeps the lesson link but not the import link (removing an import never deletes the teacher's copies).
+      setGame({ ...structuredClone(src), id: uid("g_"), builtin: false, importId: undefined, title: `${src.title} (مخصّصة)`, createdAt: now, updatedAt: now });
       setPersist(false);
       setStep(4);
     } else {

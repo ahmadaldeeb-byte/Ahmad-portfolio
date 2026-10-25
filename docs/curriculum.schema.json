@@ -299,6 +299,39 @@
                         }
                       },
                       "description": "empty or missing: the app picks suitable templates"
+                    },
+                    "guide": {
+                      "type": "object",
+                      "description": "Teacher notes written by the platform from the lesson's concepts (not quoted from the book).",
+                      "required": [
+                        "objectives",
+                        "explanation"
+                      ],
+                      "properties": {
+                        "objectives": {
+                          "type": "array",
+                          "items": {
+                            "type": "string",
+                            "minLength": 1
+                          },
+                          "minItems": 1
+                        },
+                        "explanation": {
+                          "type": "string",
+                          "minLength": 1,
+                          "description": "Simple explanation for the teacher."
+                        },
+                        "examples": {
+                          "type": "array",
+                          "items": {
+                            "type": "string"
+                          }
+                        },
+                        "warmup": {
+                          "type": "string",
+                          "description": "Warm-up activity instructions for the teacher."
+                        }
+                      }
                     }
                   }
                 }

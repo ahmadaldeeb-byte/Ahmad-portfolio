@@ -41,6 +41,16 @@ export interface CurriculumFileGame {
   count?: number;
 }
 
+/** Teacher notes for a lesson, written by the platform from the lesson's concepts (not quoted from the book). */
+export interface CurriculumFileGuide {
+  objectives: string[];
+  /** A simple explanation for the teacher. */
+  explanation: string;
+  examples?: string[];
+  /** The warm-up activity: instructions for the teacher. */
+  warmup?: string;
+}
+
 export interface CurriculumFileLesson {
   id: string;
   number?: number;
@@ -50,6 +60,7 @@ export interface CurriculumFileLesson {
   questions: CurriculumFileQuestion[];
   /** Game templates for the lesson; when empty the app picks suitable ones. */
   games?: CurriculumFileGame[];
+  guide?: CurriculumFileGuide;
 }
 
 export interface CurriculumFileUnit {
@@ -182,6 +193,12 @@ export function validateCurriculumFile(raw: unknown): { file: CurriculumFile | n
         }
         if (q.page !== undefined && (typeof q.page !== "number" || q.page < 1)) warn(qw, "رقم الصفحة غير صالح.");
       });
+      if (l.guide !== undefined) {
+        const g = l.guide;
+        const strings = (x: unknown) => Array.isArray(x) && x.every((v) => typeof v === "string" && v.trim());
+        if (!isObj(g) || !strings(g.objectives) || !text(g.explanation) || (g.examples !== undefined && !strings(g.examples)) || (g.warmup !== undefined && typeof g.warmup !== "string"))
+          err(lw, "دليل الدرس (guide) يحتاج أهدافًا (objectives) وشرحًا (explanation) نصيين.");
+      }
       if (l.games !== undefined && !Array.isArray(l.games)) err(lw, "قائمة الألعاب يجب أن تكون مصفوفة.");
       for (const g of Array.isArray(l.games) ? l.games : []) {
         const t = isObj(g) ? g.template : undefined;

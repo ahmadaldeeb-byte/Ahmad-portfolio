@@ -12,7 +12,9 @@ import { useFullscreen } from "@/games/shared/useFullscreen";
 import type { GameProps } from "@/games/types";
 import { sound } from "@/lib/audio";
 import { gameMeta } from "@/lib/constants";
-import { mainQuestions, trainToPlayable, validatePlan } from "@/lib/lessons/engine";
+import { gameComponentFor } from "@/games/registry";
+import { builtinPlanById, mainQuestions, playableItems, trainToPlayable, validatePlan } from "@/lib/lessons/engine";
+import { preparePlayable } from "@/lib/questions";
 import { SEGMENT_META, type LessonPlan } from "@/lib/lessons/types";
 import { successRate } from "@/lib/scoring";
 import { generateTrainQuestions } from "@/lib/train";
@@ -21,6 +23,7 @@ import { cn, formatDuration, formatNum, uid } from "@/lib/utils";
 import { useData } from "@/store/data";
 import { useSettings } from "@/store/settings";
 import { ChallengeActivity, SKILL_NAMES } from "./ChallengeActivity";
+import { QuestionsActivity } from "./QuestionsActivity";
 import { WarmupActivity, type ActivitySummary } from "./WarmupActivity";
 
 const loading = () => <Loading label="نجهّز النشاط..." />;
@@ -60,11 +63,15 @@ function mainGameConfig(plan: LessonPlan): GameConfig {
 export function LessonRunner() {
   const params = useSearchParams();
   const router = useRouter();
-  const { ready, lessons, addResult } = useData();
+  const { ready, lessons, addResult, titleOverrides, findGame } = useData();
   const { muted, set } = useSettings();
   const numerals = useSettings((s) => s.numerals);
   const fmt = (n: number | string) => formatNum(n, numerals);
-  const plan = lessons.find((l) => l.id === params.get("id"));
+  const id = params.get("id");
+  const builtin = useMemo(() => builtinPlanById(id, titleOverrides), [id, titleOverrides]);
+  const plan = lessons.find((l) => l.id === id) ?? builtin ?? undefined;
+  // A ready game (built-in or the teacher's saved copy) played in the main part.
+  const readyGame = plan?.segments[1].game.gameId ? findGame(plan.segments[1].game.gameId) : undefined;
   const preview = params.get("preview") === "1";
   const startStage = Math.min(2, Math.max(0, Number(params.get("stage")) || 0));
   const rootRef = useRef<HTMLDivElement>(null);
@@ -115,8 +122,10 @@ export function LessonRunner() {
   // Fresh main-game questions for every run of the main part.
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const mainQs = useMemo(() => (plan ? mainQuestions(plan) : []), [plan?.id, runKey]);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  const readyQs = useMemo(() => (readyGame ? preparePlayable(readyGame) : []), [readyGame, runKey]);
   const choiceQs = useMemo(() => {
-    if (!plan) return [];
+    if (!plan || plan.segments[1].game.gameId) return [];
     const t = plan.segments[1].game.train;
     // Choice games use three-wagon questions (one missing number).
     return generateTrainQuestions({ ...t, difficulty: "easy", mode: t.mode }, { exclude: new Set(plan.segments[2].questions.map((q) => q.key)) }).map((q) => trainToPlayable(q, t.min, t.max));
@@ -142,7 +151,7 @@ export function LessonRunner() {
         id: uid("r_"),
         gameId: `lesson-${plan.id}`,
         gameTitle: `${plan.title} — ${SEGMENT_META[plan.segments[i].kind].label}`,
-        type: i === 1 ? plan.segments[1].game.type : "train",
+        type: i === 1 ? plan.segments[1].game.type : plan.segments[2].items ? "quiz" : "train",
         grade: plan.grade,
         subject: plan.subject,
         startedAt: startedAt.current || now,
@@ -179,6 +188,8 @@ export function LessonRunner() {
   const meta = SEGMENT_META[seg.kind];
   const left = remaining[stage] ?? seg.minutes * 60;
   const ChoiceGame = CHOICE_GAMES[plan.segments[1].game.type];
+  const ReadyGame = readyGame ? gameComponentFor(readyGame) : undefined;
+  const missingGame = !!plan.segments[1].game.gameId && !ReadyGame;
   const exit = async () => {
     await fs.exit();
     router.push(preview ? `/lessons/edit?id=${plan.id}` : "/lessons");
@@ -228,8 +239,8 @@ export function LessonRunner() {
                 </div>
               ))}
             </div>
-            {issues.length > 0 ? (
-              <p className="text-hero-red">لا يمكن تشغيل الحصة قبل إصلاح: {issues[0]}</p>
+            {issues.length > 0 || missingGame ? (
+              <p className="text-hero-red">لا يمكن تشغيل الحصة قبل إصلاح: {issues[0] ?? "اللعبة الرئيسية غير موجودة (ربما حُذفت). اختر لعبة أخرى من تعديل الحصة."}</p>
             ) : (
               <Button
                 size="xl"
@@ -251,14 +262,26 @@ export function LessonRunner() {
 
         {started && !ended && !results[stage] && (
           <div key={`${stage}-${runKey}`} className="size-full">
-            {seg.kind === "warmup" && <WarmupActivity activity={seg.activity} onDone={finishActivity} />}
+            {seg.kind === "warmup" &&
+              (seg.activity.type === "questions" ? (
+                <QuestionsActivity kind="warmup" items={playableItems(seg.activity.questions)} instructions={seg.activity.instructions} paused={paused || intro} onDone={finishActivity} />
+              ) : (
+                <WarmupActivity activity={seg.activity} onDone={finishActivity} />
+              ))}
             {seg.kind === "main" &&
-              (seg.game.type === "train" ? (
+              (readyGame && ReadyGame ? (
+                <ReadyGame game={readyGame} questions={readyQs} paused={paused || intro} onFinish={finishActivity} />
+              ) : seg.game.gameId ? null : seg.game.type === "train" ? (
                 <TrainGame game={mainGameConfig(plan)} questions={[]} presetQuestions={mainQs} paused={paused || intro} onFinish={finishActivity} />
               ) : ChoiceGame ? (
                 <ChoiceGame game={mainGameConfig(plan)} questions={choiceQs} paused={paused || intro} onFinish={finishActivity} />
               ) : null)}
-            {seg.kind === "challenge" && <ChallengeActivity segment={seg} paused={paused || intro} onDone={finishActivity} />}
+            {seg.kind === "challenge" &&
+              (seg.items ? (
+                <QuestionsActivity kind="challenge" items={playableItems(seg.items)} timer={seg.timer} teams={seg.mode === "teams" ? seg.teams : []} paused={paused || intro} onDone={finishActivity} />
+              ) : (
+                <ChallengeActivity segment={seg} paused={paused || intro} onDone={finishActivity} />
+              ))}
           </div>
         )}
 
@@ -331,7 +354,7 @@ export function LessonRunner() {
                   return (
                     <li key={s.kind} className="flex flex-wrap items-center gap-3 rounded-2xl bg-hero-ink/5 p-3">
                       <span className="size-4 rounded-full" style={{ background: SEGMENT_META[s.kind].color }} />
-                      <span className="flex-1 font-bold">{SEGMENT_META[s.kind].label}: {s.kind === "main" ? gameMeta(s.game.type).name : s.title}</span>
+                      <span className="flex-1 font-bold">{SEGMENT_META[s.kind].label}: {s.kind === "main" ? (readyGame?.title ?? gameMeta(s.game.type).name) : s.title}</span>
                       <span className="text-hero-muted">الوقت: {fmt(formatDuration(used[i] * 1000))} من {fmt(s.minutes)} د</span>
                       <span className="font-bold">
                         {r ? (r.correct + r.wrong ? `نجاح ${fmt(successRate(r.correct, r.wrong))}٪` : "مكتمل") : "لم يكتمل"}

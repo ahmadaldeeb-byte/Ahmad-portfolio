@@ -16,7 +16,8 @@ Output: one file `curricula/<id>.json` in the format of `src/lib/curriculum/sche
   a unit or lesson. If a title is unreadable, keep your best reading and say so
   in your report to the user; the teacher can fix it in the import preview.
 - **Every question has `origin`:**
-  - `"textbook"`: an exercise that is in the book, with its `page`.
+  - `"textbook"`: an exercise that is in the book (same task, same numbers or words), with its `page`.
+    A question you wrote from the book's words (e.g. "which word starts with …") is `"generated"`.
   - `"generated"`: a question you wrote for practice. It must stay inside what
     the lesson teaches, use the book's numbers and words, and suit the grade.
 - **Answers must be right.** Work every answer out yourself. The checker also
@@ -55,17 +56,31 @@ Output: one file `curricula/<id>.json` in the format of `src/lib/curriculum/sche
    the subject (see the table below). For a math lesson, prefer the math game
    that teaches that skill and give a `level` 1–3. Leave `games` empty to let the
    app choose (quiz / memory / word maker from the questions).
-6. **Write the JSON:**
+6. **Write a guide per lesson** (`guide`): `objectives` (2–4), a short `explanation`
+   for the teacher, `examples` from the book's numbers or words, and a `warmup`
+   activity (3 minutes). These are platform suggestions, never quoted as the book.
+   The app builds each lesson's ready 15-minute plan from them: warm-up with three
+   lesson questions, the first game, and a closing challenge from the book's exercises.
+7. **Write the JSON:**
    - `id`: country-grade-subject-semester-edition, e.g. `jo-g1-math-s1-2022`.
    - Also fill `textbook`, `generatedBy` (e.g. "Claude Code from the textbook PDF")
      and `generatedAt` (ISO date).
-7. **Check:** run `node scripts/curriculum/check.mjs <file>`. Fix every ✗ error
+8. **Check:** run `node scripts/curriculum/check.mjs <file>`. Fix every ✗ error
    and look at every ! warning.
-8. **Report to the user:**
+9. **Report to the user:**
    - Counts of units, lessons, questions (from the book / generated) and games.
    - Pages you could not read.
    - Lessons with few questions.
    - Anything the teacher should review in the preview.
+
+## Built-in books
+
+A file in `curricula/` that `src/content/catalog.ts` imports is built into the app:
+its units, lessons, games and ready lesson plans exist on every start, and its
+questions are added to the question bank once (never again, so teacher edits and
+deletions stay). Add a new textbook there only when the user approves it.
+Equations inside Arabic sentences are wrapped in Unicode isolates (U+2066 … U+2069)
+so they read left-to-right as in the books.
 
 ## Game templates
 

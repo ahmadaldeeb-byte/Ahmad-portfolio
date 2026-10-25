@@ -1,10 +1,13 @@
 "use client";
-import { CheckCircle2, Cloud, Copy, Eye, Minus, Play, Plus, RefreshCw, Save, TriangleAlert } from "lucide-react";
+import { CheckCircle2, Cloud, Copy, Eye, Minus, Play, Plus, RefreshCw, Save, Trash2, TriangleAlert } from "lucide-react";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { gameMeta, gradeLabel, subjectLabel } from "@/lib/constants";
 import {
+  CHOICE_KINDS,
+  builtinPlanById,
+  customCopy,
   buildTrainQuestion,
   challengeQuestions,
   duplicatePlan,
@@ -16,7 +19,9 @@ import {
   warmupQuestions,
 } from "@/lib/lessons/engine";
 import { SEGMENT_META, type LessonPlan, type LessonSegment } from "@/lib/lessons/types";
-import type { GameType } from "@/lib/types";
+import { isMathExpression } from "@/lib/arabic";
+import { toPlayable } from "@/lib/questions";
+import type { GameType, Question } from "@/lib/types";
 import { cn } from "@/lib/utils";
 import { useData } from "@/store/data";
 import { toast } from "../Toast";
@@ -29,28 +34,40 @@ export const MAIN_GAME_OPTIONS: GameType[] = ["train", "quiz", "balloons", "race
 export function LessonEditor() {
   const params = useSearchParams();
   const router = useRouter();
-  const { ready, lessons, saveLesson } = useData();
+  const { ready, lessons, saveLesson, titleOverrides, builtins, games, questions: bank } = useData();
   const id = params.get("id");
-  const stored = lessons.find((l) => l.id === id);
+  const builtin = useMemo(() => builtinPlanById(id, titleOverrides), [id, titleOverrides]);
+  const stored = lessons.find((l) => l.id === id) ?? builtin ?? undefined;
   const [plan, setPlan] = useState<LessonPlan | null>(null);
   const [selected, setSelected] = useState(0);
   const [saveState, setSaveState] = useState<"saved" | "saving">("saved");
+  const copying = useRef(false);
 
   useEffect(() => {
     if (stored && (!plan || plan.id !== stored.id)) setPlan(structuredClone(stored));
   }, [stored, plan]);
 
-  // Auto-save edits.
+  // Auto-save edits. The ready plan of a lesson is never changed: the first edit saves the teacher's own copy.
   useEffect(() => {
     if (!plan || !stored || plan === stored) return;
     if (JSON.stringify(plan) === JSON.stringify(stored)) return;
+    if (stored.builtin) {
+      if (copying.current) return;
+      copying.current = true;
+      const copy = customCopy(plan);
+      void saveLesson(copy).then(() => {
+        toast("حُفظت تعديلاتك في نسخة خاصة بك؛ الحصة الجاهزة الأصلية لم تتغيّر");
+        router.replace(`/lessons/edit?id=${copy.id}`);
+      });
+      return;
+    }
     setSaveState("saving");
     const t = setTimeout(async () => {
       await saveLesson(plan);
       setSaveState("saved");
     }, 600);
     return () => clearTimeout(t);
-  }, [plan, stored, saveLesson]);
+  }, [plan, stored, saveLesson, router]);
 
   const issues = useMemo(() => (plan ? validatePlan(plan) : []), [plan]);
 
@@ -67,6 +84,10 @@ export function LessonEditor() {
     });
   const total = totalMinutes(plan);
   const [warm, main, ch] = plan.segments;
+  // Ready games of this lesson: built-in ones and the teacher's saved copies.
+  const lessonGames = [...games, ...builtins].filter((g, i, all) => g.lessonId === plan.lessonId && all.findIndex((x) => x.id === g.id) === i);
+  const WA = warm.activity.type === "numberLine" ? warm.activity : null;
+  const lessonBank = bank.filter((q) => q.lessonId === plan.lessonId && CHOICE_KINDS.includes(q.kind));
 
   return (
     <div className="flex flex-col gap-5">
@@ -81,10 +102,15 @@ export function LessonEditor() {
           <p className="text-lg text-hero-muted">{plan.lessonTitle}</p>
         </div>
         <span className="inline-flex items-center gap-2 rounded-full bg-white px-4 py-2 font-bold text-hero-muted shadow-soft" aria-live="polite">
-          {saveState === "saving" ? <Cloud className="size-5 animate-pulse" /> : <CheckCircle2 className="size-5 text-hero-green" />}
-          {saveState === "saving" ? "جارٍ الحفظ..." : "محفوظة تلقائيًا"}
+          {stored.builtin ? <Badge color="#E64980">✨ الحصة الجاهزة</Badge> : saveState === "saving" ? <Cloud className="size-5 animate-pulse" /> : <CheckCircle2 className="size-5 text-hero-green" />}
+          {stored.builtin ? "" : saveState === "saving" ? "جارٍ الحفظ..." : "محفوظة تلقائيًا"}
         </span>
       </div>
+      {stored.builtin && (
+        <p className="rounded-3xl bg-hero-purple/10 p-4 text-lg" data-testid="builtin-plan-note">
+          هذه الحصة الجاهزة للدرس. يمكنك تشغيلها مباشرة، وأي تعديل تجريه يُحفظ تلقائيًا في <b>نسخة خاصة بك</b> دون تغيير الأصل.
+        </p>
+      )}
 
       <Card className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3" >
         <Info label="الدرس" value={plan.lessonTitle} />
@@ -92,7 +118,7 @@ export function LessonEditor() {
         <Info label="الوحدة" value={`${plan.unitTitle} (الفصل ${plan.semester === 1 ? "الأول" : "الثاني"})`} />
         <Info label="مدة الحصة" value={`${total} دقيقة`} testId="lesson-total" />
         <div className="sm:col-span-2">
-          <p className="text-sm text-hero-muted">الأهداف التعليمية (صياغة مقترحة من قالب المنصة، غير منقولة من الكتاب):</p>
+          <p className="text-sm text-hero-muted">الأهداف التعليمية (صياغة مقترحة من المنصة، غير منقولة من الكتاب):</p>
           <ul className="list-inside list-disc">
             {plan.objectives.map((o) => (
               <li key={o}>{o}</li>
@@ -128,18 +154,35 @@ export function LessonEditor() {
         onMinutes={(m) => setSeg(selected as 0 | 1 | 2, { minutes: m })}
         onPreview={() => router.push(`/lesson-run?id=${plan.id}&stage=${selected}&preview=1`)}
       >
-        {selected === 0 && (
+        {selected === 0 && warm.activity.type === "questions" && (
           <div className="flex flex-col gap-3">
-            <p className="text-hero-muted">شخصية كرتونية تقف على خط الأعداد من {warm.activity.min} إلى {warm.activity.max}، والطلاب يجيبون دون مؤقت.</p>
-            {warm.activity.questions.map((q, k) => {
+            <Field label="تعليمات النشاط التمهيدي للمعلم">
+              <textarea
+                className={cn(inputClass, "min-h-24")}
+                value={warm.activity.instructions}
+                onChange={(e) => setSeg(0, { activity: { ...warm.activity, instructions: e.target.value } as typeof warm.activity })}
+              />
+            </Field>
+            <QuestionList
+              label="أسئلة التمهيد"
+              items={warm.activity.questions}
+              bank={lessonBank}
+              onChange={(questions) => setSeg(0, { activity: { ...warm.activity, questions } as typeof warm.activity })}
+            />
+          </div>
+        )}
+        {selected === 0 && WA && (
+          <div className="flex flex-col gap-3">
+            <p className="text-hero-muted">شخصية كرتونية تقف على خط الأعداد من {WA.min} إلى {WA.max}، والطلاب يجيبون دون مؤقت.</p>
+            {WA.questions.map((q, k) => {
               const a = warmupAnswer(q);
-              const bad = a < warm.activity.min || a > warm.activity.max;
+              const bad = a < WA.min || a > WA.max;
               return (
                 <div key={k} className={cn("flex flex-wrap items-center gap-2 rounded-2xl border-2 p-2", bad ? "border-hero-red" : "border-hero-ink/10")}>
                   <span className="font-bold">سؤال {k + 1}: ما العدد الذي يأتي</span>
                   <Segmented
                     value={q.dir}
-                    onChange={(dir) => setSeg(0, { activity: { ...warm.activity, questions: warm.activity.questions.map((x, j) => (j === k ? { ...x, dir } : x)) } })}
+                    onChange={(dir) => setSeg(0, { activity: { ...WA, questions: WA.questions.map((x, j) => (j === k ? { ...x, dir } : x)) } })}
                     options={[{ value: "before" as const, label: "قبل" }, { value: "after" as const, label: "بعد" }]}
                   />
                   <input
@@ -147,19 +190,44 @@ export function LessonEditor() {
                     aria-label={`عدد سؤال التمهيد ${k + 1}`}
                     className={cn(inputClass, "w-24")}
                     value={q.n}
-                    onChange={(e) => setSeg(0, { activity: { ...warm.activity, questions: warm.activity.questions.map((x, j) => (j === k ? { ...x, n: Math.round(Number(e.target.value) || 0) } : x)) } })}
+                    onChange={(e) => setSeg(0, { activity: { ...WA, questions: WA.questions.map((x, j) => (j === k ? { ...x, n: Math.round(Number(e.target.value) || 0) } : x)) } })}
                   />
                   <span>؟ الإجابة: <b>{a}</b></span>
                 </div>
               );
             })}
-            <Button variant="secondary" size="sm" className="w-fit" icon={<RefreshCw className="size-5" />} onClick={() => setSeg(0, { activity: { ...warm.activity, questions: warmupQuestions(warm.activity.min, warm.activity.max) } })}>
+            <Button variant="secondary" size="sm" className="w-fit" icon={<RefreshCw className="size-5" />} onClick={() => setSeg(0, { activity: { ...WA, questions: warmupQuestions(WA.min, WA.max) } })}>
               أسئلة تمهيد جديدة
             </Button>
           </div>
         )}
 
-        {selected === 1 && (
+        {selected === 1 && main.game.gameId && (
+          <div className="flex flex-col gap-4">
+            <Field label="اللعبة الجاهزة لهذا الدرس" group>
+              <div className="flex flex-wrap gap-2">
+                {lessonGames.map((g) => (
+                  <button
+                    key={g.id}
+                    type="button"
+                    aria-pressed={main.game.gameId === g.id}
+                    onClick={() => setSeg(1, { game: { ...main.game, gameId: g.id, type: g.type }, title: gameMeta(g.type).name })}
+                    className={cn("min-h-12 cursor-pointer rounded-2xl border-2 px-4 py-2 text-start font-bold", main.game.gameId === g.id ? "border-hero-blue bg-hero-blue/10 text-hero-blue" : "border-hero-ink/10 bg-white")}
+                  >
+                    {g.title} {!g.builtin && <Badge color="#7950F2" className="ms-1">نسختي</Badge>}
+                  </button>
+                ))}
+              </div>
+            </Field>
+            {lessonGames.every((g) => g.id !== main.game.gameId) && <p className="text-hero-red">اللعبة المختارة غير موجودة؛ اختر لعبة أخرى.</p>}
+            <p className="rounded-2xl bg-hero-blue/10 p-3">
+              لتعديل أسئلة اللعبة أو وقتها:{" "}
+              <Link className="font-bold text-hero-blue underline" href={`/create?from=${encodeURIComponent(main.game.gameId)}`}>خصّص هذه اللعبة</Link>
+              ، فتُحفظ نسخة مخصّصة مرتبطة بالدرس وتظهر هنا للاختيار.
+            </p>
+          </div>
+        )}
+        {selected === 1 && !main.game.gameId && (
           <div className="flex flex-col gap-5">
             <Field label="اللعبة الرئيسية" group>
               <Segmented
@@ -197,8 +265,9 @@ export function LessonEditor() {
                 ))}
               </div>
             )}
-            <p className="text-hero-muted">الأسئلة مختلفة عن أسئلة اللعبة الرئيسية، ضمن النطاق {ch.range.min} إلى {ch.range.max}.</p>
-            {ch.questions.map((q, k) => {
+            {ch.items && <QuestionList label="أسئلة التحدي (مع الإجابات الصحيحة)" items={ch.items} bank={lessonBank} onChange={(items) => setSeg(2, { items })} />}
+            {!ch.items && <p className="text-hero-muted">الأسئلة مختلفة عن أسئلة اللعبة الرئيسية، ضمن النطاق {ch.range.min} إلى {ch.range.max}.</p>}
+            {!ch.items && ch.questions.map((q, k) => {
               const ok = isValidTrainQuestion(q, ch.range.min, ch.range.max);
               const kind = q.kind === "challenge" ? "missing" : q.kind;
               return (
@@ -221,9 +290,11 @@ export function LessonEditor() {
                 </div>
               );
             })}
-            <Button variant="secondary" size="sm" className="w-fit" icon={<RefreshCw className="size-5" />} onClick={() => setSeg(2, { questions: challengeQuestions(ch.range.min, ch.range.max) })}>
-              أسئلة تحدٍّ جديدة
-            </Button>
+            {!ch.items && (
+              <Button variant="secondary" size="sm" className="w-fit" icon={<RefreshCw className="size-5" />} onClick={() => setSeg(2, { questions: challengeQuestions(ch.range.min, ch.range.max) })}>
+                أسئلة تحدٍّ جديدة
+              </Button>
+            )}
           </div>
         )}
       </SegmentPanel>
@@ -237,8 +308,14 @@ export function LessonEditor() {
 
       <div className="flex flex-wrap justify-between gap-3">
         <div className="flex flex-wrap gap-2">
-          <Button variant="secondary" icon={<Save className="size-5" />} onClick={async () => { await saveLesson(plan); toast("تم حفظ الحصة"); }}>حفظ الحصة</Button>
-          <Button variant="secondary" icon={<Copy className="size-5" />} onClick={async () => { const c = await saveLesson(duplicatePlan(plan)); toast("تم نسخ الحصة"); router.push(`/lessons/edit?id=${c.id}`); }}>نسخ الحصة</Button>
+          {stored.builtin ? (
+            <Button variant="secondary" icon={<Save className="size-5" />} onClick={async () => { const c = await saveLesson(customCopy(plan)); toast("حُفظت نسخة مخصّصة من الحصة"); router.push(`/lessons/edit?id=${c.id}`); }}>حفظ نسخة مخصّصة</Button>
+          ) : (
+            <>
+              <Button variant="secondary" icon={<Save className="size-5" />} onClick={async () => { await saveLesson(plan); toast("تم حفظ الحصة"); }}>حفظ الحصة</Button>
+              <Button variant="secondary" icon={<Copy className="size-5" />} onClick={async () => { const c = await saveLesson(duplicatePlan(plan)); toast("تم نسخ الحصة"); router.push(`/lessons/edit?id=${c.id}`); }}>نسخ الحصة</Button>
+            </>
+          )}
         </div>
         <Button
           size="xl"
@@ -246,7 +323,7 @@ export function LessonEditor() {
           disabled={issues.length > 0}
           icon={<Play className="size-8 fill-current" />}
           onClick={async () => {
-            await saveLesson(plan);
+            if (!stored.builtin) await saveLesson(plan);
             router.push(`/lesson-run?id=${plan.id}`);
           }}
         >
@@ -289,5 +366,61 @@ function SegmentPanel({ segment, onMinutes, onPreview, children }: { segment: Le
       <Badge color={meta.color} className="w-fit">{segment.kind === "warmup" ? "بدون مؤقت ضاغط على الطلاب" : segment.kind === "main" ? "تطبيق المفهوم باللعب" : "قياس الفهم"}</Badge>
       {children}
     </Card>
+  );
+}
+
+/** Editable list of lesson questions (warm-up or challenge): text, choices, right answer; add from the lesson's bank. */
+function QuestionList({ label, items, bank, onChange }: { label: string; items: Question[]; bank: Question[]; onChange: (items: Question[]) => void }) {
+  const set = (k: number, patch: Partial<Question>) => onChange(items.map((q, j) => (j === k ? { ...q, ...patch } : q)));
+  const unused = bank.filter((b) => !items.some((q) => q.id === b.id));
+  return (
+    <div className="flex flex-col gap-3" data-testid="plan-questions">
+      <p className="font-bold">{label} ({items.length})</p>
+      {items.map((q, k) => {
+        const ok = !!toPlayable(q);
+        return (
+          <div key={`${q.id}-${k}`} className={cn("flex flex-col gap-2 rounded-2xl border-2 p-3", ok ? "border-hero-ink/10" : "border-hero-red")} data-testid="plan-question">
+            <div className="flex flex-wrap items-center gap-2">
+              <span className="font-bold">سؤال {k + 1}</span>
+              {q.origin && <Badge color={q.origin === "textbook" ? "#4361EE" : "#E67700"}>{q.origin === "textbook" ? `📘 من الكتاب${q.page ? ` ص${q.page}` : ""}` : "✨ مولّد"}</Badge>}
+              <input aria-label={`نص السؤال ${k + 1}`} dir={isMathExpression(q.prompt) ? "ltr" : undefined} className={cn(inputClass, "min-w-56 flex-1")} value={q.prompt} onChange={(e) => set(k, { prompt: e.target.value })} />
+              <IconButton label="حذف السؤال" className="bg-hero-red/10 text-hero-red shadow-none" onClick={() => onChange(items.filter((_, j) => j !== k))}>
+                <Trash2 className="size-5" />
+              </IconButton>
+            </div>
+            {q.kind === "mcq" && (
+              <div className="flex flex-wrap gap-2">
+                {q.choices.map((c, i) => (
+                  <label key={i} className={cn("flex items-center gap-1 rounded-xl border-2 px-2", i === q.correctIndex ? "border-hero-green" : "border-hero-ink/10")}>
+                    <input type="radio" name={`correct-${q.id}-${k}`} checked={i === q.correctIndex} onChange={() => set(k, { correctIndex: i })} aria-label={`الإجابة الصحيحة ${i + 1}`} />
+                    <input className="w-28 bg-transparent p-1 outline-none" value={c} aria-label={`الخيار ${i + 1}`} onChange={(e) => set(k, { choices: q.choices.map((x, j) => (j === i ? e.target.value : x)) })} />
+                  </label>
+                ))}
+              </div>
+            )}
+            {q.kind === "truefalse" && (
+              <Segmented value={q.correctIndex === 1 ? 1 : 0} onChange={(v) => set(k, { correctIndex: v })} options={[{ value: 0, label: "صح" }, { value: 1, label: "خطأ" }]} />
+            )}
+            {q.kind === "arithmetic" && <p className="text-sm text-hero-muted">مسألة حسابية: تُحسب الإجابة وتُولَّد الخيارات تلقائيًا.</p>}
+          </div>
+        );
+      })}
+      {unused.length > 0 && (
+        <select
+          aria-label="إضافة سؤال من أسئلة الدرس"
+          className={cn(inputClass, "w-full max-w-xl")}
+          value=""
+          onChange={(e) => {
+            const q = unused.find((b) => b.id === e.target.value);
+            if (q) onChange([...items, structuredClone(q)]);
+          }}
+        >
+          <option value="">➕ إضافة سؤال من أسئلة الدرس ({unused.length})</option>
+          {unused.map((b) => (
+            <option key={b.id} value={b.id}>{b.prompt}</option>
+          ))}
+        </select>
+      )}
+    </div>
   );
 }

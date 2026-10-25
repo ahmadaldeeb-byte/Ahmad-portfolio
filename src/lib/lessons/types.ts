@@ -1,4 +1,5 @@
-import type { GameType, Grade, Subject, Team } from "../types";
+import type { LessonGuide } from "@/content/curriculum/types";
+import type { GameType, Grade, Question, Subject, Team } from "../types";
 import type { TrainQuestion, TrainSettings } from "../train";
 
 export type SegmentKind = "warmup" | "main" | "challenge";
@@ -9,18 +10,33 @@ export interface WarmupQuestion {
   n: number;
 }
 
+export interface NumberLineActivity {
+  type: "numberLine";
+  min: number;
+  max: number;
+  questions: WarmupQuestion[];
+}
+
+/** A warm-up from the lesson's questions, with instructions for the teacher. */
+export interface QuestionsActivity {
+  type: "questions";
+  instructions: string;
+  questions: Question[];
+}
+
 export interface WarmupSegment {
   kind: "warmup";
   title: string;
   minutes: number;
-  activity: { type: "numberLine"; min: number; max: number; questions: WarmupQuestion[] };
+  activity: NumberLineActivity | QuestionsActivity;
 }
 
 export interface MainSegment {
   kind: "main";
   title: string;
   minutes: number;
-  game: { type: GameType; train: TrainSettings; points: number };
+  /** gameId: a ready game (built-in or saved) played as it is; otherwise the train settings below. */
+  game: { type: GameType; train: TrainSettings; points: number; gameId?: string };
 }
 
 export interface ChallengeSegment {
@@ -33,6 +49,8 @@ export interface ChallengeSegment {
   timer: number;
   range: { min: number; max: number };
   questions: TrainQuestion[];
+  /** Lesson questions; when present they are used instead of the train questions. */
+  items?: Question[];
 }
 
 export type LessonSegment = WarmupSegment | MainSegment | ChallengeSegment;
@@ -50,6 +68,9 @@ export interface LessonPlan {
   objectives: string[];
   template: string;
   segments: [WarmupSegment, MainSegment, ChallengeSegment];
+  /** The ready plan of a built-in lesson (read-only; editing it saves a copy). */
+  builtin?: boolean;
+  guide?: LessonGuide;
   createdAt: number;
   updatedAt: number;
 }

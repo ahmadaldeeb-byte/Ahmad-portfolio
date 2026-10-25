@@ -1,9 +1,14 @@
-import { findLesson, lessonTitle } from "@/content/curriculum";
-import { DEFAULT_TEAM_NAMES, TEAM_COLORS } from "../constants";
-import type { PlayableQuestion } from "../questions";
-import { generateTrainQuestions, trainPrompt, type TrainQuestion, type TrainSettings } from "../train";
+import { BUNDLE_TIME, findLesson, lessonBuiltinGames, lessonQuestions } from "@/content/catalog";
+import { lessonTitle } from "@/content/curriculum";
+import { DEFAULT_TEAM_NAMES, TEAM_COLORS, gameMeta } from "../constants";
+import { toPlayable, validateQuestion, type PlayableQuestion } from "../questions";
+import type { Question } from "../types";
+import { TRAIN_DEFAULTS, generateTrainQuestions, trainPrompt, type TrainQuestion, type TrainSettings } from "../train";
 import { randomInt, shuffle, uid } from "../utils";
 import type { ChallengeSegment, LessonPlan, MainSegment, WarmupQuestion, WarmupSegment } from "./types";
+
+const strip = (s: string) => s.replace(/[\u064B-\u0652]/g, "");
+const teams = () => [0, 1].map((i) => ({ name: DEFAULT_TEAM_NAMES[i], color: TEAM_COLORS[i] }));
 
 /**
  * Lesson Preparation Engine (version 1): builds a 15-minute plan from fixed
@@ -136,6 +141,70 @@ export function prepareLesson(lessonId: string, titleOverrides: Record<string, s
   };
 }
 
+/** Kinds a warm-up or closing challenge can ask (one answer to pick). */
+export const CHOICE_KINDS: Question["kind"][] = ["mcq", "truefalse", "arithmetic"];
+export const BUILTIN_PLAN_PREFIX = "plan_";
+
+/**
+ * The ready plan of a built-in lesson: warm-up (3 min) with the guide's
+ * instructions and three lesson questions, the lesson's first ready game
+ * (7 min), and a closing challenge (5 min) from the book's exercises.
+ * Always the same for the same lesson; it is never stored.
+ */
+export function builtinPlan(lessonId: string, titleOverrides: Record<string, string> = {}): LessonPlan | null {
+  const ref = findLesson(lessonId);
+  const game = lessonBuiltinGames(lessonId)[0];
+  const choice = lessonQuestions(lessonId).filter((q) => CHOICE_KINDS.includes(q.kind) && toPlayable(q));
+  if (!ref?.book.bundled || !game || choice.length === 0) return null;
+  const fromBook = choice.filter((q) => q.origin === "textbook");
+  const challengeItems = (fromBook.length >= 3 ? fromBook : choice).slice(-5);
+  const rest = choice.filter((q) => !challengeItems.includes(q));
+  const warmupItems = (rest.length ? rest : choice).slice(0, 3);
+  const title = lessonTitle(ref.lesson, titleOverrides);
+  return {
+    id: `${BUILTIN_PLAN_PREFIX}${lessonId}`,
+    title: `حصة: ${strip(title)}`,
+    lessonId,
+    lessonTitle: title,
+    unitTitle: ref.unit.title,
+    semester: ref.unit.semester,
+    grade: ref.book.grade,
+    subject: ref.book.subject,
+    objectives: ref.lesson.guide?.objectives ?? [],
+    guide: ref.lesson.guide,
+    template: "ready",
+    builtin: true,
+    segments: [
+      {
+        kind: "warmup",
+        title: "نشاط تمهيدي",
+        minutes: 3,
+        activity: { type: "questions", instructions: ref.lesson.guide?.warmup ?? "", questions: structuredClone(warmupItems) },
+      },
+      { kind: "main", title: gameMeta(game.type).name, minutes: 7, game: { type: game.type, gameId: game.id, points: game.settings.pointsPerCorrect, train: { ...TRAIN_DEFAULTS } } },
+      { kind: "challenge", title: "تحدي الأبطال", minutes: 5, mode: "class", teams: teams(), timer: 0, range: { min: 0, max: 20 }, questions: [], items: structuredClone(challengeItems) },
+    ],
+    createdAt: BUNDLE_TIME,
+    updatedAt: BUNDLE_TIME,
+  };
+}
+
+/** A built-in plan by its id (`plan_<lessonId>`). */
+export function builtinPlanById(id: string | null | undefined, titleOverrides: Record<string, string> = {}) {
+  return id?.startsWith(BUILTIN_PLAN_PREFIX) ? builtinPlan(id.slice(BUILTIN_PLAN_PREFIX.length), titleOverrides) : null;
+}
+
+/** The teacher's own copy of a plan (the original stays as it is). */
+export function customCopy(plan: LessonPlan): LessonPlan {
+  const now = Date.now();
+  return { ...structuredClone(plan), id: uid("ls_"), builtin: false, title: plan.builtin ? `${plan.title} (نسختي)` : plan.title, createdAt: now, updatedAt: now };
+}
+
+/** Questions of a warm-up or challenge in the form the activity plays them. */
+export function playableItems(items: Question[]): PlayableQuestion[] {
+  return items.map(toPlayable).filter((p): p is PlayableQuestion => p !== null);
+}
+
 export function totalMinutes(plan: LessonPlan) {
   return plan.segments.reduce((a, s) => a + s.minutes, 0);
 }
@@ -151,19 +220,31 @@ export function validatePlan(plan: LessonPlan): string[] {
   const errs: string[] = [];
   for (const s of plan.segments) if (!(s.minutes >= 1 && s.minutes <= 30)) errs.push(`مدة «${s.title}» يجب أن تكون بين ١ و٣٠ دقيقة.`);
   const w = plan.segments[0].activity;
-  w.questions.forEach((q, i) => {
-    const a = warmupAnswer(q);
-    if (a < w.min || a > w.max || q.n < w.min || q.n > w.max) errs.push(`سؤال التمهيد ${i + 1} يخرج عن خط الأعداد.`);
-  });
+  if (w.type === "numberLine")
+    w.questions.forEach((q, i) => {
+      const a = warmupAnswer(q);
+      if (a < w.min || a > w.max || q.n < w.min || q.n > w.max) errs.push(`سؤال التمهيد ${i + 1} يخرج عن خط الأعداد.`);
+    });
+  else
+    w.questions.forEach((q, i) => {
+      if (validateQuestion(q).length || !toPlayable(q)) errs.push(`سؤال التمهيد ${i + 1} غير مكتمل.`);
+    });
   const c = plan.segments[2];
-  if (c.questions.length === 0) errs.push("أضف سؤالًا واحدًا على الأقل في التحدي الختامي.");
-  c.questions.forEach((q, i) => {
-    if (!isValidTrainQuestion(q, c.range.min, c.range.max)) errs.push(`سؤال التحدي ${i + 1} يخرج عن النطاق.`);
-  });
+  if (c.items) {
+    if (c.items.length === 0) errs.push("أضف سؤالًا واحدًا على الأقل في التحدي الختامي.");
+    c.items.forEach((q, i) => {
+      if (validateQuestion(q).length || !toPlayable(q)) errs.push(`سؤال التحدي ${i + 1} غير مكتمل.`);
+    });
+  } else {
+    if (c.questions.length === 0) errs.push("أضف سؤالًا واحدًا على الأقل في التحدي الختامي.");
+    c.questions.forEach((q, i) => {
+      if (!isValidTrainQuestion(q, c.range.min, c.range.max)) errs.push(`سؤال التحدي ${i + 1} يخرج عن النطاق.`);
+    });
+  }
   return errs;
 }
 
 export function duplicatePlan(plan: LessonPlan): LessonPlan {
   const now = Date.now();
-  return { ...structuredClone(plan), id: uid("ls_"), title: `${plan.title} (نسخة)`, createdAt: now, updatedAt: now };
+  return { ...structuredClone(plan), id: uid("ls_"), builtin: false, title: `${plan.title} (نسخة)`, createdAt: now, updatedAt: now };
 }

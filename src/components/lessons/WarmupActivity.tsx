@@ -7,7 +7,7 @@ import { Button } from "@/components/ui";
 import { FeedbackBurst } from "@/games/shared/Feedback";
 import { useFeedback } from "@/games/shared/useFeedback";
 import { warmupAnswer, warmupPrompt } from "@/lib/lessons/engine";
-import type { WarmupSegment } from "@/lib/lessons/types";
+import type { NumberLineActivity } from "@/lib/lessons/types";
 import { cn, formatNum, shuffle } from "@/lib/utils";
 import { useSettings } from "@/store/settings";
 
@@ -22,7 +22,7 @@ export interface ActivitySummary {
 }
 
 /** Warm-up: a character on a number line; «قبل» and «بعد» questions, no timer. */
-export function WarmupActivity({ activity, onDone }: { activity: WarmupSegment["activity"]; onDone: (s: ActivitySummary) => void }) {
+export function WarmupActivity({ activity, onDone }: { activity: NumberLineActivity; onDone: (s: ActivitySummary) => void }) {
   const numerals = useSettings((s) => s.numerals);
   const fmt = (n: number) => formatNum(n, numerals);
   const [qi, setQi] = useState(0);

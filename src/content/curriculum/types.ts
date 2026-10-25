@@ -17,9 +17,20 @@ export type PlannedGame =
   | "clock"
   | "measure";
 
+/** Teacher notes for a lesson (objectives, explanation, examples, warm-up). */
+export interface LessonGuide {
+  objectives: string[];
+  explanation: string;
+  examples?: string[];
+  warmup?: string;
+}
+
 export interface CurriculumLesson {
   id: string;
   title: string;
+  /** Textbook pages of the lesson. */
+  pages?: [number, number];
+  guide?: LessonGuide;
   /** Lesson-specific playable games. */
   games: GameType[];
   /** Planned lesson games, not built yet. */
@@ -59,6 +70,8 @@ export interface CurriculumImportInfo {
 
 export interface CurriculumBook {
   id: string;
+  /** Built into the app from a curriculum file in curricula/ (always available, read-only). */
+  bundled?: boolean;
   imported?: CurriculumImportInfo;
   grade: Grade;
   subject: Subject;

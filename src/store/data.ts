@@ -1,5 +1,6 @@
 "use client";
 import { create } from "zustand";
+import { BUNDLED_GAMES, BUNDLED_QUESTIONS, isBundledQuestion } from "@/content/catalog";
 import { SEED_VERSION, builtinGames, seedQuestions, seedQuestionsSince } from "@/content/seed";
 import { dataStore } from "@/lib/datastore";
 import type { CurriculumBook } from "@/content/curriculum/types";
@@ -45,6 +46,21 @@ interface DataState {
 
 let loading: Promise<void> | null = null;
 
+/**
+ * Puts the built-in curricula's questions into the question bank once.
+ * Safe to repeat: a question already added (even if the teacher edited or
+ * deleted it since) is never added again, so nothing is duplicated or reset.
+ */
+export async function seedBundledQuestions() {
+  const seeded = new Set((await dataStore().meta.get<string[]>("bundled-questions")) ?? []);
+  const fresh = BUNDLED_QUESTIONS.filter((q) => !seeded.has(q.id));
+  if (!fresh.length) return;
+  const existing = new Set((await dataStore().questions.all()).map((q) => q.id));
+  const add = fresh.filter((q) => !existing.has(q.id));
+  if (add.length) await dataStore().questions.putMany(add);
+  await dataStore().meta.set("bundled-questions", [...seeded, ...fresh.map((q) => q.id)]);
+}
+
 export const useData = create<DataState>()((set, get) => ({
   ready: false,
   error: null,
@@ -55,7 +71,7 @@ export const useData = create<DataState>()((set, get) => ({
   titleOverrides: {},
   firstRun: false,
   curricula: [],
-  builtins: builtinGames(),
+  builtins: [...builtinGames(), ...BUNDLED_GAMES],
 
   load: () => {
     loading ??= (async () => {
@@ -73,6 +89,7 @@ export const useData = create<DataState>()((set, get) => ({
             await dataStore().meta.set("seed-version", SEED_VERSION);
           }
         }
+        await seedBundledQuestions();
         const [games, questions, results, lessons, titleOverrides, curricula] = await Promise.all([
           dataStore().games.all(),
           dataStore().questions.all(),
@@ -101,7 +118,8 @@ export const useData = create<DataState>()((set, get) => ({
     if (!book) return;
     const importId = book.imported?.importId ?? id;
     for (const g of get().games.filter((x) => x.importId === importId)) await dataStore().games.remove(g.id);
-    for (const q of get().questions.filter((x) => x.importId === importId)) await dataStore().questions.remove(q.id);
+    // Questions of a built-in book stay in the bank (they belong to the built-in curriculum too).
+    for (const q of get().questions.filter((x) => x.importId === importId && !isBundledQuestion(x.id))) await dataStore().questions.remove(q.id);
     await dataStore().curricula.remove(id);
     await get().refresh();
   },

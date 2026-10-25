@@ -1,11 +1,16 @@
 "use client";
 import { motion } from "motion/react";
-import { ChevronDown, ExternalLink, Hourglass, Pencil, Sparkles, TriangleAlert, Undo2 } from "lucide-react";
+import { BookOpen, ChevronDown, ExternalLink, Eye, Hourglass, Pencil, Play, Sparkles, TriangleAlert, Undo2 } from "lucide-react";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useState } from "react";
-import { BOOKS, PLANNED_GAME_NAMES, lessonTitle, type CurriculumLesson } from "@/content/curriculum";
+import { CATALOG } from "@/content/catalog";
+import { PLANNED_GAME_NAMES, lessonTitle, type CurriculumBook, type CurriculumLesson } from "@/content/curriculum";
+import { builtinPlan } from "@/lib/lessons/engine";
+import { SEGMENT_META } from "@/lib/lessons/types";
 import { GRADES, SUBJECTS } from "@/lib/constants";
+import type { LessonPlan } from "@/lib/lessons/types";
+import type { GameConfig, Question } from "@/lib/types";
 import { cn } from "@/lib/utils";
 import { useData } from "@/store/data";
 import { GameCard } from "./GameCard";
@@ -15,23 +20,26 @@ import { Badge, Button, EmptyState, IconButton, PageHeader, Segmented, inputClas
 export function CurriculumView() {
   const params = useSearchParams();
   const router = useRouter();
-  const { builtins, games: saved, curricula, titleOverrides, setTitleOverride } = useData();
+  const { builtins, games: saved, curricula, titleOverrides, setTitleOverride, questions, lessons: plans } = useData();
   const [grade, setGrade] = useState(Number(params.get("grade")) || 1);
   const [subject, setSubject] = useState(params.get("subject") || "math");
-  // The built-in index and the curricula imported from files («📚 استيراد منهج»).
-  const books = [...BOOKS, ...curricula].filter((b) => b.grade === grade && b.subject === subject);
+  // The built-in textbooks and the curricula imported from files («📚 استيراد منهج»); an imported copy of a built-in book is not shown twice.
+  const books = [...CATALOG, ...curricula.filter((c) => !CATALOG.some((b) => b.id === c.id))].filter((b) => b.grade === grade && b.subject === subject);
   const [bookId, setBookId] = useState(params.get("book"));
-  const book = books.find((b) => b.id === bookId) ?? books[0];
   const [semester, setSemester] = useState<1 | 2>(1);
+  const allSemesters = [...new Set(books.flatMap((b) => b.units.map((u) => u.semester)))].sort();
+  const pickedSemester = allSemesters.includes(semester) ? semester : (allSemesters[0] ?? 1);
+  const semesterBooks = books.filter((b) => b.units.some((u) => u.semester === pickedSemester));
+  const book: CurriculumBook | undefined = semesterBooks.find((b) => b.id === bookId) ?? semesterBooks[0];
+  const [tab, setTab] = useState<"guide" | "games" | "plan" | "edit">("guide");
   const [openUnit, setOpenUnit] = useState<string | null>(params.get("unit"));
   const [openLesson, setOpenLesson] = useState<string | null>(params.get("lesson"));
   const [editing, setEditing] = useState<string | null>(null);
   const [draft, setDraft] = useState("");
 
-  // A book for one semester only shows that semester without a switch.
-  const semesters = [...new Set(book?.units.map((u) => u.semester) ?? [])];
-  const shownSemester = semesters.includes(semester) ? semester : (semesters[0] ?? 1);
-  const lessonGames = (l: CurriculumLesson) => [...builtins, ...saved].filter((g) => g.lessonId === l.id);
+  const shownSemester = pickedSemester;
+  // Built-in games and the teacher's copies (a saved game replaces a built-in one with the same id).
+  const lessonGames = (l: CurriculumLesson) => [...saved, ...builtins].filter((g, i, all) => g.lessonId === l.id && all.findIndex((x) => x.id === g.id) === i);
 
   return (
     <div className="flex flex-col gap-6">
@@ -57,8 +65,15 @@ export function CurriculumView() {
         />
       ) : (
         <>
-          {books.length > 1 && (
-            <Segmented value={book.id} onChange={setBookId} options={books.map((b) => ({ value: b.id, label: b.imported ? `📚 ${b.imported.title}` : `الفهرس المدمج — ${b.source.name}` }))} />
+          {allSemesters.length > 1 && (
+            <Segmented
+              value={shownSemester}
+              onChange={setSemester}
+              options={allSemesters.map((s) => ({ value: s, label: s === 1 ? "الفصل الدراسي الأول" : "الفصل الدراسي الثاني" }))}
+            />
+          )}
+          {semesterBooks.length > 1 && (
+            <Segmented value={book.id} onChange={setBookId} options={semesterBooks.map((b) => ({ value: b.id, label: b.bundled ? `📘 ${b.source.name}` : b.imported ? `📚 ${b.imported.title}` : `الفهرس المؤقت — ${b.source.name}` }))} />
           )}
           <div className={cn("flex gap-3 rounded-3xl p-4", book.source.status === "verified" ? "bg-hero-green/10" : "bg-hero-yellow/25")} data-testid="curriculum-source">
             <TriangleAlert className="size-6 shrink-0 text-[#E67700]" />
@@ -76,16 +91,6 @@ export function CurriculumView() {
             </div>
           </div>
 
-          {semesters.length > 1 && (
-            <Segmented
-              value={shownSemester}
-              onChange={setSemester}
-              options={[
-                { value: 1 as const, label: "الفصل الدراسي الأول" },
-                { value: 2 as const, label: "الفصل الدراسي الثاني" },
-              ]}
-            />
-          )}
 
           <div className="flex flex-col gap-3">
             {book.units
@@ -136,7 +141,7 @@ export function CurriculumView() {
                                   </button>
                                 )}
                                 {games.length > 0 && <Badge color="#40C057">{games.length} لعبة جاهزة</Badge>}
-                                {l.template && <Badge color="#E64980">✨ قالب حصة</Badge>}
+                                {(l.template || book.bundled) && <Badge color="#E64980">✨ حصة جاهزة</Badge>}
                                 {editing !== l.id && (
                                   <IconButton label="تعديل عنوان الدرس" className="bg-hero-ink/5 shadow-none" onClick={() => { setEditing(l.id); setDraft(lessonTitle(l, titleOverrides)); }}>
                                     <Pencil className="size-5" />
@@ -150,34 +155,20 @@ export function CurriculumView() {
                               </div>
                               {lOpen && (
                                 <motion.div initial={{ opacity: 0, y: -6 }} animate={{ opacity: 1, y: 0 }} className="flex flex-col gap-4 border-t border-hero-ink/5 p-4">
-                                  {l.template && (
-                                    <Button
-                                      className="w-fit bg-gradient-to-l from-hero-purple to-hero-pink"
-                                      icon={<Sparkles className="size-5" />}
-                                      onClick={() => router.push(`/lessons/new?lesson=${l.id}`)}
-                                    >
-                                      حضّر حصة لهذا الدرس
-                                    </Button>
-                                  )}
-                                  {games.length > 0 ? (
-                                    <div className="grid gap-5 sm:grid-cols-2 xl:grid-cols-3">
-                                      {games.map((g, k) => (
-                                        <GameCard key={g.id} game={g} index={k} />
-                                      ))}
-                                    </div>
-                                  ) : (
-                                    <p className="text-hero-muted">لا توجد لعبة جاهزة مرتبطة بهذا الدرس بعد.</p>
-                                  )}
-                                  {l.planned.length > 0 && (
-                                    <div className="flex flex-wrap items-center gap-2">
-                                      <span className="text-sm text-hero-muted">ألعاب مخطط لها لهذا الدرس:</span>
-                                      {l.planned.map((p) => (
-                                        <Badge key={p} color="#868E96">
-                                          <Hourglass className="size-4" /> {PLANNED_GAME_NAMES[p]} — قيد التطوير
-                                        </Badge>
-                                      ))}
-                                    </div>
-                                  )}
+                                  <LessonPanel
+                                    lesson={l}
+                                    title={lessonTitle(l, titleOverrides)}
+                                    bundled={!!book.bundled}
+                                    tab={tab}
+                                    setTab={setTab}
+                                    games={games}
+                                    bank={questions.filter((q) => q.lessonId === l.id)}
+                                    plan={book.bundled ? builtinPlan(l.id, titleOverrides) : null}
+                                    myPlans={plans.filter((p) => p.lessonId === l.id)}
+                                    grade={grade}
+                                    subject={subject}
+                                    onPrepare={() => router.push(`/lessons/new?lesson=${l.id}`)}
+                                  />
                                 </motion.div>
                               )}
                             </li>
@@ -190,6 +181,177 @@ export function CurriculumView() {
               })}
           </div>
         </>
+      )}
+    </div>
+  );
+}
+
+type Tab = "guide" | "games" | "plan" | "edit";
+const TABS: { id: Tab; label: string }[] = [
+  { id: "guide", label: "📖 شرح الدرس" },
+  { id: "games", label: "🎮 الألعاب الجاهزة" },
+  { id: "plan", label: "✨ الحصة الجاهزة" },
+  { id: "edit", label: "✏️ تعديل المحتوى" },
+];
+
+/** A lesson: its explanation, ready games, ready lesson plan and where to edit its content. */
+function LessonPanel({
+  lesson,
+  title,
+  bundled,
+  tab: picked,
+  setTab,
+  games,
+  bank,
+  plan,
+  myPlans,
+  grade,
+  subject,
+  onPrepare,
+}: {
+  lesson: CurriculumLesson;
+  title: string;
+  bundled: boolean;
+  tab: Tab;
+  setTab: (t: Tab) => void;
+  games: GameConfig[];
+  bank: Question[];
+  plan: LessonPlan | null;
+  myPlans: LessonPlan[];
+  grade: number;
+  subject: string;
+  onPrepare: () => void;
+}) {
+  const g = lesson.guide;
+  const fromBook = bank.filter((q) => q.origin === "textbook").length;
+  // A lesson without a guide (imported or provisional) opens on its games.
+  const tab = picked === "guide" && !g ? "games" : picked;
+  return (
+    <div className="flex flex-col gap-4" data-testid="lesson-panel">
+      <div className="flex flex-wrap gap-2" role="tablist">
+        {TABS.map((t) => (
+          <button
+            key={t.id}
+            type="button"
+            role="tab"
+            aria-selected={tab === t.id}
+            onClick={() => setTab(t.id)}
+            className={cn("min-h-12 cursor-pointer rounded-2xl px-4 font-display text-lg font-bold", tab === t.id ? "bg-hero-blue text-white" : "bg-hero-ink/5")}
+          >
+            {t.label}
+          </button>
+        ))}
+      </div>
+
+      {tab === "guide" &&
+        (g ? (
+          <div className="flex flex-col gap-3" data-testid="lesson-guide">
+            {lesson.pages && <Badge color="#4361EE" className="w-fit"><BookOpen className="size-4" /> صفحات الكتاب {lesson.pages[0]}–{lesson.pages[1]}</Badge>}
+            <div>
+              <h3 className="text-lg font-extrabold">الأهداف التعليمية</h3>
+              <ul className="list-inside list-disc">{g.objectives.map((o) => <li key={o}>{o}</li>)}</ul>
+            </div>
+            <div>
+              <h3 className="text-lg font-extrabold">شرح مبسّط للمعلم</h3>
+              <p>{g.explanation}</p>
+            </div>
+            {g.examples?.length ? (
+              <div>
+                <h3 className="text-lg font-extrabold">أمثلة</h3>
+                <div className="flex flex-wrap gap-2">{g.examples.map((e) => <span key={e} dir={/[\u0621-\u064A]/.test(e) ? undefined : "ltr"} className="rounded-xl bg-hero-yellow/30 px-3 py-1 font-bold">{e}</span>)}</div>
+              </div>
+            ) : null}
+            {g.warmup && (
+              <div>
+                <h3 className="text-lg font-extrabold">النشاط التمهيدي</h3>
+                <p>{g.warmup}</p>
+              </div>
+            )}
+            <p className="text-sm text-hero-muted">الأهداف والشرح والأنشطة صياغة مقترحة من المنصة اعتمادًا على مفاهيم الدرس، وليست منقولة من الكتاب.</p>
+          </div>
+        ) : (
+          <p className="text-hero-muted">لا يوجد شرح لهذا الدرس بعد{bundled ? "" : " (هذا الدرس من فهرس مؤقت)"}.</p>
+        ))}
+
+      {tab === "games" &&
+        (games.length > 0 ? (
+          <div className="grid gap-5 sm:grid-cols-2 xl:grid-cols-3">
+            {games.map((game, k) => (
+              <GameCard key={game.id} game={game} index={k} />
+            ))}
+          </div>
+        ) : (
+          <p className="text-hero-muted">لا توجد لعبة جاهزة مرتبطة بهذا الدرس بعد.</p>
+        ))}
+      {tab === "games" && lesson.planned.length > 0 && (
+        <div className="flex flex-wrap items-center gap-2">
+          <span className="text-sm text-hero-muted">ألعاب مخطط لها لهذا الدرس:</span>
+          {lesson.planned.map((p) => (
+            <Badge key={p} color="#868E96">
+              <Hourglass className="size-4" /> {PLANNED_GAME_NAMES[p]} — قيد التطوير
+            </Badge>
+          ))}
+        </div>
+      )}
+
+      {tab === "plan" &&
+        (plan ? (
+          <div className="flex flex-col gap-3" data-testid="lesson-ready-plan">
+            <div className="flex w-full max-w-2xl gap-2">
+              {plan.segments.map((s) => (
+                <div key={s.kind} style={{ flex: s.minutes, background: SEGMENT_META[s.kind].color }} className="rounded-2xl p-3 text-white">
+                  <p className="font-display font-bold">{SEGMENT_META[s.kind].emoji} {SEGMENT_META[s.kind].label}</p>
+                  <p className="font-display text-xl font-extrabold">{s.minutes} د</p>
+                </div>
+              ))}
+            </div>
+            <div className="flex flex-wrap gap-2">
+              <Link href={`/lesson-run?id=${plan.id}`} className="btn-3d inline-flex min-h-12 items-center gap-2 rounded-2xl bg-hero-green px-5 font-display text-lg font-bold text-white">
+                <Play className="size-5 fill-current" /> تشغيل الحصة
+              </Link>
+              <Link href={`/lessons/edit?id=${plan.id}`} className="btn-3d inline-flex min-h-12 items-center gap-2 rounded-2xl bg-white px-5 font-display text-lg font-bold">
+                <Eye className="size-5" /> معاينة وتعديل
+              </Link>
+            </div>
+            {myPlans.length > 0 && (
+              <ul className="flex flex-col gap-2">
+                {myPlans.map((m) => (
+                  <li key={m.id} className="flex flex-wrap items-center gap-2 rounded-2xl bg-hero-ink/5 p-2">
+                    <span className="flex-1 font-bold">{m.title}</span>
+                    <Link href={`/lesson-run?id=${m.id}`} className="inline-flex min-h-11 items-center rounded-xl bg-hero-green px-3 font-bold text-white">تشغيل</Link>
+                    <Link href={`/lessons/edit?id=${m.id}`} className="inline-flex min-h-11 items-center rounded-xl bg-white px-3 font-bold">فتح</Link>
+                  </li>
+                ))}
+              </ul>
+            )}
+          </div>
+        ) : lesson.template ? (
+          <Button className="w-fit bg-gradient-to-l from-hero-purple to-hero-pink" icon={<Sparkles className="size-5" />} onClick={onPrepare}>
+            حضّر حصة لهذا الدرس
+          </Button>
+        ) : (
+          <p className="text-hero-muted">لا توجد حصة جاهزة لهذا الدرس بعد.</p>
+        ))}
+
+      {tab === "edit" && (
+        <div className="flex flex-col gap-3" data-testid="lesson-edit">
+          <p>
+            أسئلة الدرس في بنك الأسئلة: <b>{bank.length}</b> (📘 {fromBook} من الكتاب، ✨ {bank.length - fromBook} مولّدة)
+          </p>
+          <div className="flex flex-wrap gap-2">
+            <Link href={`/bank?grade=${grade}&subject=${subject}&lessonId=${encodeURIComponent(lesson.id)}`} className="btn-3d inline-flex min-h-12 items-center gap-2 rounded-2xl bg-hero-blue px-5 font-bold text-white">
+              <Pencil className="size-5" /> تعديل أسئلة الدرس
+            </Link>
+            {plan && (
+              <Link href={`/lessons/edit?id=${plan.id}`} className="btn-3d inline-flex min-h-12 items-center gap-2 rounded-2xl bg-white px-5 font-bold">
+                <Sparkles className="size-5" /> تعديل الحصة (نسخة خاصة بك)
+              </Link>
+            )}
+          </div>
+          <p className="text-sm text-hero-muted">
+            لتعديل لعبة: من «🎮 الألعاب الجاهزة» اختر «تخصيص»، فتُحفظ نسخة خاصة بك مرتبطة بالدرس. لتعديل عنوان «{title}» استعمل زر القلم بجانبه. المحتوى الأصلي يبقى كما هو.
+          </p>
+        </div>
       )}
     </div>
   );

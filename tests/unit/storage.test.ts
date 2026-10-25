@@ -1,3 +1,4 @@
+import { BUNDLED_QUESTIONS } from "@/content/catalog";
 import { beforeEach, describe, expect, it } from "vitest";
 import { gamesRepo, questionsRepo, resetDBConnection, resultsRepo } from "@/lib/db";
 import { collectBackupData, makeBackup, parseBackup, restoreBackup } from "@/lib/backup";
@@ -48,7 +49,8 @@ describe("data store", () => {
   it("seeds the question bank once and persists teacher games across reloads", async () => {
     await useData.getState().load();
     const seeded = useData.getState().questions.length;
-    expect(seeded).toBe(seedQuestions().length);
+    // Built-in seed questions plus the built-in textbooks' questions.
+    expect(seeded).toBe(seedQuestions().length + BUNDLED_QUESTIONS.length);
 
     const src = useData.getState().builtins[0];
     const copy = await useData.getState().duplicateGame(src.id);

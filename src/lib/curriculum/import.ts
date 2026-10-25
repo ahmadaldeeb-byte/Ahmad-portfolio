@@ -125,7 +125,7 @@ export function planImport(file: CurriculumFile, now = Date.now()): ImportPlan {
         games.push(game);
       }
       if (!made.length) issues.push({ level: "warning", where: `الدرس «${l.title}»`, message: "لا توجد لعبة لهذا الدرس (أسئلته غير كافية لأي قالب)." });
-      return { id, title: l.title.trim(), games: made, planned: [] };
+      return { id, title: l.title.trim(), games: made, planned: [], ...(l.pages && { pages: l.pages }), ...(l.guide && { guide: l.guide }) };
     }),
   }));
 

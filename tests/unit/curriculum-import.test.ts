@@ -175,7 +175,7 @@ describe("saving an import", () => {
     await useData.getState().removeCurriculum(plan.book.id);
     s = useData.getState();
     expect(s.curricula).toEqual([]);
-    expect((await questionsRepo.all()).some((q) => q.importId)).toBe(false);
+    expect((await questionsRepo.all()).some((q) => q.importId === plan.book.id)).toBe(false);
     expect(s.games.map((g) => g.id)).toContain("mine");
   });
 });
