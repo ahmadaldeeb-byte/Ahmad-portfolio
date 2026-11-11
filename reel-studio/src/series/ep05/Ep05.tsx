@@ -179,7 +179,7 @@ export const Ep05: React.FC<SeriesProps> = (p) => {
       <Fact font={p.font} from={c.twelve} to={c.secret - 2} value="12" caption={['كاميرا · كل وحدة بعد 27 إنش']} y={74} />
       <PartLabel font={p.font} from={c.threads} durationInFrames={c.shutter - c.threads} text="خيط" capHeightPct={2.4} x={86} y={20} anchor={pin(kC, A.thread, c.threads)} width={width} height={height} />
       <PartLabel font={p.font} from={c.shutter} durationInFrames={c.series - c.shutter} text="الغالق" capHeightPct={2.4} x={86} y={20} anchor={pin(kC, A.cam_04, c.shutter)} width={width} height={height} />
-      <Fact font={p.font} from={c.fraction} to={c.series - 2} value={'⁦< 1/2000⁩ ثانية'} caption={['مدة التعريض حسب البطاقة الأصلية']} y={74} capHeightPct={4.2} />
+      <Fact font={p.font} from={c.fraction} to={c.series - 2} value={'أقل من \u20661/2000\u2069 ثانية'} caption={['مدة التعريض حسب البطاقة الأصلية']} y={74} capHeightPct={4.2} />
       <Fact font={p.font} from={c.play} to={c.cinema - 2} value={'⁦1/25⁩ ثانية'} caption={['بين كل صورة والثانية · حسب البطاقة']} y={80} capHeightPct={4} />
 
       {p.voiceStatus === 'temp' ? <Tag text="صوت مؤقت" font={p.font} tone="temp" x={70} y={7.6} /> : null}
