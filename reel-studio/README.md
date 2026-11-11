@@ -64,7 +64,7 @@ Uploaded MP3/WAV, local (no API): `npm run vo:setup` once, then
 (faster-whisper `small`, `--model medium|large-v3` for harder audio). Whisper's word times are mapped onto the
 approved text letter by letter, then snapped to the real pauses in the recording; the command prints where
 «هون» and «محور الميل» start. `--engine eleven` uses ElevenLabs forced alignment instead.
-ElevenLabs forced alignment: `npm run vo -- align --audio <file.mp3> --text-file scripts/voiceover/gimbal-hook.txt --out vo/gimbal-hook`.
+ElevenLabs forced alignment: `npm run vo -- align --engine eleven --audio <file.mp3> --text-file scripts/voiceover/gimbal-hook.txt --out vo/gimbal-hook`.
 Until `public/vo/gimbal-hook.words.json` exists, the VO compositions run on `gimbal-hook.temp.words.json`
 (estimated timings, no audio, a TEMP badge in the preview) and switch to the recording automatically.
 The key is read from `ELEVENLABS_API_KEY` (or injected by the cloud-session proxy). With a voice-over, the hook
