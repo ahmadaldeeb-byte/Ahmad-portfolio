@@ -69,7 +69,7 @@ export const ArchivePhoto: React.FC<{
         style={{position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: fit, objectPosition: fit === 'cover' ? `${px}% ${py}%` : '50% 50%', scale: String(s), transformOrigin: `${px}% ${py}%`, filter: invert ? 'invert(1)' : undefined}}
       />
       {tag ? <Tag text={label} font={font} tone="archive" /> : null}
-      <div style={{position: 'absolute', left: '6%', right: '14%', bottom: '21%', color: 'rgba(232,236,242,0.7)', fontFamily: 'Inter, Arial, sans-serif', fontSize: 22, textAlign: 'left', direction: 'ltr'}}>{credit}</div>
+      <div style={{position: 'absolute', left: '6%', right: '6%', top: '11.2%', color: 'rgba(232,236,242,0.72)', fontFamily: 'Inter, Arial, sans-serif', fontSize: 22, textAlign: 'left', direction: 'ltr'}}>{credit}</div>
     </AbsoluteFill>
   );
 };
