@@ -234,7 +234,7 @@ export const Ep07: React.FC<SeriesProps> = (p) => {
       <ArabicHook font={p.font} from={0} durationInFrames={c.year - 2} lines={HOOK} capHeightPct={3.3} y={20} wordStarts={p.hookWordStarts.length ? p.hookWordStarts : undefined} />
       <Fact font={p.font} from={c.year} to={c.red - 2} value="1861" caption={['ماكسويل · المصوّر توماس ساتون']} y={86} capHeightPct={4} />
       <PartLabel font={p.font} from={c.lights} durationInFrames={c.strange - c.lights} text="ثلاث فلاتر · ثلاث أضواء" capHeightPct={2.3} x={86} y={20} anchor={pin(kL, A.filter_green, c.lights)} width={width} height={height} />
-      <Fact font={p.font} from={c.century} to={c.today - 2} value="1961" caption={['تبيّن إنه الأحمر انسجّل غالبًا', 'من الأشعة فوق البنفسجية']} y={20} capHeightPct={4} />
+      <Fact font={p.font} from={c.century} to={c.today - 2} value="1961" caption={['تفسير إيفانز: الأحمر انسجّل من فوق البنفسجي', 'ودراسة 2022 بتشكّك فيه']} y={20} capHeightPct={4} />
       <PartLabel font={p.font} from={c.pixel} durationInFrames={c.half - c.pixel} text="فلتر فوق كل بكسل" capHeightPct={2.3} x={86} y={20} anchor={pin(kB, A.die, c.pixel)} width={width} height={height} />
       <Fact font={p.font} from={c.half} to={end} value="50% أخضر" caption={['25% أحمر · 25% أزرق', 'نمط Bayer · 1976']} y={74} capHeightPct={4.4} />
 

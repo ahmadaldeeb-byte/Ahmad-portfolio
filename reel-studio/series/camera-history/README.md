@@ -198,3 +198,30 @@
 - Bayer: [Bayer filter](https://wikipedia.com/wiki/Bayer_mask)
 - ابن الهيثم / موزي: [OER Project](https://www.oerproject.com/OER-Materials/OER-Media/HTML-Articles/BHP/Unit2/The-Universe-Through-a-Pinhole)
 - ماكسويل 1861 وتجربة 1961 وآليات الـSLR والـOIS: معرفة موثّقة، لسه بدها مصدر مكتوب قبل إنتاج الحلقات 07، 08، 10.
+
+---
+
+## الإنتاج (مبني فعليًا)
+| # | Composition | الحالة | الصوت |
+|---|---|---|---|
+| 01 | `CH01-CameraObscura` | مبنية | مؤقت |
+| 02 | `CH02-FirstPhotograph` | مبنية | مؤقت |
+| 03 | `CH03-FirstHuman` | مبنية | مؤقت |
+| 04 | `CH04-FirstNegative` | مبنية | مؤقت |
+| 05 | `CH05-HorseInMotion` | مبنية | مؤقت |
+| 06 | `CH06-KodakFilm` | مبنية | مؤقت |
+| 07 | `CH07-FirstColor` | مبنية | مؤقت |
+| 08 | `CH08-SLRMirror` | مبنية | مؤقت |
+| 09 | `CH09-FirstDigital` | مبنية | مؤقت |
+| 10 | `CH10-PhoneCamera` | مبنية | مؤقت |
+
+- **مجسّمات Blender:** `series/camera-history/blender/epNN.py` → `epNN.blend` (قابل للتعديل) + `public/models/epNN.glb` + `src/series/epNN/anchors.json`
+  شغّلها: `blender -b --python series/camera-history/blender/epNN.py`
+- **الحلقات:** `src/series/epNN/EpNN.tsx`. المحرّك: `src/series/engine/`. السجل: `src/series/index.tsx`.
+- **الصوت المؤقت:** `npm run series:tts -- NN` (Piper ar_JO-kareem). ينكتب `public/vo/series/NN.mp3` و`NN.words.json` مع `"temp": true`، فيظهر وسم «صوت مؤقت».
+- **الصوت النهائي (حميد):** حط التسجيل باسم `public/vo/series/NN.mp3`، وبعدين شغّل:
+  `node scripts/voiceover/manual-timing.mjs --audio public/vo/series/NN.mp3 --text-file series/camera-history/scripts/NN-*.txt --out vo/series/NN`
+  التوقيت بيطلع من التسجيل نفسه، وبيروح وسم «صوت مؤقت»، وكل كشف بيرجع يقعد على كلمته. صحّح أي كلمة بنص الجملة بـ `public/vo/series/NN.fixes.json`.
+- **الرندر:** `bash series/camera-history/render-all.sh 01 02 …`، والملفات بتطلع على `out/series/CHNN-<slug>-TEMP-VOICE.mp4` أو `-FINAL-VOICE.mp4`.
+- **الأصوات والموسيقى:** `bash series/camera-history/make-sfx.sh`.
+- **المصادر:** `SOURCES.md` و`sources.json`.
