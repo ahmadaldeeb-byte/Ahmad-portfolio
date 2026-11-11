@@ -10,3 +10,4 @@ public/vo/_test
 public/vo/library
 # local Python envs are never part of the project
 .venv
+!out/gimbal-tilt-vo.mp4
