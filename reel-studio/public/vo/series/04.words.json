@@ -12,8 +12,9 @@
   },
   {
    "word": "صورة",
-   "start": 0.319,
-   "end": 0.837
+   "start": 0,
+   "end": 0.837,
+   "fixed": true
   },
   {
    "word": "طبعتها",
@@ -87,8 +88,9 @@
   },
   {
    "word": "نقع",
-   "start": 9.671,
-   "end": 9.944
+   "start": 9.32,
+   "end": 9.944,
+   "fixed": true
   },
   {
    "word": "ورقة",
@@ -282,78 +284,93 @@
   },
   {
    "word": "خمس",
-   "start": 32.185,
-   "end": 32.896
+   "start": 31.32,
+   "end": 32.896,
+   "fixed": true
   },
   {
    "word": "سنين،",
-   "start": 32.896,
-   "end": 33.979
+   "start": 31.62,
+   "end": 33.979,
+   "fixed": true
   },
   {
    "word": "سنة",
-   "start": 34.277,
-   "end": 34.483
+   "start": 32.1,
+   "end": 34.483,
+   "fixed": true
   },
   {
    "word": "ألف",
-   "start": 34.483,
-   "end": 34.689
+   "start": 32.56,
+   "end": 34.689,
+   "fixed": true
   },
   {
    "word": "وثمنمية",
-   "start": 34.804,
-   "end": 35.091
+   "start": 32.74,
+   "end": 35.091,
+   "fixed": true
   },
   {
    "word": "وأربعين،",
-   "start": 35.149,
-   "end": 35.493
+   "start": 33.36,
+   "end": 35.493,
+   "fixed": true
   },
   {
    "word": "اكتشف",
-   "start": 35.974,
-   "end": 36.461
+   "start": 34.277,
+   "end": 36.461,
+   "fixed": true
   },
   {
    "word": "إشي",
-   "start": 36.461,
-   "end": 36.695
+   "start": 34.82,
+   "end": 36.695,
+   "fixed": true
   },
   {
    "word": "أغرب:",
-   "start": 36.695,
-   "end": 37.212
+   "start": 35.14,
+   "end": 37.212,
+   "fixed": true
   },
   {
    "word": "الصورة",
-   "start": 37.356,
-   "end": 37.598
+   "start": 35.973,
+   "end": 37.598,
+   "fixed": true
   },
   {
    "word": "بتنطبع",
-   "start": 37.598,
-   "end": 37.84
+   "start": 36.42,
+   "end": 37.84,
+   "fixed": true
   },
   {
    "word": "حتى",
-   "start": 37.909,
-   "end": 37.982
+   "start": 37,
+   "end": 37.982,
+   "fixed": true
   },
   {
    "word": "لو",
-   "start": 37.909,
-   "end": 38.089
+   "start": 37.4,
+   "end": 38.089,
+   "fixed": true
   },
   {
    "word": "ما",
-   "start": 38.089,
-   "end": 38.197
+   "start": 37.6,
+   "end": 38.197,
+   "fixed": true
   },
   {
    "word": "بتبيّن…",
-   "start": 38.197,
-   "end": 38.406
+   "start": 37.76,
+   "end": 38.406,
+   "fixed": true
   },
   {
    "word": "صورة",

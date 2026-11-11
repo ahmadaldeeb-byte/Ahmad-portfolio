@@ -17,129 +17,153 @@
   },
   {
    "word": "رقمية",
-   "start": 0.408,
-   "end": 0.66
+   "start": 0.78,
+   "end": 0.66,
+   "fixed": true
   },
   {
    "word": "بالتاريخ",
-   "start": 0.66,
-   "end": 0.934
+   "start": 1.24,
+   "end": 0.934,
+   "fixed": true
   },
   {
    "word": "كان",
-   "start": 0.934,
-   "end": 1.162
+   "start": 2,
+   "end": 1.162,
+   "fixed": true
   },
   {
    "word": "وزنها",
-   "start": 1.162,
-   "end": 1.368
+   "start": 2.36,
+   "end": 1.368,
+   "fixed": true
   },
   {
    "word": "حوالي",
-   "start": 1.368,
-   "end": 1.627
+   "start": 2.8,
+   "end": 1.627,
+   "fixed": true
   },
   {
    "word": "أربع",
-   "start": 1.627,
-   "end": 1.821
+   "start": 3.36,
+   "end": 1.821,
+   "fixed": true
   },
   {
    "word": "كيلو…",
-   "start": 1.65,
+   "start": 3.76,
    "end": 2.016,
    "fixed": true
   },
   {
    "word": "وصورتها",
-   "start": 2.201,
-   "end": 2.808
+   "start": 4.728,
+   "end": 2.808,
+   "fixed": true
   },
   {
    "word": "عشرة",
-   "start": 2.808,
-   "end": 3.192
+   "start": 5.36,
+   "end": 3.192,
+   "fixed": true
   },
   {
    "word": "آلاف",
-   "start": 3.368,
-   "end": 3.577
+   "start": 6.04,
+   "end": 3.577,
+   "fixed": true
   },
   {
    "word": "بكسل",
-   "start": 3.624,
-   "end": 3.962
+   "start": 6.48,
+   "end": 3.962,
+   "fixed": true
   },
   {
    "word": "بس.",
-   "start": 4.037,
-   "end": 4.199
+   "start": 6.88,
+   "end": 4.199,
+   "fixed": true
   },
   {
    "word": "سنة",
-   "start": 4.729,
-   "end": 4.827
+   "start": 7.906,
+   "end": 4.827,
+   "fixed": true
   },
   {
    "word": "ألف",
-   "start": 4.827,
-   "end": 4.926
+   "start": 8.14,
+   "end": 4.926,
+   "fixed": true
   },
   {
    "word": "وتسعمية",
-   "start": 4.926,
-   "end": 5.118
+   "start": 8.38,
+   "end": 5.118,
+   "fixed": true
   },
   {
    "word": "وخمسة",
-   "start": 5.119,
-   "end": 5.264
+   "start": 9.06,
+   "end": 5.264,
+   "fixed": true
   },
   {
    "word": "وسبعين،",
-   "start": 5.119,
-   "end": 5.433
+   "start": 9.56,
+   "end": 5.433,
+   "fixed": true
   },
   {
    "word": "ستيفن",
-   "start": 5.549,
-   "end": 6.443
+   "start": 10.41,
+   "end": 6.443,
+   "fixed": true
   },
   {
    "word": "ساسون،",
-   "start": 6.475,
-   "end": 7.336
+   "start": 10.86,
+   "end": 7.336,
+   "fixed": true
   },
   {
    "word": "مهندس",
-   "start": 7.915,
-   "end": 8.928
+   "start": 11.48,
+   "end": 8.928,
+   "fixed": true
   },
   {
    "word": "بكوداك،",
-   "start": 8.928,
-   "end": 10.104
+   "start": 11.94,
+   "end": 10.104,
+   "fixed": true
   },
   {
    "word": "بنى",
-   "start": 10.414,
-   "end": 11.119
+   "start": 12.72,
+   "end": 11.119,
+   "fixed": true
   },
   {
    "word": "كاميرا",
-   "start": 11.119,
-   "end": 12.258
+   "start": 12.92,
+   "end": 12.258,
+   "fixed": true
   },
   {
    "word": "قد",
-   "start": 12.258,
-   "end": 12.867
+   "start": 13.4,
+   "end": 12.867,
+   "fixed": true
   },
   {
    "word": "التوستر.",
-   "start": 12.98,
-   "end": 14.245
+   "start": 13.66,
+   "end": 14.245,
+   "fixed": true
   },
   {
    "word": "والسر",
@@ -416,13 +440,15 @@
   },
   {
    "word": "هسا،",
-   "start": 40.252,
-   "end": 40.68
+   "start": 39.83,
+   "end": 40.68,
+   "fixed": true
   },
   {
    "word": "حساس",
-   "start": 40.789,
-   "end": 41.169
+   "start": 40.249,
+   "end": 41.169,
+   "fixed": true
   },
   {
    "word": "موبايلك",

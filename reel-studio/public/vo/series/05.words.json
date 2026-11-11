@@ -32,8 +32,9 @@
   },
   {
    "word": "الراكض",
-   "start": 3.343,
-   "end": 3.603
+   "start": 2.98,
+   "end": 3.603,
+   "fixed": true
   },
   {
    "word": "ورجليه",
@@ -42,8 +43,9 @@
   },
   {
    "word": "ممدودة",
-   "start": 4.405,
-   "end": 4.782
+   "start": 4.1,
+   "end": 4.782,
+   "fixed": true
   },
   {
    "word": "لقدّام",
@@ -72,28 +74,33 @@
   },
   {
    "word": "ألف",
-   "start": 8.283,
-   "end": 8.549
+   "start": 8.344,
+   "end": 8.549,
+   "fixed": true
   },
   {
    "word": "وثمنمية",
-   "start": 8.549,
-   "end": 9.192
+   "start": 8.653,
+   "end": 9.192,
+   "fixed": true
   },
   {
    "word": "وثمانية",
-   "start": 9.284,
-   "end": 9.764
+   "start": 8.962,
+   "end": 9.764,
+   "fixed": true
   },
   {
    "word": "وسبعين",
-   "start": 9.764,
-   "end": 10.266
+   "start": 9.271,
+   "end": 10.266,
+   "fixed": true
   },
   {
    "word": "بكاليفورنيا،",
-   "start": 10.333,
-   "end": 11.116
+   "start": 9.58,
+   "end": 11.116,
+   "fixed": true
   },
   {
    "word": "إدوارد",
@@ -213,90 +220,105 @@
   },
   {
    "word": "بفتح",
-   "start": 23.322,
-   "end": 23.512
+   "start": 23.64,
+   "end": 23.512,
+   "fixed": true
   },
   {
    "word": "وبسكّر",
-   "start": 23.626,
-   "end": 23.738
+   "start": 24.16,
+   "end": 23.738,
+   "fixed": true
   },
   {
    "word": "بجزء",
-   "start": 23.838,
-   "end": 23.928
+   "start": 24.8,
+   "end": 23.928,
+   "fixed": true
   },
   {
    "word": "صغير",
-   "start": 23.988,
-   "end": 24.118
+   "start": 25.3,
+   "end": 24.118,
+   "fixed": true
   },
   {
    "word": "من",
-   "start": 23.988,
-   "end": 24.234
+   "start": 25.82,
+   "end": 24.234,
+   "fixed": true
   },
   {
    "word": "الثانية.",
-   "start": 24.234,
-   "end": 24.534
+   "start": 25.98,
+   "end": 24.534,
+   "fixed": true
   },
   {
    "word": "اثنعشر",
-   "start": 24.642,
-   "end": 25.238
+   "start": 26.929,
+   "end": 25.238,
+   "fixed": true
   },
   {
    "word": "صورة",
-   "start": 25.238,
-   "end": 25.76
+   "start": 27.34,
+   "end": 25.76,
+   "fixed": true
   },
   {
    "word": "ورا",
-   "start": 25.76,
-   "end": 26.114
+   "start": 27.88,
+   "end": 26.114,
+   "fixed": true
   },
   {
    "word": "بعض…",
-   "start": 26.114,
-   "end": 26.518
+   "start": 28.1,
+   "end": 26.518,
+   "fixed": true
   },
   {
    "word": "وبوحدة",
-   "start": 27.076,
-   "end": 27.812
+   "start": 28.463,
+   "end": 27.812,
+   "fixed": true
   },
   {
    "word": "منهم،",
-   "start": 27.812,
-   "end": 28.344
+   "start": 29.3,
+   "end": 28.344,
+   "fixed": true
   },
   {
    "word": "الحصان",
-   "start": 28.888,
-   "end": 29.67
+   "start": 29.74,
+   "end": 29.67,
+   "fixed": true
   },
   {
    "word": "طاير",
-   "start": 29.61,
+   "start": 30.58,
    "end": 30.234,
    "fixed": true
   },
   {
    "word": "والأربع",
-   "start": 30.19,
+   "start": 31.06,
    "end": 31.124,
    "fixed": true
   },
   {
    "word": "رجلين",
-   "start": 31.124,
-   "end": 31.797
+   "start": 31.72,
+   "end": 31.797,
+   "fixed": true
   },
   {
    "word": "بالهوا.",
-   "start": 31.797,
-   "end": 32.578
+   "start": 32.14,
+   "end": 32.578,
+   "fixed": true
   },
   {
    "word": "بس",

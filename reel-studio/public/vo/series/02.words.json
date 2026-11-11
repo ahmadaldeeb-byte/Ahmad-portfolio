@@ -43,8 +43,9 @@
   },
   {
    "word": "انطبعت",
-   "start": 3.361,
-   "end": 3.888
+   "start": 2.814,
+   "end": 3.888,
+   "fixed": true
   },
   {
    "word": "على",
@@ -291,105 +292,123 @@
   },
   {
    "word": "ساعات",
-   "start": 27.681,
-   "end": 28.436
+   "start": 27.02,
+   "end": 28.436,
+   "fixed": true
   },
   {
    "word": "لأيام،",
-   "start": 28.436,
-   "end": 29.336
+   "start": 27.52,
+   "end": 29.336,
+   "fixed": true
   },
   {
    "word": "حسب",
-   "start": 29.606,
-   "end": 30.197
+   "start": 28.32,
+   "end": 30.197,
+   "fixed": true
   },
   {
    "word": "التقديرات.",
-   "start": 30.197,
-   "end": 31.631
+   "start": 28.56,
+   "end": 31.631,
+   "fixed": true
   },
   {
    "word": "بعدين",
-   "start": 32.046,
-   "end": 32.38
+   "start": 29.605,
+   "end": 32.38,
+   "fixed": true
   },
   {
    "word": "غسله",
-   "start": 32.505,
-   "end": 32.555
+   "start": 30.12,
+   "end": 32.555,
+   "fixed": true
   },
   {
    "word": "بزيت",
-   "start": 32.505,
-   "end": 32.63
+   "start": 30.62,
+   "end": 32.63,
+   "fixed": true
   },
   {
    "word": "اللافندر:",
-   "start": 32.63,
-   "end": 32.98
+   "start": 31.02,
+   "end": 32.98,
+   "fixed": true
   },
   {
    "word": "الطري",
-   "start": 33.121,
-   "end": 33.629
+   "start": 32.046,
+   "end": 33.629,
+   "fixed": true
   },
   {
    "word": "بذوب،",
-   "start": 33.59,
+   "start": 32.42,
    "end": 34.055,
    "fixed": true
   },
   {
    "word": "والقاسي",
-   "start": 34.457,
-   "end": 35.266
+   "start": 33.121,
+   "end": 35.266,
+   "fixed": true
   },
   {
    "word": "بضل…",
-   "start": 35.266,
-   "end": 36.003
+   "start": 33.76,
+   "end": 36.003,
+   "fixed": true
   },
   {
    "word": "وبتطلع",
-   "start": 36.35,
-   "end": 36.826
+   "start": 34.456,
+   "end": 36.826,
+   "fixed": true
   },
   {
    "word": "أسطح",
-   "start": 36.826,
-   "end": 37.16
+   "start": 35.04,
+   "end": 37.16,
+   "fixed": true
   },
   {
    "word": "البيوت.",
-   "start": 37.16,
-   "end": 37.646
+   "start": 35.44,
+   "end": 37.646,
+   "fixed": true
   },
   {
    "word": "ولأنه",
-   "start": 37.766,
-   "end": 37.923
+   "start": 36.348,
+   "end": 37.923,
+   "fixed": true
   },
   {
    "word": "الشمس",
-   "start": 38.13,
+   "start": 36.62,
    "end": 38.081,
    "fixed": true
   },
   {
    "word": "تحركت",
-   "start": 38.081,
-   "end": 38.238
+   "start": 37.1,
+   "end": 38.238,
+   "fixed": true
   },
   {
    "word": "طول",
-   "start": 38.238,
-   "end": 38.344
+   "start": 37.66,
+   "end": 38.344,
+   "fixed": true
   },
   {
    "word": "هالوقت،",
-   "start": 38.344,
-   "end": 38.527
+   "start": 37.94,
+   "end": 38.527,
+   "fixed": true
   },
   {
    "word": "الضو",

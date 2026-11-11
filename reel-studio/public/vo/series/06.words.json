@@ -17,23 +17,27 @@
   },
   {
    "word": "وثمنمية",
-   "start": 0.579,
-   "end": 1.237
+   "start": 0.656,
+   "end": 1.237,
+   "fixed": true
   },
   {
    "word": "وثمانية",
-   "start": 1.325,
-   "end": 1.848
+   "start": 0.984,
+   "end": 1.848,
+   "fixed": true
   },
   {
    "word": "وثمانين،",
-   "start": 1.849,
-   "end": 2.459
+   "start": 1.312,
+   "end": 2.459,
+   "fixed": true
   },
   {
    "word": "صار",
-   "start": 2.68,
-   "end": 3.015
+   "start": 1.64,
+   "end": 3.015,
+   "fixed": true
   },
   {
    "word": "أي",
@@ -354,8 +358,9 @@
   },
   {
    "word": "على",
-   "start": 32.914,
-   "end": 33.421
+   "start": 33.28,
+   "end": 33.421,
+   "fixed": true
   },
   {
    "word": "الحبة…",
@@ -399,13 +404,15 @@
   },
   {
    "word": "علامة",
-   "start": 38.042,
-   "end": 38.533
+   "start": 37.7,
+   "end": 38.533,
+   "fixed": true
   },
   {
    "word": "بتتحول",
-   "start": 38.533,
-   "end": 39.016
+   "start": 38.22,
+   "end": 39.016,
+   "fixed": true
   },
   {
    "word": "كلها",
