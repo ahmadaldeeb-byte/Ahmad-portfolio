@@ -10,6 +10,6 @@ for ep in "$@"; do
   out="out/series/CH$ep-${SLUG[$ep]}-$tag.mp4"
   rm -f out/series/CH$ep-${SLUG[$ep]}-*.mp4
   echo "== $ep → $out"
-  npx remotion render src/index.ts "${ID[$ep]}" "$out" --codec=h264 --pixel-format=yuv420p --color-space=bt709 --log=error 2>&1 | grep -v -E "404|Failed to load" | tail -3
+  npx remotion render src/index.ts "${ID[$ep]}" "$out" --codec=h264 --crf=18 --pixel-format=yuv420p --color-space=bt709 --port=3500 --log=error 2>&1 | grep -v -E "404|Failed to load" | tail -3
   ffprobe -v error -show_entries stream=codec_type,width,height:format=duration -of compact "$out" | tr '\n' ' '; echo
 done

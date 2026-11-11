@@ -3,7 +3,7 @@ import {staticFile} from 'remotion';
 import {findPhrase, onScreenWordStarts, type VoWords} from '../../text/voice';
 import type {SeriesProps} from './schema';
 
-export const FPS = 30;
+export const FPS = 25; // final delivery frame rate (cues are in seconds, so they stay on their words)
 /** [cueId, spoken phrase] in speaking order; each is searched after the previous one. */
 export type CueList = readonly (readonly [string, string])[];
 
