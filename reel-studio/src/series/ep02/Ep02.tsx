@@ -7,7 +7,7 @@ import * as THREE from 'three';
 import {ArabicHook, PartLabel} from '../../text/ArabicMotion';
 import {arabicStack} from '../../text/fonts';
 import {SafeGuides} from '../../text/SafeGuides';
-import {ArchivePhoto, Shot, SoundBed, Tag} from '../engine/Shots';
+import {ArchivePhoto, Shot, SoundBed, Tag, VoiceBadge} from '../engine/Shots';
 import {Stage3D, viewAt, project, type CamKey} from '../engine/Stage3D';
 import {Fact} from '../engine/Text';
 import {ImagePlane, Ray} from '../engine/Primitives';
@@ -293,7 +293,7 @@ export const Ep02: React.FC<SeriesProps> = (p) => {
       <Fact font={p.font} from={c.found} to={c.museum - 2} value="1952" caption={['انلقى بعد ما ضاع عقود']} y={70} />
       <PartLabel font={p.font} from={c.museum} durationInFrames={end - c.museum} text="مركز هاري رانسوم · أوستن" capHeightPct={2.3} x={86} y={20} anchor={pin(keysM, A.case, c.museum)} width={width} height={height} />
 
-      {p.voiceStatus === 'temp' ? <Tag text="صوت مؤقت" font={p.font} tone="temp" x={70} y={7.6} /> : null}
+      <VoiceBadge status={p.voiceStatus} font={p.font} />
       {p.showGuides ? <SafeGuides /> : null}
     </AbsoluteFill>
   );

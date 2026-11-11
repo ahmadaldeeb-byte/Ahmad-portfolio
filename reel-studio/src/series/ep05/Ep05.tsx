@@ -7,7 +7,7 @@ import * as THREE from 'three';
 import {ArabicHook, PartLabel} from '../../text/ArabicMotion';
 import {arabicStack, type ArabicFont} from '../../text/fonts';
 import {SafeGuides} from '../../text/SafeGuides';
-import {ArchivePhoto, Shot, SoundBed, Tag} from '../engine/Shots';
+import {ArchivePhoto, Shot, SoundBed, Tag, VoiceBadge} from '../engine/Shots';
 import {Stage3D, project, viewAt, type CamKey} from '../engine/Stage3D';
 import {Fact} from '../engine/Text';
 import {node, setOpacity, useGLB, useTexture} from '../engine/useGLB';
@@ -182,7 +182,7 @@ export const Ep05: React.FC<SeriesProps> = (p) => {
       <Fact font={p.font} from={c.fraction} to={c.series - 2} value={'أقل من \u20661/2000\u2069 ثانية'} caption={['مدة التعريض حسب البطاقة الأصلية']} y={74} capHeightPct={4.2} />
       <Fact font={p.font} from={c.play} to={c.cinema - 2} value={'⁦1/25⁩ ثانية'} caption={['بين كل صورة والثانية · حسب البطاقة']} y={80} capHeightPct={4} />
 
-      {p.voiceStatus === 'temp' ? <Tag text="صوت مؤقت" font={p.font} tone="temp" x={70} y={7.6} /> : null}
+      <VoiceBadge status={p.voiceStatus} font={p.font} />
       {p.showGuides ? <SafeGuides /> : null}
     </AbsoluteFill>
   );

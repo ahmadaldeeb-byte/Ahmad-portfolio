@@ -6,7 +6,7 @@ import * as THREE from 'three';
 import {ArabicHook, PartLabel} from '../../text/ArabicMotion';
 import {arabicStack, type ArabicFont} from '../../text/fonts';
 import {SafeGuides} from '../../text/SafeGuides';
-import {Shot, SoundBed, Tag} from '../engine/Shots';
+import {Shot, SoundBed, Tag, VoiceBadge} from '../engine/Shots';
 import {Stage3D, project, viewAt, type CamKey} from '../engine/Stage3D';
 import {Fact} from '../engine/Text';
 import {ImagePlane, Ray} from '../engine/Primitives';
@@ -215,7 +215,7 @@ export const Ep01: React.FC<SeriesProps> = (p) => {
       <PartLabel font={p.font} from={c.flipped} durationInFrames={c.mozi - c.flipped} text="الصورة مقلوبة" capHeightPct={2.5} x={86} y={20} anchor={pin(kR, A.screen, c.flipped)} width={width} height={height} />
       <Fact font={p.font} from={c.aperture + 20} to={end} value="نفس الموازنة" caption={['فتحة العدسة: ضو أكثر أو حدّة أكثر']} y={84} capHeightPct={3.8} />
 
-      {p.voiceStatus === 'temp' ? <Tag text="صوت مؤقت" font={p.font} tone="temp" x={70} y={7.6} /> : null}
+      <VoiceBadge status={p.voiceStatus} font={p.font} />
       {p.showGuides ? <SafeGuides /> : null}
     </AbsoluteFill>
   );

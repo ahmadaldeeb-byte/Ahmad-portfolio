@@ -1,5 +1,5 @@
 import React from 'react';
-import {AbsoluteFill, Easing, Img, interpolate, Sequence, staticFile, useCurrentFrame, useVideoConfig} from 'remotion';
+import {AbsoluteFill, Easing, getRemotionEnvironment, Img, interpolate, Sequence, staticFile, useCurrentFrame, useVideoConfig} from 'remotion';
 import {Audio} from '@remotion/media';
 import {arabicStack, type ArabicFont} from '../../text/fonts';
 
@@ -94,3 +94,11 @@ export const SoundBed: React.FC<{voiceover: string; voiceFrom: number; musicVolu
     ))}
   </>
 );
+
+/** Voice status. TEMP voice → «صوت مؤقت» tag burned into the video. Approved recording → nothing in the
+ *  video; a «الصوت المعتمد — حميد» badge shows in Remotion Studio only (never in renders). */
+export const VoiceBadge: React.FC<{status: 'temp' | 'recorded'; font: ArabicFont}> = ({status, font}) => {
+  if (status === 'temp') return <Tag text="صوت مؤقت" font={font} tone="temp" x={70} y={7.6} />;
+  if (!getRemotionEnvironment().isStudio) return null;
+  return <Tag text="الصوت المعتمد — حميد" font={font} tone="archive" x={58} y={95} />;
+};

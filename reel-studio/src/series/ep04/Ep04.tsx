@@ -7,7 +7,7 @@ import * as THREE from 'three';
 import {ArabicHook, PartLabel} from '../../text/ArabicMotion';
 import {arabicStack, type ArabicFont} from '../../text/fonts';
 import {SafeGuides} from '../../text/SafeGuides';
-import {ArchivePhoto, Shot, SoundBed, Tag} from '../engine/Shots';
+import {ArchivePhoto, Shot, SoundBed, Tag, VoiceBadge} from '../engine/Shots';
 import {Stage3D, project, viewAt, type CamKey} from '../engine/Stage3D';
 import {Fact} from '../engine/Text';
 import {useGLB} from '../engine/useGLB';
@@ -222,7 +222,7 @@ export const Ep04: React.FC<SeriesProps> = (p) => {
       <Fact font={p.font} from={c.negative} to={c.genius - 2} value="نيغاتيف" y={84} capHeightPct={4.2} />
       <Fact font={p.font} from={c.cut} to={end} value="ساعة وأكثر ← دقيقة أو دقيقتين" caption={['مدة التعريض قبل وبعد الاكتشاف']} y={24} capHeightPct={3.4} />
 
-      {p.voiceStatus === 'temp' ? <Tag text="صوت مؤقت" font={p.font} tone="temp" x={70} y={7.6} /> : null}
+      <VoiceBadge status={p.voiceStatus} font={p.font} />
       {p.showGuides ? <SafeGuides /> : null}
     </AbsoluteFill>
   );
