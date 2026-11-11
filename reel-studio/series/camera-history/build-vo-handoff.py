@@ -267,13 +267,13 @@ NOTES = {
 
 def main():
     out = ["# Camera History: نصوص الفويس أوفر (CH01–CH10)", "",
-           "النصوص هي نفس الكلام المستخدم فعليًا لتوليد الصوت الحالي، مأخوذة من `public/vo/series/NN.words.json` ومطابقة 100% لـ`series/camera-history/scripts/NN-*.txt`.",
+           "النصوص هي نفس الكلام اللي بتسجيلات حميد المعتمدة، مأخوذة من `public/vo/series/NN.words.json` ومطابقة 100% لـ`series/camera-history/scripts/NN-*.txt`.",
            "اللهجة: أردنية. الأرقام مكتوبة بالكلمات زي ما بتنحكى.",
-           "التوقيتات بالجداول من الصوت المؤقت الحالي (Piper). لما تسجّل، بيتعاد حسابها تلقائيًا من التسجيل. «الكلمة» هي اللي لازم تنحكى بوضوح لأنه الحركة بتبدأ عليها.", ""]
+           "التوقيتات بالجداول من تسجيلات حميد الفعلية. «الكلمة» هي اللي لازم تنحكى بوضوح لأنه الحركة بتبدأ عليها.", ""]
     for nn, (comp, title) in TITLES.items():
         d = json.load(open(ROOT / f"public/vo/series/{nn}.words.json", encoding="utf-8"))
         script = Path(glob.glob(str(ROOT / f"series/camera-history/scripts/{nn}-*.txt"))[0]).read_text(encoding="utf-8").strip()
-        assert " ".join(script.split()) == d["text"], f"ep{nn}: script and voiced text differ"
+        assert " ".join(script.split()) == " ".join(d["text"].split()), f"ep{nn}: script and voiced text differ"
         src = Path(glob.glob(str(ROOT / f"src/series/ep{nn}/Ep{nn}.tsx"))[0]).read_text(encoding="utf-8")
         block = src[src.index("export const CUES"): src.index("];", src.index("export const CUES"))]
         cues = re.findall(r"\['(\w+)', '([^']+)'\]", block)

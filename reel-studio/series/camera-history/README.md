@@ -204,16 +204,16 @@
 ## الإنتاج (مبني فعليًا)
 | # | Composition | الحالة | الصوت |
 |---|---|---|---|
-| 01 | `CH01-CameraObscura` | مبنية | مؤقت |
-| 02 | `CH02-FirstPhotograph` | مبنية | مؤقت |
-| 03 | `CH03-FirstHuman` | مبنية | مؤقت |
-| 04 | `CH04-FirstNegative` | مبنية | مؤقت |
-| 05 | `CH05-HorseInMotion` | مبنية | مؤقت |
-| 06 | `CH06-KodakFilm` | مبنية | مؤقت |
-| 07 | `CH07-FirstColor` | مبنية | مؤقت |
-| 08 | `CH08-SLRMirror` | مبنية | مؤقت |
-| 09 | `CH09-FirstDigital` | مبنية | مؤقت |
-| 10 | `CH10-PhoneCamera` | مبنية | مؤقت |
+| 01 | `CH01-CameraObscura` | مبنية | نهائي (حميد) |
+| 02 | `CH02-FirstPhotograph` | مبنية | نهائي (حميد) |
+| 03 | `CH03-FirstHuman` | مبنية | نهائي (حميد) |
+| 04 | `CH04-FirstNegative` | مبنية | نهائي (حميد) |
+| 05 | `CH05-HorseInMotion` | مبنية | نهائي (حميد) |
+| 06 | `CH06-KodakFilm` | مبنية | نهائي (حميد) |
+| 07 | `CH07-FirstColor` | مبنية | نهائي (حميد) |
+| 08 | `CH08-SLRMirror` | مبنية | نهائي (حميد) |
+| 09 | `CH09-FirstDigital` | مبنية | نهائي (حميد) |
+| 10 | `CH10-PhoneCamera` | مبنية | نهائي (حميد) |
 
 - **مجسّمات Blender:** `series/camera-history/blender/epNN.py` → `epNN.blend` (قابل للتعديل) + `public/models/epNN.glb` + `src/series/epNN/anchors.json`
   شغّلها: `blender -b --python series/camera-history/blender/epNN.py`

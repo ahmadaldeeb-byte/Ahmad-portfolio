@@ -15,7 +15,7 @@ import type {SeriesProps} from '../engine/schema';
 import type {CueList} from '../engine/timing';
 import A from './anchors.json';
 
-export const HOOK = ['الرسامين غلطوا', 'مئات السنين'];
+export const HOOK = ['مئات السنين الرسامين', 'طلعوا غلطانين'];
 export const CUES: CueList = [
   ['year', 'سنة'],
   ['twelve', 'اثنعشر'],

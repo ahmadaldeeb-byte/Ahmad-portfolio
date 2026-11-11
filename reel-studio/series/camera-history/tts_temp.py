@@ -24,7 +24,7 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[2]
 SCRIPTS = ROOT / "series/camera-history/scripts"
-OUT = ROOT / "public/vo/series"
+OUT = ROOT / "public/vo/series/temp"
 CACHE = ROOT / ".cache/piper"
 VOICE = "ar_JO-kareem-medium"
 HF = "https://huggingface.co/rhasspy/piper-voices/resolve/main/ar/ar_JO/kareem/medium/"
