@@ -6,7 +6,7 @@
 //   npm run vo -- add --public-owner <id> --voice <id> --name "<name>"   # add a library voice to My Voices
 //   npm run vo -- design --description-file scripts/voiceover/voice-design.txt --text-file <txt> [--model <ttv model>]
 //   npm run vo -- save-design --generated <generated_voice_id> --name "<name>" --description-file <txt>
-//   npm run vo -- align --audio <uploaded.mp3> --text-file scripts/voiceover/gimbal-hook.txt --out vo/gimbal-hook
+//   npm run vo -- align --audio <rec.mp3|rec.wav> [--engine whisper|eleven] [--model small] --text-file scripts/voiceover/gimbal-hook.txt --out vo/gimbal-hook
 //   npm run vo -- tts --voice <voice_id> --text-file scripts/voiceover/gimbal-hook.txt --out vo/gimbal-hook [--model auto]
 //
 // tts writes public/<out>.mp3 + public/<out>.words.json (word start/end in seconds) — the episode reads
@@ -78,6 +78,18 @@ const forcedAlign = async (mp3Path, text) => {
 const commands = {
   /** uploaded MP3 → <out>.mp3 + <out>.words.json via ElevenLabs forced alignment */
   async align() {
+    // local Whisper (default when .venv has faster-whisper), or ElevenLabs forced alignment (--engine eleven)
+    const venvPy = path.join(root, '.venv/bin/python');
+    const engine = opt.engine || (fs.existsSync(venvPy) ? 'whisper' : 'eleven');
+    if (engine === 'whisper') {
+      const {spawnSync} = await import('node:child_process');
+      const a = ['scripts/voiceover/whisper_align.py', '--audio', opt.audio, '--out', opt.out || 'vo/voiceover', '--model', opt.model || 'small'];
+      if (opt['text-file']) a.push('--text-file', opt['text-file']);
+      else a.push('--text', opt.text);
+      const r = spawnSync(venvPy, a, {cwd: root, stdio: 'inherit'});
+      if (r.status !== 0) throw new Error('whisper align failed');
+      return;
+    }
     const text = readText('text');
     const out = path.join(root, 'public', opt.out || 'vo/voiceover');
     const src = path.resolve(root, opt.audio);

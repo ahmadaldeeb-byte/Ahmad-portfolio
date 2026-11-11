@@ -59,7 +59,12 @@ npm run vo -- tts --voice <voice_id> --text-file scripts/voiceover/gimbal-hook.t
 npm run studio                                           # TextMotionPreviewVO / GimbalTiltReelVO
 npm run render:gimbal-vo                                 # → out/gimbal-tilt-vo.mp4
 ```
-Uploaded MP3 instead: `npm run vo -- align --audio <file.mp3> --text-file scripts/voiceover/gimbal-hook.txt --out vo/gimbal-hook`.
+Uploaded MP3/WAV, local (no API): `npm run vo:setup` once, then
+`npm run vo -- align --audio <rec.mp3|rec.wav> --text-file scripts/voiceover/gimbal-hook.txt --out vo/gimbal-hook`
+(faster-whisper `small`, `--model medium|large-v3` for harder audio). Whisper's word times are mapped onto the
+approved text letter by letter, then snapped to the real pauses in the recording; the command prints where
+«هون» and «محور الميل» start. `--engine eleven` uses ElevenLabs forced alignment instead.
+ElevenLabs forced alignment: `npm run vo -- align --audio <file.mp3> --text-file scripts/voiceover/gimbal-hook.txt --out vo/gimbal-hook`.
 Until `public/vo/gimbal-hook.words.json` exists, the VO compositions run on `gimbal-hook.temp.words.json`
 (estimated timings, no audio, a TEMP badge in the preview) and switch to the recording automatically.
 The key is read from `ELEVENLABS_API_KEY` (or injected by the cloud-session proxy). With a voice-over, the hook

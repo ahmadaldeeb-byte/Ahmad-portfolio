@@ -8,3 +8,4 @@ out/stills
 !out/gimbal-tilt.mp4
 public/vo/_test
 public/vo/library
+.venv

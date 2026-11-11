@@ -11,7 +11,8 @@
     "new-episode": "node scripts/new-episode.mjs",
     "typecheck": "tsc --noEmit",
     "vo": "NODE_USE_ENV_PROXY=1 node scripts/voiceover/eleven.mjs",
-    "render:gimbal-vo": "remotion render src/index.ts GimbalTiltReelVO out/gimbal-tilt-vo.mp4 --codec=h264 --pixel-format=yuv420p --color-space=bt709"
+    "render:gimbal-vo": "remotion render src/index.ts GimbalTiltReelVO out/gimbal-tilt-vo.mp4 --codec=h264 --pixel-format=yuv420p --color-space=bt709",
+    "vo:setup": "python3 -m venv .venv && .venv/bin/pip install -r scripts/voiceover/requirements.txt"
   },
   "dependencies": {
     "@react-three/fiber": "9.8.2",
