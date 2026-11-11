@@ -16,3 +16,4 @@ public/vo/library
 !out/series/
 !out/series/*.mp4
 __pycache__
+out/preview
