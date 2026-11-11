@@ -155,6 +155,10 @@ def finish(ep, still_cam=None, still_target=(0, 0, 0)):
     out_anchor = ROOT / f"src/series/{ep}/anchors.json"
     for p in (out_glb, out_anchor):
         p.parent.mkdir(parents=True, exist_ok=True)
+    # objects parented with `o.parent = g` keep their world position (scripts create them in world space)
+    for o in bpy.data.objects:
+        if o.parent is not None and o.matrix_parent_inverse == o.matrix_parent_inverse.Identity(4):
+            o.matrix_parent_inverse = o.parent.matrix_world.inverted()
     bpy.context.view_layer.update()
     anchors = {}
     for o in bpy.data.objects:

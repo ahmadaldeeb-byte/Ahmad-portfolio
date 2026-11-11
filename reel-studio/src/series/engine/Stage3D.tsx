@@ -3,6 +3,7 @@ import {AbsoluteFill, Easing, interpolate, useCurrentFrame, useVideoConfig} from
 import {ThreeCanvas} from '@remotion/three';
 import {useThree} from '@react-three/fiber';
 import * as THREE from 'three';
+import {RoomEnvironment} from 'three/examples/jsm/environments/RoomEnvironment.js';
 
 export type V3 = [number, number, number];
 export type CamKey = {f: number; pos: V3; target: V3; fov?: number};
@@ -51,6 +52,19 @@ const FrameCamera: React.FC<{keys: CamKey[]; frameOffset: number}> = ({keys, fra
   return null;
 };
 
+/** Neutral studio reflections so metals (silver, pewter, brass) read as metal instead of black. */
+const Env: React.FC<{intensity?: number}> = ({intensity = 0.4}) => {
+  const {gl, scene} = useThree();
+  useLayoutEffect(() => {
+    if (scene.environment) return;
+    const pm = new THREE.PMREMGenerator(gl);
+    scene.environment = pm.fromScene(new RoomEnvironment(), 0.04).texture;
+    scene.environmentIntensity = intensity;
+    pm.dispose();
+  }, [gl, scene, intensity]);
+  return null;
+};
+
 /** WebGL stage with frame-driven camera. `frameOffset` = absolute frame of this Sequence's start, so camera
  *  keys can be written in episode (absolute) frames. */
 export const Stage3D: React.FC<{keys: CamKey[]; frameOffset: number; background?: string; children: React.ReactNode}> = ({keys, frameOffset, background, children}) => {
@@ -59,8 +73,11 @@ export const Stage3D: React.FC<{keys: CamKey[]; frameOffset: number; background?
     <AbsoluteFill style={{background: background ?? 'radial-gradient(120% 80% at 50% 40%, #1d2230 0%, #0b0d12 65%, #050609 100%)'}}>
       <ThreeCanvas width={width} height={height} linear={false} gl={{antialias: true, alpha: true}}>
         <FrameCamera keys={keys} frameOffset={frameOffset} />
+        <Env />
         {children}
       </ThreeCanvas>
+      {/* legibility scrims behind the top (hook/labels) and bottom (facts) text bands */}
+      <AbsoluteFill style={{pointerEvents: 'none', background: 'linear-gradient(rgba(5,6,9,0.55) 0%, rgba(5,6,9,0) 30%, rgba(5,6,9,0) 58%, rgba(5,6,9,0.6) 88%)'}} />
     </AbsoluteFill>
   );
 };

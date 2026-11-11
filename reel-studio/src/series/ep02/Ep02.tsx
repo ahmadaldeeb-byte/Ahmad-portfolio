@@ -40,7 +40,7 @@ export const CUES: CueList = [
   ['museum', 'بجامعة'],
 ];
 
-const CREDIT = 'Nicéphore Niépce, View from the Window at Le Gras, c. 1826–27 · Public domain · Harry Ransom Center, UT Austin · via Wikimedia Commons';
+const CREDIT = 'Nicéphore Niépce, View from the Window at Le Gras, c. 1826–27 · enhanced reproduction by Helmut Gernsheim, c. 1952 · Public domain · Harry Ransom Center, UT Austin · via Wikimedia Commons';
 const IMG = 'archive/ep02-le-gras.jpg';
 const clamp = {extrapolateLeft: 'clamp', extrapolateRight: 'clamp'} as const;
 const ramp = (f: number, a: number, b: number) => interpolate(f, [a, b], [0, 1], {...clamp, easing: Easing.inOut(Easing.cubic)});
@@ -284,7 +284,7 @@ export const Ep02: React.FC<SeriesProps> = (p) => {
       </Shot>
 
       {/* text */}
-      <ArabicHook font={p.font} from={0} durationInFrames={c.metal - 2} lines={HOOK} capHeightPct={3.4} y={19} wordStarts={p.hookWordStarts.length ? p.hookWordStarts : undefined} />
+      <ArabicHook font={p.font} from={0} durationInFrames={c.metal - 2} lines={HOOK} capHeightPct={3.4} y={20} wordStarts={p.hookWordStarts.length ? p.hookWordStarts : undefined} />
       <Fact font={p.font} from={c.year} to={c.bitumen - 2} value={"\u20661826 – 1827\u2069"} caption={['نيسفور نييبس · فرنسا']} y={70} />
       <PartLabel font={p.font} from={c.bitumen} durationInFrames={c.secret - c.bitumen} text="قار يهودا" capHeightPct={2.5} x={86} y={20} anchor={pin(keysT, A.plate, c.bitumen)} width={width} height={height} />
       <PartLabel font={p.font} from={c.camera + 10} durationInFrames={c.window - c.camera - 10} text="لوح القار" capHeightPct={2.4} x={86} y={20} anchor={pin(keysR, A.plate_in_camera, c.camera + 10)} width={width} height={height} />
@@ -293,7 +293,7 @@ export const Ep02: React.FC<SeriesProps> = (p) => {
       <Fact font={p.font} from={c.found} to={c.museum - 2} value="1952" caption={['انلقى بعد ما ضاع عقود']} y={70} />
       <PartLabel font={p.font} from={c.museum} durationInFrames={end - c.museum} text="مركز هاري رانسوم · أوستن" capHeightPct={2.3} x={86} y={20} anchor={pin(keysM, A.case, c.museum)} width={width} height={height} />
 
-      {p.voiceStatus === 'temp' ? <Tag text="صوت مؤقت" font={p.font} tone="temp" x={5} y={80.5} /> : null}
+      {p.voiceStatus === 'temp' ? <Tag text="صوت مؤقت" font={p.font} tone="temp" x={70} y={7.6} /> : null}
       {p.showGuides ? <SafeGuides /> : null}
     </AbsoluteFill>
   );
