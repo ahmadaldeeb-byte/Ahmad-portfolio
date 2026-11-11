@@ -7,6 +7,7 @@ import {CUES as CUES03, Ep03, HOOK as HOOK03} from './ep03/Ep03';
 import {CUES as CUES04, Ep04, HOOK as HOOK04} from './ep04/Ep04';
 import {CUES as CUES05, Ep05, HOOK as HOOK05} from './ep05/Ep05';
 import {CUES as CUES06, Ep06, HOOK as HOOK06} from './ep06/Ep06';
+import {CUES as CUES07, Ep07, HOOK as HOOK07} from './ep07/Ep07';
 // @series-imports
 
 const base = {schema: seriesSchema, durationInFrames: 1500, fps: FPS, width: 1080, height: 1920} as const;
@@ -19,6 +20,7 @@ export const CameraHistory: React.FC = () => (
     <Composition id="CH04-FirstNegative" component={Ep04} defaultProps={seriesDefaults('04')} calculateMetadata={seriesMetadata(CUES04, HOOK04)} {...base} />
     <Composition id="CH05-HorseInMotion" component={Ep05} defaultProps={seriesDefaults('05')} calculateMetadata={seriesMetadata(CUES05, HOOK05)} {...base} />
     <Composition id="CH06-KodakFilm" component={Ep06} defaultProps={seriesDefaults('06')} calculateMetadata={seriesMetadata(CUES06, HOOK06)} {...base} />
+    <Composition id="CH07-FirstColor" component={Ep07} defaultProps={seriesDefaults('07')} calculateMetadata={seriesMetadata(CUES07, HOOK07)} {...base} />
     {/* @series-compositions */}
   </Folder>
 );
