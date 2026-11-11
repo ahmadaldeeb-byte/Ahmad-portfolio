@@ -11,7 +11,8 @@
     "new-episode": "node scripts/new-episode.mjs",
     "typecheck": "tsc --noEmit",
     "vo": "NODE_USE_ENV_PROXY=1 node scripts/voiceover/eleven.mjs",
-    "render:gimbal-vo": "remotion render src/index.ts GimbalTiltReelVO out/gimbal-tilt-vo.mp4 --codec=h264 --pixel-format=yuv420p --color-space=bt709"
+    "render:gimbal-vo": "remotion render src/index.ts GimbalTiltReelVO out/gimbal-tilt-vo.mp4 --codec=h264 --pixel-format=yuv420p --color-space=bt709",
+    "series:tts": "python3 series/camera-history/tts_temp.py"
   },
   "dependencies": {
     "@react-three/fiber": "9.8.2",

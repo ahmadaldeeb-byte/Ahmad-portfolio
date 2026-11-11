@@ -11,3 +11,7 @@ public/vo/library
 # local Python envs are never part of the project
 .venv
 !out/gimbal-tilt-vo.mp4
+.tts
+.cache
+!out/series/
+!out/series/*.mp4
