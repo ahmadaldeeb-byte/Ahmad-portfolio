@@ -9,12 +9,15 @@
     "render:gimbal": "remotion render src/index.ts GimbalTiltReel out/gimbal-tilt.mp4 --codec=h264 --pixel-format=yuv420p --color-space=bt709 --enforce-audio-track",
     "render:preview": "remotion render src/index.ts TextMotionPreview out/text-motion-preview.mp4 --codec=h264 --pixel-format=yuv420p",
     "new-episode": "node scripts/new-episode.mjs",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "vo": "NODE_USE_ENV_PROXY=1 node scripts/voiceover/eleven.mjs",
+    "render:gimbal-vo": "remotion render src/index.ts GimbalTiltReelVO out/gimbal-tilt-vo.mp4 --codec=h264 --pixel-format=yuv420p --color-space=bt709"
   },
   "dependencies": {
     "@react-three/fiber": "9.8.2",
     "@remotion/cli": "4.0.542",
     "@remotion/fonts": "4.0.542",
+    "@remotion/media": "4.0.542",
     "@remotion/three": "4.0.542",
     "@remotion/transitions": "4.0.542",
     "@remotion/zod-types": "4.0.542",

@@ -19,12 +19,14 @@ export const RIG = {
 };
 
 /** Handle pitch in degrees (+ = top of handle forward, toward the lens). */
-export const handleTiltDeg = (f: number, p: Pick<GimbalProps, 'tiltFrom' | 'tiltRampFrames' | 'counterTo'>) => {
+export const handleTiltDeg = (f: number, p: Pick<GimbalProps, 'tiltFrom' | 'tiltRampFrames' | 'counterTo' | 'hookFrames'>) => {
   const A = p.counterTo;
   const t0 = p.tiltFrom;
   const r = p.tiltRampFrames;
   // hook: small natural wobble (camera already steady)
-  const wobble = interpolate(f, [0, 16, 34, 52, 62], [0, -4, 5, -2, 0], {...clamp, easing: io});
+  // spread over the hook (62 frames by default, longer when the hook follows a voice-over)
+  const H = Math.max(40, p.hookFrames);
+  const wobble = interpolate(f, [0, H * 0.26, H * 0.55, H * 0.84, H], [0, -4, 5, -2, 0], {...clamp, easing: io});
   if (f < t0) return wobble;
   // forward tilt to A (Counter-shaped ease), hold, back to -0.6A, home
   if (f < t0 + r) return interpolate(f, [t0, t0 + r], [0, A], {...clamp, easing: roll});

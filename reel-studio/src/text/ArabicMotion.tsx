@@ -16,8 +16,8 @@ type Common = {font: ArabicFont; from: number; durationInFrames: number};
 
 /** Hook / payoff line(s): word-by-word entry (Arabic words stay joined), short fade-out. */
 export const ArabicHook: React.FC<
-  Common & {lines: string[]; capHeightPct: number; y: number; entry?: KineticTextProps['entry']; color?: string}
-> = ({font, from, durationInFrames, lines, capHeightPct, y, entry = 'perWord', color = INK.text}) => (
+  Common & {lines: string[]; capHeightPct: number; y: number; entry?: KineticTextProps['entry']; color?: string; wordStarts?: number[]}
+> = ({font, from, durationInFrames, lines, capHeightPct, y, entry = 'perWord', color = INK.text, wordStarts}) => (
   <Sequence from={from} durationInFrames={durationInFrames} name="Hook" layout="none">
     <KineticText
       lines={lines}
@@ -26,6 +26,7 @@ export const ArabicHook: React.FC<
       exit="fade"
       exitFrames={6}
       staggerFrames={4}
+      wordStarts={wordStarts}
       capHeightPct={capHeightPct}
       weight={700}
       y={y}

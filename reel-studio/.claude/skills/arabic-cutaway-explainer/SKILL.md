@@ -67,6 +67,22 @@ Arabic rules (from official `remotion-markup/arabic-text.md`): `dir="rtl"`, no l
 animate per word or per line; per letter only via `splitArabicLetters` (ZWJ). Fonts are vendored in
 `public/fonts` (IBM Plex Sans Arabic, Cairo, Tajawal, Readex Pro) - choose with the `font` prop.
 
+### 6b. Voice-over (ElevenLabs, Eleven v4)
+1. `npm run vo -- models` - confirm the Eleven v4 model id (the tts step picks v4 automatically, warns
+   and falls back to v3 / multilingual v2 if the account has no v4).
+2. Library first: `npm run vo -- library --gender male --previews 1` (Arabic voices + preview mp3s in
+   `public/vo/library/`), listen, then `npm run vo -- add --public-owner <id> --voice <id> --name "<name>"`.
+3. If no library voice has the tone: Voice Design with `scripts/voiceover/voice-design.txt`
+   (`npm run vo -- design --description-file scripts/voiceover/voice-design.txt --text-file <hook.txt>`),
+   listen to the previews in `public/vo/design/`, then `save-design --generated <id> --name "<name>"`.
+4. `npm run vo -- tts --voice <voice_id> --text-file <hook.txt> --out vo/<slug>-hook` writes the mp3 and
+   `<slug>-hook.words.json` (word start/end from ElevenLabs timestamps, forced alignment as fallback).
+5. Set `voiceover: 'vo/<slug>-hook'` and the cue props. `calculateMetadata` re-times the episode on
+   the recording: on-screen hook words land on the spoken words (`cueLeadFrames` = 2 frames early, the
+   apple-motion VO rule), the reveal starts on `revealCue`, the apple-motion part label on `labelCue`,
+   the mechanism follows, and the duration grows to fit the voice. Pilot: `src/episodes/gimbal/voiceSync.ts`.
+6. Review sound + motion together in Studio (`TextMotionPreviewVO`, `GimbalTiltReelVO`) before exporting.
+
 ### 7. Preview, then export
 ```bash
 npm run studio                       # Remotion Studio → <Name>TextPreview, then <Name>Reel

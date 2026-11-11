@@ -51,6 +51,17 @@ export const gimbalSchema = z.object({
   tiltFrom: z.number().int().min(0),
   tiltRampFrames: z.number().int().min(4),
   correctionLagFrames: z.number().int().min(0).max(10),
+  // voice-over (ElevenLabs): '' = no voice. Path under public/ without extension; needs <path>.mp3 + <path>.words.json
+  voiceover: z.string(),
+  voiceFrom: z.number().int().min(0),
+  /** spoken word that starts the reveal */
+  revealCue: z.string(),
+  /** spoken phrase that brings in the part label */
+  labelCue: z.string(),
+  /** type lands this many frames BEFORE the spoken word (apple-motion VO.typeLeadFrames = 2) */
+  cueLeadFrames: z.number().int().min(0).max(10),
+  /** derived by calculateMetadata from the words file (frames, relative to the hook start) */
+  hookWordStarts: z.array(z.number()),
   // preview helpers
   showGuides: z.boolean(),
 });
@@ -85,8 +96,17 @@ export const gimbalDefaults: GimbalProps = {
   tiltFrom: 96,
   tiltRampFrames: 28,
   correctionLagFrames: 3,
+  voiceover: '',
+  voiceFrom: 6,
+  revealCue: 'هون',
+  labelCue: 'محور الميل',
+  cueLeadFrames: 2,
+  hookWordStarts: [],
   showGuides: false,
 };
+
+/** Hook used with the voice-over: the spoken question, shown word by word on the speech. */
+export const VO_HOOK = ['ليش الكاميرا بتضل ثابتة', 'وإنت بتميل المقبض؟'];
 
 export const GIMBAL_FPS = 30;
 export const GIMBAL_FRAMES = 240;

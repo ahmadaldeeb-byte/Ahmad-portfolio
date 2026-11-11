@@ -49,6 +49,9 @@ export type KineticTextProps = {
    *  and makes perLetter split into joinable units (ZWJ) instead of isolated letters. */
   dir?: 'ltr' | 'rtl';
   lang?: string;
+  /** [reel-studio patch] perWord only: start frame of each word (relative to this text's start),
+   *  e.g. from voice-over word timings. Overrides staggerFrames. */
+  wordStarts?: number[];
 };
 
 const capToEmCache = new Map<string, number>();
@@ -124,6 +127,7 @@ export const KineticText: React.FC<KineticTextProps> = ({
   fontFamily,
   dir,
   lang,
+  wordStarts,
 }) => {
   const family = fontFamily ?? TYPE.family;
   const rtl = dir === 'rtl';
@@ -233,7 +237,8 @@ export const KineticText: React.FC<KineticTextProps> = ({
           {parts.map((part, pi) => {
             if (/^\s+$/.test(part)) return <span key={pi}>{part}</span>;
             const i = unitIndex++;
-            const up = entryProgress(f - (i * stagger) / ts, fps, entry === 'perLetter' ? 2 : entryFrames);
+            const startAt = entry === 'perWord' && wordStarts && wordStarts[i] !== undefined ? wordStarts[i] : i * stagger;
+            const up = entryProgress(f - startAt / ts, fps, entry === 'perLetter' ? 2 : entryFrames);
             const st: React.CSSProperties =
               entry === 'perWord'
                 ? {

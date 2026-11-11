@@ -6,3 +6,5 @@ out/stills
 .claude/skills/animated-svg/node_modules
 .claude/skills/animated-svg/assets/vendor
 !out/gimbal-tilt.mp4
+public/vo/_test
+public/vo/library

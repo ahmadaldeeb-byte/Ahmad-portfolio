@@ -49,6 +49,20 @@ scripts/new-episode.mjs  scaffolder
 | motion pack (15) | `stanleystaw/Motion-design-Stanley`, via `npx skills add` | installed; `reel-export` rules applied to the MP4 |
 | Blender | — | not installed: no Blender in this environment |
 
+## Voice-over (ElevenLabs)
+```bash
+npm run vo -- models                                     # find Eleven v4
+npm run vo -- library --gender male --previews 1         # Arabic library voices → public/vo/library/
+npm run vo -- design --description-file scripts/voiceover/voice-design.txt --text-file scripts/voiceover/gimbal-hook.txt
+npm run vo -- save-design --generated <generated_voice_id> --name "Reel narrator" --description-file scripts/voiceover/voice-design.txt
+npm run vo -- tts --voice <voice_id> --text-file scripts/voiceover/gimbal-hook.txt --out vo/gimbal-hook
+npm run studio                                           # TextMotionPreviewVO / GimbalTiltReelVO
+npm run render:gimbal-vo                                 # → out/gimbal-tilt-vo.mp4
+```
+The key is read from `ELEVENLABS_API_KEY` (or injected by the cloud-session proxy). With a voice-over, the hook
+words follow the speech, the reveal starts on «هون» and the label «محور الميل» lands on the spoken phrase
+(`src/episodes/gimbal/voiceSync.ts`); cue words, lead frames and voice offset are props.
+
 ## Rendering without a GPU
 `remotion.config.ts` sets `--gl=swangle` (SwiftShader). Passing `--gl=angle` on a GPU-less machine fails
 with “Error creating WebGL context”. On a machine with a GPU, `--gl=angle` is faster.

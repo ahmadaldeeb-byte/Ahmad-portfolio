@@ -3,6 +3,7 @@ import {AbsoluteFill, useVideoConfig} from 'remotion';
 import {ArabicHook, ArabicNumber, PartLabel} from '../../text/ArabicMotion';
 import {project, RIG, rigState, withHandle} from './rig';
 import type {GimbalProps} from './storyboard';
+import {VoiceTrack} from '../../text/VoiceTrack';
 
 /** All on-screen Arabic text of the gimbal episode. Rendered on top of the 3D scene in the reel and
  *  on top of layout guides in TextMotionPreview. */
@@ -16,7 +17,8 @@ export const GimbalTextLayer: React.FC<GimbalProps> = (p) => {
   };
   return (
     <AbsoluteFill>
-      <ArabicHook font={p.font} from={p.hookFrom} durationInFrames={p.hookFrames} lines={p.hook} capHeightPct={p.hookCapPct} y={p.hookY} />
+      <VoiceTrack {...p} />
+      <ArabicHook font={p.font} from={p.hookFrom} durationInFrames={p.hookFrames} lines={p.hook} capHeightPct={p.hookCapPct} y={p.hookY} wordStarts={p.hookWordStarts.length ? p.hookWordStarts : undefined} />
       <PartLabel
         font={p.font}
         from={p.labelFrom}
