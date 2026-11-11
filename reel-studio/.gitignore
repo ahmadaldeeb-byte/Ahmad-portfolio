@@ -1,0 +1,18 @@
+node_modules
+out/*.mp4
+out/*.png
+out/*.jpeg
+out/stills
+.claude/skills/animated-svg/node_modules
+.claude/skills/animated-svg/assets/vendor
+!out/gimbal-tilt.mp4
+public/vo/_test
+public/vo/library
+# local Python envs are never part of the project
+.venv
+!out/gimbal-tilt-vo.mp4
+.tts
+.cache
+!out/series/
+!out/series/*.mp4
+__pycache__

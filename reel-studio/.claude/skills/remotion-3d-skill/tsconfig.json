@@ -1,0 +1,26 @@
+{
+  "compilerOptions": {
+    "target": "ES2022",
+    "lib": ["DOM", "DOM.Iterable", "ES2022"],
+    "module": "ESNext",
+    "moduleResolution": "Bundler",
+    "jsx": "react-jsx",
+    "strict": true,
+    "noEmit": true,
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true,
+    "resolveJsonModule": true,
+    "baseUrl": ".",
+    "paths": {
+      "@3d-assets/core": ["templates/core/index.ts"],
+      "@3d-assets/assets": ["templates/assets/index.ts"],
+      "@3d-assets/remotion": ["templates/remotion/index.ts"]
+    }
+  },
+  "include": [
+    "templates/**/*.ts",
+    "templates/**/*.tsx",
+    "scripts/**/*.ts"
+  ]
+}
