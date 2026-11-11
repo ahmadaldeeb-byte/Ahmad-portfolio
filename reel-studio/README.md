@@ -54,7 +54,13 @@ scripts/new-episode.mjs  scaffolder
 Script to record: `scripts/voiceover/gimbal-full.txt` (hook unchanged + tilt, sensor, roll, pan, payoff).
 Until the recording exists the reel runs on `public/vo/gimbal-full.temp.words.json`
 (`node scripts/voiceover/estimate.mjs --text-file scripts/voiceover/gimbal-full.txt --out vo/gimbal-full`).
-Drop in the recording and align it (MP3 or WAV):
+Recorded voice-over (Hamid, ElevenLabs): `public/vo/gimbal-full.mp3` (40.1 s). Its timings come from the manual path, no API:
+```bash
+node scripts/voiceover/manual-timing.mjs --audio public/vo/gimbal-full.mp3 --text-file scripts/voiceover/gimbal-full.txt --out vo/gimbal-full
+```
+It maps the script's punctuation onto the recording's pauses, spreads words by letter count, snaps them to
+micro-gaps, then applies hand corrections from `public/vo/gimbal-full.fixes.json` (`"word#occurrence": start_s`).
+With an ElevenLabs key, alignment is also possible (MP3 or WAV):
 ```bash
 npm run vo -- align --audio <rec.mp3|rec.wav> --text-file scripts/voiceover/gimbal-full.txt --out vo/gimbal-full
 ```

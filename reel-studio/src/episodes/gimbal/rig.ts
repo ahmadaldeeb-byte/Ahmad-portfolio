@@ -45,7 +45,7 @@ export const handRoll = (f: number, p: GimbalProps) => {
   const c = cf(p);
   const r = p.rollDeg;
   // «يمين وشمال» are spoken close together: the swing left waits until the swing right has landed
-  const left = Math.max(c.rollLeft, c.rollRight + 22);
+  const left = Math.max(c.rollLeft, c.rollRight + 30); // 18-frame swing + ~0.4 s hold on the right
   const home = Math.max(left + 40, c.pan - 24);
   const v = f < left ? ramp(f, c.rollRight, c.rollRight + 18, 0, r) : f < home ? ramp(f, left, left + 26, r, -r) : ramp(f, home, home + 20, -r, 0);
   return v + shake(f, c, 2.1);

@@ -85,6 +85,9 @@ animate per word or per line; per letter only via `splitArabicLetters` (ZWJ). Fo
    phrases, as in `src/episodes/gimbal/` (`cues` → `cueFrames` in `voiceSync.ts`; the rig, camera views,
    labels and numbers all read `cueFrames`). Before a recording exists, estimate timings with
    `node scripts/voiceover/estimate.mjs --text-file <script> --out vo/<slug>` (writes `.temp.words.json`).
+   Recording without API access: `node scripts/voiceover/manual-timing.mjs --audio <mp3> --text-file <script> --out vo/<slug>`
+   (pause-mapped phrases, letter-weighted words; correct mid-phrase cues in `<slug>.fixes.json` after
+   checking the audio envelope).
 6. Review sound + motion together in Studio (`TextMotionPreviewVO`, `GimbalTiltReelVO`) before exporting.
 
 ### 7. Preview, then export
