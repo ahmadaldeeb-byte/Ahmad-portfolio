@@ -59,8 +59,8 @@ const benchKeys = (c: Record<string, number>): CamKey[] => [
   {f: c.minutes, pos: [19.6, 1.68, 0.85], target: [19.0, 1.2, 0], fov: 30},
 ];
 const devKeys = (c: Record<string, number>): CamKey[] => [
-  {f: c.develop, pos: [20.6, 1.75, 0.9], target: [20.0, 1.2, 0], fov: 34},
-  {f: c.mercury, pos: [20.35, 1.6, 0.6], target: [20.0, 1.35, 0], fov: 30},
+  {f: c.develop, pos: [21.0, 2.05, 1.45], target: [20.1, 1.3, 0], fov: 34},
+  {f: c.mercury, pos: [21.0, 2.25, 1.75], target: [20.05, 1.3, 0], fov: 40},
   {f: c.fix, pos: [21.4, 1.5, 0.7], target: [20.9, 1.0, 0], fov: 32},
 ];
 const caseKeys = (c: Record<string, number>): CamKey[] => [
