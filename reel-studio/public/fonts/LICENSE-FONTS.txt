@@ -1,0 +1,1 @@
+Fonts: IBM Plex Sans Arabic, Cairo, Tajawal, Readex Pro — from Google Fonts, SIL Open Font License 1.1 (https://openfontlicense.org). Vendored so renders do not depend on the network.

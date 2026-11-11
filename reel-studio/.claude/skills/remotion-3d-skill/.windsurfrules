@@ -1,0 +1,18 @@
+# Windsurf Cascade Rules for Remotion 3D Skill
+
+## Project Overview
+This repository contains a Standalone Universal Multi-Agent Skill for composing deterministic 3D animation scenes in Remotion using Three.js and React Three Fiber.
+
+## Prime Directive: Deterministic Rendering
+- NEVER use real-time or asynchronous clocks (`Date.now()`, `Clock.getDelta()`, `requestAnimationFrame()`, `setTimeout`).
+- All 3D movement and shaders MUST be pure deterministic functions of Remotion's `frame` and `fps`.
+- Use Remotion's native `spring` and `interpolate` utilities.
+
+## Asset Workflow
+- Available 3D assets are cataloged in `references/asset-catalog.md`.
+- Inspect components via CLI: `npm run list-assets` (or `npx tsx scripts/list-assets.ts`).
+- Scaffold scenes & inject self-contained component templates:
+  ```bash
+  npx tsx scripts/scaffold-scene.ts --name=<SceneName> --template=diorama-explainer --inject
+  ```
+- Target project dependencies required: `npm install three @react-three/fiber @remotion/three zod`.

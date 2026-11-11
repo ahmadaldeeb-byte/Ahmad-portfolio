@@ -1,0 +1,29 @@
+---
+description: Deterministic 3D animation, Three.js, React Three Fiber, and Remotion scene creation guidelines
+globs: "**/*.tsx,**/*.ts"
+alwaysApply: false
+---
+
+# Cursor Rule: Remotion 3D Animation Asset Skill
+
+When composing 3D scenes, Three.js components, or Remotion video compositions with this skill:
+
+## 1. Prime Directive: The Deterministic Frame Contract
+- **Never use real-time clocks**: Do not use `Date.now()`, `performance.now()`, `requestAnimationFrame()`, or `THREE.Clock.getDelta()`.
+- **Pure frame function**: Every 3D transform (position, rotation, scale, material property, camera pose) must be driven strictly by `frame` from `useCurrentFrame()` and `fps` from `useVideoConfig()`.
+- **Spring animations**: Use Remotion's `spring({ frame, fps, config })`.
+- **Interpolations**: Use Remotion's `interpolate(frame, [inStart, inEnd], [outStart, outEnd])`.
+
+## 2. Using the Skill & Templates
+- Inspect 25+ available assets: `npx tsx scripts/list-assets.ts`
+- Scaffold scene and inject templates into target project:
+  ```bash
+  npx tsx scripts/scaffold-scene.ts --name=MyNewScene --template=diorama-explainer --inject
+  ```
+- Target project dependencies required: `npm install three @react-three/fiber @remotion/three zod`
+
+## 3. References & Catalogs
+- Catalog: `references/asset-catalog.md`
+- Camera recipes: `references/camera-recipes.md`
+- Templates: `references/composition-templates.md`
+- Self-contained source templates: `templates/`

@@ -1,0 +1,32 @@
+{
+  "name": "reel-studio",
+  "private": true,
+  "version": "0.1.0",
+  "description": "Arabic cutaway explainer reels (Remotion + R3F + apple-motion typography)",
+  "scripts": {
+    "studio": "remotion studio src/index.ts",
+    "still": "remotion still src/index.ts",
+    "render:gimbal": "remotion render src/index.ts GimbalTiltReel out/gimbal-tilt.mp4 --codec=h264 --pixel-format=yuv420p --color-space=bt709 --enforce-audio-track",
+    "render:preview": "remotion render src/index.ts TextMotionPreview out/text-motion-preview.mp4 --codec=h264 --pixel-format=yuv420p",
+    "new-episode": "node scripts/new-episode.mjs",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@react-three/fiber": "9.8.2",
+    "@remotion/cli": "4.0.542",
+    "@remotion/fonts": "4.0.542",
+    "@remotion/three": "4.0.542",
+    "@remotion/transitions": "4.0.542",
+    "@remotion/zod-types": "4.0.542",
+    "react": "19.1.0",
+    "react-dom": "19.1.0",
+    "remotion": "4.0.542",
+    "three": "0.187.0",
+    "zod": "4.6.7"
+  },
+  "devDependencies": {
+    "@types/react": "19.1.8",
+    "@types/three": "0.187.0",
+    "typescript": "5.8.3"
+  }
+}

@@ -1,0 +1,15 @@
+# Cline / Roo Code System Rules for Remotion 3D Skill
+
+You are utilizing the Standalone Remotion 3D Animation Skill.
+
+1. **Strict Deterministic Frame Contract**:
+   - Video rendering in Remotion is offline and frame-based.
+   - Do NOT use `Date.now()`, `Clock.getDelta()`, `requestAnimationFrame()`, or unseeded `Math.random()`.
+   - Calculate all 3D mesh transforms purely from `frame` (`useCurrentFrame()`) and `fps` (`useVideoConfig()`).
+
+2. **Skill Tooling & Assets**:
+   - Inspect catalog: `npx tsx scripts/list-assets.ts` (or `npm run list-assets`).
+   - Scaffold scene & inject 3D components into target Remotion project:
+     `npx tsx scripts/scaffold-scene.ts --name=<SceneName> --template=diorama-explainer --inject`
+   - Self-contained component templates reside in `templates/`.
+   - Required dependencies for target project: `npm install three @react-three/fiber @remotion/three zod`.

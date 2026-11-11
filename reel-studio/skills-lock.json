@@ -1,0 +1,173 @@
+{
+  "version": 2,
+  "skills": {
+    "animated-chart": {
+      "source": "stanleystaw/Motion-design-Stanley",
+      "sourceType": "github",
+      "skillPath": "skills/animated-chart/SKILL.md",
+      "computedHash": "bf7f8644e66c3f9101d582642fb21b4c409011144741784323e7fb946c25a077"
+    },
+    "apple-launch-film": {
+      "source": "stanleystaw/Motion-design-Stanley",
+      "sourceType": "github",
+      "skillPath": "skills/apple-launch-film/SKILL.md",
+      "computedHash": "9d6c49377921c1607fadf188a28d7e863f64ad83ac06962b058b076795f5f90b"
+    },
+    "brand-intake": {
+      "source": "stanleystaw/Motion-design-Stanley",
+      "sourceType": "github",
+      "skillPath": "skills/brand-intake/SKILL.md",
+      "computedHash": "a4ab9773c4e82b9c7453aed3ca68442bdc705944f1a4e7c2ff89c9a0d394a848"
+    },
+    "launch-video": {
+      "source": "stanleystaw/Motion-design-Stanley",
+      "sourceType": "github",
+      "skillPath": "skills/launch-video/SKILL.md",
+      "computedHash": "0122a7e03c22a51693ac2c59269d3a4337dbb4ee2f6bdc9625cb6b1087c2a12e"
+    },
+    "loop-cover": {
+      "source": "stanleystaw/Motion-design-Stanley",
+      "sourceType": "github",
+      "skillPath": "skills/loop-cover/SKILL.md",
+      "computedHash": "2fcd6dc8dd4f8efa63bd2b068ba0d31b311c30ef2fa8b4caa09ca95d6b5ef384"
+    },
+    "milestone-reveal": {
+      "source": "stanleystaw/Motion-design-Stanley",
+      "sourceType": "github",
+      "skillPath": "skills/milestone-reveal/SKILL.md",
+      "computedHash": "99f107102ac218f40c294015c437ac68524416c8b6d962c9dba9dda4d9bf98a9"
+    },
+    "model-showdown": {
+      "source": "stanleystaw/Motion-design-Stanley",
+      "sourceType": "github",
+      "skillPath": "skills/model-showdown/SKILL.md",
+      "computedHash": "c4c32be9c9816dff005c203dfa95c423df2aae70188800b4e6cfa1ee8dd6add4"
+    },
+    "motion-brief-writer": {
+      "source": "stanleystaw/Motion-design-Stanley",
+      "sourceType": "github",
+      "skillPath": "skills/motion-brief-writer/SKILL.md",
+      "computedHash": "b2e846aaa2624bf95202ee290ba8a07eafadc4438911f382ce0f48d018236c13"
+    },
+    "motion-effects": {
+      "source": "stanleystaw/Motion-design-Stanley",
+      "sourceType": "github",
+      "skillPath": "skills/motion-effects/SKILL.md",
+      "computedHash": "665f2911af78d794d32cd18c2c775b76ff12699fbbb05d7954eb21bb4f2b2b33"
+    },
+    "motion-prompt-writer": {
+      "source": "stanleystaw/Motion-design-Stanley",
+      "sourceType": "github",
+      "skillPath": "skills/motion-prompt-writer/SKILL.md",
+      "computedHash": "a984c4625eea48c3b3ec779b8418f3b1f72b60b912474c5e6b93948d6217b306"
+    },
+    "newsletter-promo": {
+      "source": "stanleystaw/Motion-design-Stanley",
+      "sourceType": "github",
+      "skillPath": "skills/newsletter-promo/SKILL.md",
+      "computedHash": "ab4f48303759b75528b0fbd09ba021bc01843b00561b1d5a75d2d69f6a0e0e19"
+    },
+    "reel-export": {
+      "source": "stanleystaw/Motion-design-Stanley",
+      "sourceType": "github",
+      "skillPath": "skills/reel-export/SKILL.md",
+      "computedHash": "b1dc112e84eefb44000a2661ddb9d63b96ef0b6d26d0f3d6cc8e4c83de2d425d"
+    },
+    "reference-to-motion": {
+      "source": "stanleystaw/Motion-design-Stanley",
+      "sourceType": "github",
+      "skillPath": "skills/reference-to-motion/SKILL.md",
+      "computedHash": "e090335adae1b0233d00fe2e341c19b0a02a18579af7b61765164655de45934f"
+    },
+    "remotion-best-practices": {
+      "source": "remotion-dev/skills",
+      "sourceType": "github",
+      "skillPath": "skills/remotion-best-practices/SKILL.md",
+      "computedHash": "027911032531105a8055dcc3d9a44b129005bbea8fdbd3d721ca1e4db432b9fc"
+    },
+    "remotion-captions": {
+      "source": "remotion-dev/skills",
+      "sourceType": "github",
+      "skillPath": "skills/remotion-captions/SKILL.md",
+      "computedHash": "2d9394f042195359d3f519ba2b828940f31deb88e34acdc3c37570113336b5b2"
+    },
+    "remotion-create": {
+      "source": "remotion-dev/skills",
+      "sourceType": "github",
+      "skillPath": "skills/remotion-create/SKILL.md",
+      "computedHash": "3e453c3d1f019d9fd4269d0dc523b56546ec77fc004e7dc65f13293293927300"
+    },
+    "remotion-docs": {
+      "source": "remotion-dev/skills",
+      "sourceType": "github",
+      "skillPath": "skills/remotion-docs/SKILL.md",
+      "computedHash": "1c993ff9a8f827d586578c4d575ead197ddb708ea49f981f1aa52934569ceee2"
+    },
+    "remotion-interactivity": {
+      "source": "remotion-dev/skills",
+      "sourceType": "github",
+      "skillPath": "skills/remotion-interactivity/SKILL.md",
+      "computedHash": "17af7179922f90de9831d647deb6fbbbbcdc6586d26a7a98734a39823f80a35f"
+    },
+    "remotion-license": {
+      "source": "remotion-dev/skills",
+      "sourceType": "github",
+      "skillPath": "skills/remotion-license/SKILL.md",
+      "computedHash": "516680df06eb22a2b1f871f0dba9fa06863231743a566bd96eb248fef3410b67"
+    },
+    "remotion-maps": {
+      "source": "remotion-dev/skills",
+      "sourceType": "github",
+      "skillPath": "skills/remotion-maps/SKILL.md",
+      "computedHash": "0ab0e3fe4f835e612c2b9b34123668e6b77d3ded810b9417e4f1323b35d6b443"
+    },
+    "remotion-markup": {
+      "source": "remotion-dev/skills",
+      "sourceType": "github",
+      "skillPath": "skills/remotion-markup/SKILL.md",
+      "computedHash": "e4b1d9451aa08c62e4901d8f1f8323d24133bbb108dcea819a4a1690defb14cb"
+    },
+    "remotion-multimedia": {
+      "source": "remotion-dev/skills",
+      "sourceType": "github",
+      "skillPath": "skills/remotion-multimedia/SKILL.md",
+      "computedHash": "8300b4afa850128722c141a9600fd2aa4a448f186e09b7ff9dbf5257545a4573"
+    },
+    "remotion-render": {
+      "source": "remotion-dev/skills",
+      "sourceType": "github",
+      "skillPath": "skills/remotion-render/SKILL.md",
+      "computedHash": "781b458d874c7c8037a84f0b5e8de0cb38ec477db4e0d821b2d6f5de144c1bfa"
+    },
+    "remotion-saas": {
+      "source": "remotion-dev/skills",
+      "sourceType": "github",
+      "skillPath": "skills/remotion-saas/SKILL.md",
+      "computedHash": "a7bd14b6dc7a2fa6f2064d48abe884b4cbc934965bbce224c9b6f1f56e4f96c7"
+    },
+    "remotion-studio": {
+      "source": "remotion-dev/skills",
+      "sourceType": "github",
+      "skillPath": "skills/remotion-studio/SKILL.md",
+      "computedHash": "6f0764115d1fb7fde62f97a819c4dbe7a5e04722a50e90f1a1a9dc86c53876a6"
+    },
+    "remotion-upgrade": {
+      "source": "remotion-dev/skills",
+      "sourceType": "github",
+      "skillPath": "skills/remotion-upgrade/SKILL.md",
+      "computedHash": "9aec7684e1b4bd42e343f9b6d9757bb167c0ae8293f41f42280caade73ea975b"
+    },
+    "title-sequence-3d": {
+      "source": "stanleystaw/Motion-design-Stanley",
+      "sourceType": "github",
+      "skillPath": "skills/title-sequence-3d/SKILL.md",
+      "computedHash": "c22dae16fed38d03886e1e060f26fa5e70b0b33d318477a9394f9a63d090ec2a"
+    },
+    "vox-explainer": {
+      "source": "stanleystaw/Motion-design-Stanley",
+      "sourceType": "github",
+      "skillPath": "skills/vox-explainer/SKILL.md",
+      "computedHash": "9f7033b698ad90313818325583b9bdf6db824fe1f385210d4a1b73db7c704676"
+    }
+  }
+}
