@@ -1,0 +1,58 @@
+# Windows packaging for Heroes World (electron-builder).
+#   npm run dist:win → dist-desktop/Heroes-World-Setup-<version>.exe  (NSIS installer, updates itself)
+#                      dist-desktop/Heroes-World-Portable-<version>.exe (USB copy, no auto-update)
+#                      dist-desktop/latest.yml + *.blockmap         (update feed files)
+# productName stays "HeroesWorld": the install folder (%LOCALAPPDATA%\Programs\HeroesWorld)
+# and the data folder (%APPDATA%\HeroesWorld) must not move between versions.
+appId: edu.heroesworld.app
+productName: HeroesWorld
+copyright: "© Heroes World — عالم الأبطال التعليمي"
+directories:
+  output: dist-desktop
+  buildResources: build
+# The app shell and its only runtime dependency (electron-updater, from "dependencies");
+# the games are the prebuilt static release (out/), copied as resources.
+files:
+  - desktop/**/*
+  - package.json
+extraResources:
+  - from: out
+    to: web
+asar: true
+electronLanguages: [ar, en-US]
+# Update feed: the public GitHub Releases of this repository (no token in the app).
+# electron-builder never publishes from CI here (--publish never); a release is
+# created as a draft and made public only by the owner.
+publish:
+  provider: github
+  owner: ahmadaldeeb-byte
+  repo: Ahmad-portfolio
+  releaseType: draft
+win:
+  icon: build/icon.png
+  target:
+    - target: nsis
+      arch: [x64]
+    - target: portable
+      arch: [x64]
+  executableName: HeroesWorld
+  # Code signing: set CSC_LINK / CSC_KEY_PASSWORD (or Azure Trusted Signing) and add
+  # publisherName here, so updates are also checked against the certificate.
+portable:
+  artifactName: Heroes-World-Portable-${version}.${ext}
+  # Show a splash while the portable exe unpacks on slow USB sticks.
+  splashImage: build/portable-splash.bmp
+nsis:
+  artifactName: Heroes-World-Setup-${version}.${ext}
+  oneClick: false
+  perMachine: false
+  allowToChangeInstallationDirectory: true
+  createDesktopShortcut: always
+  createStartMenuShortcut: true
+  shortcutName: عالم الأبطال التعليمي
+  uninstallDisplayName: عالم الأبطال التعليمي (Heroes World)
+  # Teacher data in %APPDATA%\HeroesWorld is kept when the app is uninstalled or updated.
+  deleteAppDataOnUninstall: false
+  differentialPackage: true
+  installerLanguages: [ar_SA, en_US]
+  language: "1025"

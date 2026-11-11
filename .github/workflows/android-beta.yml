@@ -1,0 +1,112 @@
+# Heroes World — Android Beta APK (Capacitor).
+# 1. Basic checks: type check, unit tests, content audit, production build.
+# 2. Test APK (WebView debugging on) installed on an Android emulator with the
+#    network switched off; tests/android drive the real app (curricula, games,
+#    lessons, teacher data across restarts, share sheet, landscape, tablet size).
+# 3. The Beta APK (WebView debugging off): signed with the release key when the
+#    ANDROID_KEYSTORE_* secrets exist, otherwise debug-signed (installable, but a
+#    later build signed by another key needs an uninstall first — see INSTALL).
+# Nothing is published: the APK is an artifact of the run (login required).
+name: Android beta
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [claude/heroes-world-educational-platform-27pxa0]
+    paths: [android/**, capacitor.config.ts, tests/android/**, playwright.android.config.ts, .github/workflows/android-beta.yml]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: android-beta-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  APK_NAME: Heroes-World-1.0.0-Beta.apk
+
+jobs:
+  android:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 75
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 21
+      - run: npm ci
+      - name: Type check
+        run: npm run lint
+      - name: Unit tests
+        run: npm test
+      - name: Content audit (curricula, guides, games, ready lessons)
+        run: node scripts/release/audit.mjs
+      - name: Production build (static release)
+        run: npm run build
+
+      - name: Test APK (WebView debugging on, for the automated tests)
+        run: |
+          HEROES_ANDROID_DEBUG=1 npx cap sync android
+          (cd android && ./gradlew assembleDebug --no-daemon -q)
+          mkdir -p apk && cp android/app/build/outputs/apk/debug/app-debug.apk apk/test.apk
+      - name: Enable KVM for the emulator
+        run: |
+          echo 'KERNEL=="kvm", GROUP="kvm", MODE="0666", OPTIONS+="static_node=kvm"' | sudo tee /etc/udev/rules.d/99-kvm4all.rules
+          sudo udevadm control --reload-rules
+          sudo udevadm trigger --name-match=kvm
+      - name: Run the app on an Android emulator (offline)
+        uses: reactivecircus/android-emulator-runner@v2
+        with:
+          api-level: 35
+          target: google_apis
+          arch: x86_64
+          profile: pixel_6
+          disable-animations: true
+          emulator-options: -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none
+          script: |
+            adb install -r apk/test.apk
+            npx playwright test -c playwright.android.config.ts
+
+      - name: Beta APK (WebView debugging off)
+        env:
+          KEYSTORE_B64: ${{ secrets.ANDROID_KEYSTORE_BASE64 }}
+          KEYSTORE_PASSWORD: ${{ secrets.ANDROID_KEYSTORE_PASSWORD }}
+          KEY_ALIAS: ${{ secrets.ANDROID_KEY_ALIAS }}
+          KEY_PASSWORD: ${{ secrets.ANDROID_KEY_PASSWORD }}
+        run: |
+          npx cap sync android
+          mkdir -p beta && cp docs/release/android/INSTALL.md beta/
+          if [ -n "$KEYSTORE_B64" ]; then
+            (cd android && ./gradlew assembleRelease --no-daemon -q)
+            echo "$KEYSTORE_B64" | base64 -d > release.jks
+            bt=$(ls -d "$ANDROID_HOME"/build-tools/* | sort -V | tail -1)
+            "$bt/zipalign" -p -f 4 android/app/build/outputs/apk/release/app-release-unsigned.apk aligned.apk
+            "$bt/apksigner" sign --ks release.jks --ks-pass env:KEYSTORE_PASSWORD --ks-key-alias "$KEY_ALIAS" --key-pass env:KEY_PASSWORD --out "beta/$APK_NAME" aligned.apk
+            rm -f release.jks
+            echo "Signed with the release key."
+          else
+            (cd android && ./gradlew assembleDebug --no-daemon -q)
+            cp android/app/build/outputs/apk/debug/app-debug.apk "beta/$APK_NAME"
+            echo "::warning::No ANDROID_KEYSTORE_* secrets: the Beta APK is debug-signed."
+          fi
+          bt=$(ls -d "$ANDROID_HOME"/build-tools/* | sort -V | tail -1)
+          "$bt/apksigner" verify --print-certs "beta/$APK_NAME" | head -3
+          "$bt/aapt2" dump badging "beta/$APK_NAME" | grep -E "^package|sdkVersion|application-label" || true
+          (cd beta && sha256sum *.apk > SHA256SUMS.txt && cat SHA256SUMS.txt && ls -l)
+      - uses: actions/upload-artifact@v4
+        with:
+          name: Heroes-World-1.0.0-Beta-Android
+          path: beta/
+          retention-days: 30
+          compression-level: 0
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: android-test-screenshots
+          path: test-results/
+          retention-days: 30
