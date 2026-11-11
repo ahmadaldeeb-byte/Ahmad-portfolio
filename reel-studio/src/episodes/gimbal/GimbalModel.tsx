@@ -1,9 +1,10 @@
-// Simplified 3-axis handheld gimbal, built from primitives (original geometry).
-// Cutaway pattern follows remotion-3d-skill's <StructuralCutaway />: the outer casing turns
-// translucent (depthWrite off) while the internal part we are explaining is drawn solid and coloured.
+// Simplified 3-axis handheld gimbal from primitives (original geometry), built as a joint chain
+// handle → pan → roll → tilt. Each link is a group whose world matrix comes from rig.chain(), the same
+// matrices the label anchors use. Cutaway pattern from remotion-3d-skill's <StructuralCutaway />:
+// context parts go translucent (depthWrite off), the part being explained turns solid orange.
 import React from 'react';
 import * as THREE from 'three';
-import {RIG, type RigState} from './rig';
+import {chain, RIG, type RigState} from './rig';
 
 export const PALETTE = {
   graphite: '#2a2d33',
@@ -11,29 +12,19 @@ export const PALETTE = {
   metal: '#9aa3ad',
   rubber: '#16181c',
   skin: '#c99a7c',
-  focus: '#ff8a1f', // the part being explained
+  focus: '#ff8a1f',
   focusGlow: '#ffb15c',
   copper: '#d9824b',
   ghost: '#7f9bb8',
-  level: '#5ef0c4', // "camera direction stays level"
-  handleAxis: '#e8ecf2',
+  level: '#5ef0c4',
+  hand: '#e8ecf2',
 };
 
-type Role = 'context' | 'subject' | 'focus';
-
-/** Material that fades context parts into an x-ray ghost as `reveal` goes 0 → 1. */
-const PartMat: React.FC<{color: string; role: Role; reveal: number; metalness?: number; roughness?: number; emissive?: string; emissiveIntensity?: number}> = ({
-  color,
-  role,
-  reveal,
-  metalness = 0.35,
-  roughness = 0.45,
-  emissive,
-  emissiveIntensity = 0,
-}) => {
-  const ghost = role === 'context' ? reveal : 0;
-  const opacity = 1 - ghost * 0.78;
-  const c = new THREE.Color(color).lerp(new THREE.Color(PALETTE.ghost), ghost * 0.55);
+/** Material: `ghost` fades to an x-ray, `focus` turns it orange and glowing. */
+const Mat: React.FC<{color: string; ghost?: number; focus?: number; metalness?: number; roughness?: number}> = ({color, ghost = 0, focus = 0, metalness = 0.35, roughness = 0.45}) => {
+  const g = ghost * (1 - focus);
+  const opacity = 1 - g * 0.78;
+  const c = new THREE.Color(color).lerp(new THREE.Color(PALETTE.ghost), g * 0.55).lerp(new THREE.Color(PALETTE.focus), focus * 0.55);
   return (
     <meshStandardMaterial
       color={c}
@@ -42,78 +33,70 @@ const PartMat: React.FC<{color: string; role: Role; reveal: number; metalness?: 
       transparent={opacity < 0.999}
       opacity={opacity}
       depthWrite={opacity > 0.999}
-      emissive={emissive ?? '#000000'}
-      emissiveIntensity={emissiveIntensity}
+      emissive={PALETTE.focus}
+      emissiveIntensity={focus * 0.55}
     />
   );
 };
 
-/** Thin rod between two points (used for axis lines and arrows). */
+const Link: React.FC<{m: THREE.Matrix4; children: React.ReactNode}> = ({m, children}) => (
+  <group matrixAutoUpdate={false} matrix={m}>
+    {children}
+  </group>
+);
+
+/** Thin rod between two world points (overlay: drawn on top). */
 const Rod: React.FC<{from: THREE.Vector3; to: THREE.Vector3; r: number; color: string; opacity?: number}> = ({from, to, r, color, opacity = 1}) => {
   const dir = to.clone().sub(from);
   const len = dir.length();
   if (len < 1e-4 || opacity <= 0.001) return null;
-  const mid = from.clone().add(to).multiplyScalar(0.5);
   const q = new THREE.Quaternion().setFromUnitVectors(new THREE.Vector3(0, 1, 0), dir.normalize());
   return (
-    <mesh position={mid} quaternion={q}>
+    <mesh position={from.clone().add(to).multiplyScalar(0.5)} quaternion={q} renderOrder={10}>
       <cylinderGeometry args={[r, r, len, 10]} />
       <meshBasicMaterial color={color} transparent opacity={opacity} depthTest={false} />
     </mesh>
   );
 };
 
-/** Dashed rod: alternating segments along from→to, drawn up to `progress`. */
-const DashedRod: React.FC<{from: THREE.Vector3; to: THREE.Vector3; r: number; color: string; progress?: number; opacity?: number; dash?: number}> = ({
-  from,
-  to,
-  r,
-  color,
-  progress = 1,
-  opacity = 1,
-  dash = 0.22,
-}) => {
-  const len = from.distanceTo(to) * progress;
-  const n = Math.floor(len / (dash * 2));
+const Dashed: React.FC<{from: THREE.Vector3; to: THREE.Vector3; r: number; color: string; opacity?: number; dash?: number}> = ({from, to, r, color, opacity = 1, dash = 0.2}) => {
+  if (opacity <= 0.001) return null;
+  const len = from.distanceTo(to);
   const dir = to.clone().sub(from).normalize();
+  const n = Math.floor(len / (dash * 2));
   return (
     <>
       {Array.from({length: n + 1}, (_, i) => {
         const a = i * dash * 2;
         const b = Math.min(a + dash, len);
-        if (b <= a) return null;
-        return <Rod key={i} from={from.clone().addScaledVector(dir, a)} to={from.clone().addScaledVector(dir, b)} r={r} color={color} opacity={opacity} />;
+        return b > a ? <Rod key={i} from={from.clone().addScaledVector(dir, a)} to={from.clone().addScaledVector(dir, b)} r={r} color={color} opacity={opacity} /> : null;
       })}
     </>
   );
 };
 
-/**
- * Angle arc in the Y–Z plane (pitch), centred on `centre`, from vertical/horizontal reference `startRad`
- * sweeping `sweepRad`; arrowhead shows the direction.
- */
-const PitchArc: React.FC<{centre: THREE.Vector3; radius: number; startRad: number; sweepRad: number; color: string; opacity: number}> = ({
+/** Angle arc: rotates `ref` about `axis` through `sweep` rad around `centre` (all world space), arrowhead at the end. */
+const AxisArc: React.FC<{centre: THREE.Vector3; axis: THREE.Vector3; ref: THREE.Vector3; radius: number; sweep: number; color: string; opacity: number}> = ({
   centre,
+  axis,
+  ref,
   radius,
-  startRad,
-  sweepRad,
+  sweep,
   color,
   opacity,
 }) => {
-  if (opacity <= 0.001 || Math.abs(sweepRad) < 0.02) return null;
-  const s = sweepRad >= 0 ? startRad : startRad + sweepRad;
-  const len = Math.abs(sweepRad);
-  const end = startRad + sweepRad;
-  // ring lies in local XY; rotate so local X -> world -Z ... we want angle measured in world Z–Y plane
-  // with angle 0 = +Z (lens direction) and +90° = up.  rotation.y = -PI/2 maps local +X -> world +Z.
-  const tip = new THREE.Vector3(0, Math.sin(end) * radius, Math.cos(end) * radius);
-  const tangent = new THREE.Vector3(0, Math.cos(end), -Math.sin(end)).multiplyScalar(Math.sign(sweepRad));
-  const q = new THREE.Quaternion().setFromUnitVectors(new THREE.Vector3(0, 1, 0), tangent.normalize());
+  if (opacity <= 0.001 || Math.abs(sweep) < 0.03) return null;
+  const ax = axis.clone().normalize();
+  const r0 = ref.clone().sub(ax.clone().multiplyScalar(ref.dot(ax))).normalize().multiplyScalar(radius);
+  const pts = Array.from({length: 24}, (_, i) => centre.clone().add(r0.clone().applyAxisAngle(ax, (sweep * i) / 23)));
+  const tip = pts[pts.length - 1];
+  const tangent = tip.clone().sub(pts[pts.length - 2]).normalize();
+  const q = new THREE.Quaternion().setFromUnitVectors(new THREE.Vector3(0, 1, 0), tangent);
   return (
-    <group position={centre}>
-      <mesh rotation={[0, -Math.PI / 2, 0]}>
-        <ringGeometry args={[radius - 0.035, radius + 0.035, 48, 1, s, len]} />
-        <meshBasicMaterial color={color} transparent opacity={opacity} side={THREE.DoubleSide} depthTest={false} />
+    <group renderOrder={10}>
+      <mesh>
+        <tubeGeometry args={[new THREE.CatmullRomCurve3(pts), 32, 0.035, 8, false]} />
+        <meshBasicMaterial color={color} transparent opacity={opacity} depthTest={false} />
       </mesh>
       <mesh position={tip} quaternion={q}>
         <coneGeometry args={[0.11, 0.26, 16]} />
@@ -123,27 +106,42 @@ const PitchArc: React.FC<{centre: THREE.Vector3; radius: number; startRad: numbe
   );
 };
 
-/** Low-poly hand gripping the handle (fingers wrap toward the lens side). */
+/** Generic brushless motor: housing + rotor cap with a tick mark (so rotation reads). Axis = local Y. */
+const Motor: React.FC<{r: number; h: number; rotor: number; ghost: number; focus: number}> = ({r, h, rotor, ghost, focus}) => (
+  <group>
+    <mesh>
+      <cylinderGeometry args={[r, r, h, 36]} />
+      <Mat color={PALETTE.graphiteLight} ghost={ghost} focus={focus} />
+    </mesh>
+    <group rotation={[0, rotor, 0]}>
+      <mesh position={[0, h / 2 + 0.03, 0]}>
+        <cylinderGeometry args={[r * 0.82, r * 0.82, 0.06, 36]} />
+        <Mat color={PALETTE.graphite} ghost={ghost} focus={focus} />
+      </mesh>
+      <mesh position={[r * 0.5, h / 2 + 0.07, 0]}>
+        <boxGeometry args={[r * 0.7, 0.03, 0.06]} />
+        <meshBasicMaterial color={focus > 0.05 ? PALETTE.focusGlow : PALETTE.metal} />
+      </mesh>
+    </group>
+  </group>
+);
+
 const Hand: React.FC = () => (
   <group position={[0, -2.15, 0]}>
-    {/* palm behind the grip */}
     <mesh position={[0, 0, -0.42]} scale={[1, 1.15, 0.6]}>
       <sphereGeometry args={[0.5, 24, 16]} />
       <meshStandardMaterial color={PALETTE.skin} roughness={0.7} />
     </mesh>
-    {/* four fingers wrapping round the front */}
     {[0.36, 0.12, -0.12, -0.36].map((y, i) => (
       <mesh key={i} position={[0, y, 0]} rotation={[Math.PI / 2, 0, 0]}>
         <torusGeometry args={[0.4, 0.105, 12, 24, Math.PI * 1.25]} />
         <meshStandardMaterial color={PALETTE.skin} roughness={0.7} />
       </mesh>
     ))}
-    {/* thumb resting on top */}
     <mesh position={[0.32, 0.62, -0.05]} rotation={[0.3, 0, -0.5]}>
       <capsuleGeometry args={[0.1, 0.36, 6, 12]} />
       <meshStandardMaterial color={PALETTE.skin} roughness={0.7} />
     </mesh>
-    {/* forearm leaving frame */}
     <mesh position={[0, -0.75, -0.5]} rotation={[0.35, 0, 0]}>
       <cylinderGeometry args={[0.36, 0.42, 1.1, 20]} />
       <meshStandardMaterial color={PALETTE.skin} roughness={0.75} />
@@ -151,79 +149,61 @@ const Hand: React.FC = () => (
   </group>
 );
 
-/** The tilt motor: closed housing that opens (cap slides out along the axis) to show stator + rotor. */
-const TiltMotor: React.FC<{reveal: number; rotorRad: number; glow: number}> = ({reveal, rotorRad, glow}) => {
-  const capOut = reveal * 0.55;
-  return (
-    <group position={RIG.tiltAxis}>
-      {/* fixed side (stator) — attached to the roll arm */}
-      <group rotation={[0, 0, Math.PI / 2]}>
-        <mesh position={[0, 0.08, 0]}>
-          <cylinderGeometry args={[0.44, 0.44, 0.16, 40]} />
-          <PartMat color={PALETTE.graphiteLight} role="subject" reveal={reveal} emissive={PALETTE.focus} emissiveIntensity={reveal * 0.45} />
+/** Tilt motor stator (on the roll arm): opens at the reveal to show copper windings. */
+const TiltStator: React.FC<{reveal: number; focus: number}> = ({reveal, focus}) => (
+  <group position={RIG.tiltMotor} rotation={[0, 0, Math.PI / 2]}>
+    <mesh position={[0, 0.08, 0]}>
+      <cylinderGeometry args={[0.44, 0.44, 0.16, 40]} />
+      <Mat color={PALETTE.graphiteLight} ghost={reveal} focus={focus * 0.7} />
+    </mesh>
+    {Array.from({length: 12}, (_, i) => {
+      const a = (i / 12) * Math.PI * 2;
+      return (
+        <mesh key={i} position={[Math.cos(a) * 0.27, -0.05, Math.sin(a) * 0.27]} rotation={[0, -a, 0]}>
+          <boxGeometry args={[0.12, 0.2, 0.07]} />
+          <meshStandardMaterial color={PALETTE.copper} metalness={0.7} roughness={0.35} emissive={PALETTE.focus} emissiveIntensity={focus * 0.3} />
         </mesh>
-        {/* stator teeth with copper windings */}
-        {Array.from({length: 12}, (_, i) => {
-          const a = (i / 12) * Math.PI * 2;
-          return (
-            <mesh key={i} position={[Math.cos(a) * 0.27, -0.05, Math.sin(a) * 0.27]} rotation={[0, -a, 0]}>
-              <boxGeometry args={[0.12, 0.2, 0.07]} />
-              <meshStandardMaterial color={PALETTE.copper} metalness={0.7} roughness={0.35} emissive={PALETTE.focus} emissiveIntensity={glow * 0.25} />
-            </mesh>
-          );
-        })}
-      </group>
-      {/* rotating side (rotor bell + magnets) — turns with the camera plate */}
-      <group rotation={[rotorRad, 0, 0]}>
-        <group rotation={[0, 0, Math.PI / 2]}>
-          {Array.from({length: 14}, (_, i) => {
-            const a = (i / 14) * Math.PI * 2;
-            return (
-              <mesh key={i} position={[Math.cos(a) * 0.4, -0.05, Math.sin(a) * 0.4]} rotation={[0, -a, 0]}>
-                <boxGeometry args={[0.05, 0.2, 0.12]} />
-                <meshStandardMaterial color={i % 2 ? '#c8ccd2' : '#5a6270'} metalness={0.8} roughness={0.3} />
-              </mesh>
-            );
-          })}
-          {/* outer cap: opaque before the reveal, slides outward (+X) and turns translucent */}
-          <mesh position={[0, -0.12 - capOut, 0]}>
-            <cylinderGeometry args={[0.46, 0.46, 0.14, 40]} />
-            <meshStandardMaterial
-              color={PALETTE.graphite}
-              metalness={0.4}
-              roughness={0.4}
-              transparent
-              opacity={1 - reveal * 0.8}
-              depthWrite={reveal < 0.01}
-              emissive={PALETTE.focus}
-              emissiveIntensity={reveal * 0.6}
-            />
+      );
+    })}
+    <mesh>
+      <cylinderGeometry args={[0.075, 0.075, 0.7, 16]} />
+      <meshStandardMaterial color={PALETTE.focus} emissive={PALETTE.focus} emissiveIntensity={0.3 + focus} />
+    </mesh>
+  </group>
+);
+
+/** Tilt rotor (turns with the camera): magnets + cap that slides off and turns translucent. */
+const TiltRotor: React.FC<{reveal: number; focus: number}> = ({reveal, focus}) => {
+  const out = reveal * 0.55;
+  return (
+    <group position={RIG.tiltMotor} rotation={[0, 0, Math.PI / 2]}>
+      {Array.from({length: 14}, (_, i) => {
+        const a = (i / 14) * Math.PI * 2;
+        return (
+          <mesh key={i} position={[Math.cos(a) * 0.4, -0.05, Math.sin(a) * 0.4]} rotation={[0, -a, 0]}>
+            <boxGeometry args={[0.05, 0.2, 0.12]} />
+            <meshStandardMaterial color={i % 2 ? '#c8ccd2' : '#5a6270'} metalness={0.8} roughness={0.3} />
           </mesh>
-          {/* tick mark on the rotor so its rotation is readable */}
-          <mesh position={[0.3, -0.2 - capOut, 0]}>
-            <boxGeometry args={[0.18, 0.03, 0.05]} />
-            <meshBasicMaterial color={PALETTE.focusGlow} />
-          </mesh>
-        </group>
-      </group>
-      {/* the shaft: glowing core of the axis */}
-      <mesh rotation={[0, 0, Math.PI / 2]}>
-        <cylinderGeometry args={[0.075, 0.075, 0.7, 16]} />
-        <meshStandardMaterial color={PALETTE.focus} emissive={PALETTE.focus} emissiveIntensity={0.4 + glow} metalness={0.5} roughness={0.3} />
+        );
+      })}
+      <mesh position={[0, -0.12 - out, 0]}>
+        <cylinderGeometry args={[0.46, 0.46, 0.14, 40]} />
+        <meshStandardMaterial color={PALETTE.graphite} metalness={0.4} roughness={0.4} transparent opacity={1 - reveal * 0.8} depthWrite={reveal < 0.01} emissive={PALETTE.focus} emissiveIntensity={focus * 0.6} />
+      </mesh>
+      <mesh position={[0.3, -0.2 - out, 0]}>
+        <boxGeometry args={[0.18, 0.03, 0.05]} />
+        <meshBasicMaterial color={PALETTE.focusGlow} />
       </mesh>
     </group>
   );
 };
 
-/** Camera body + bracket. Everything here rotates with the tilt motor about the tilt axis. */
-const CameraBody: React.FC<{reveal: number; imuPulse: number}> = ({reveal, imuPulse}) => (
-  <group>
-    {/* body */}
+const Camera: React.FC<{reveal: number; imu: number; imuPulse: number; ring: number}> = ({reveal, imu, imuPulse, ring}) => (
+  <group position={RIG.cameraCentre}>
     <mesh position={[-0.05, 0, 0]}>
       <boxGeometry args={[1.7, 1.05, 0.8]} />
-      <PartMat color="#1d2026" role="subject" reveal={reveal} metalness={0.25} roughness={0.55} />
+      <Mat color="#1d2026" ghost={reveal * 0.25} metalness={0.25} roughness={0.55} />
     </mesh>
-    {/* grip bump + shutter */}
     <mesh position={[-0.72, 0.05, 0.42]}>
       <boxGeometry args={[0.3, 0.85, 0.18]} />
       <meshStandardMaterial color={PALETTE.rubber} roughness={0.9} />
@@ -232,7 +212,6 @@ const CameraBody: React.FC<{reveal: number; imuPulse: number}> = ({reveal, imuPu
       <cylinderGeometry args={[0.1, 0.1, 0.08, 20]} />
       <meshStandardMaterial color={PALETTE.metal} metalness={0.8} roughness={0.3} />
     </mesh>
-    {/* lens */}
     <mesh position={[0.05, 0, 0.75]} rotation={[Math.PI / 2, 0, 0]}>
       <cylinderGeometry args={[0.36, 0.33, 0.75, 36]} />
       <meshStandardMaterial color="#111317" metalness={0.5} roughness={0.35} />
@@ -245,112 +224,126 @@ const CameraBody: React.FC<{reveal: number; imuPulse: number}> = ({reveal, imuPu
       <cylinderGeometry args={[0.28, 0.28, 0.02, 36]} />
       <meshStandardMaterial color="#2b4a7a" metalness={0.9} roughness={0.05} emissive="#1b3d6e" emissiveIntensity={0.3} />
     </mesh>
-    {/* L-bracket from the tilt motor rotor to the camera */}
+    {/* bracket */}
     <mesh position={[1.0, 0, 0]}>
       <boxGeometry args={[0.12, 0.7, 0.6]} />
-      <PartMat color={PALETTE.metal} role="subject" reveal={reveal} metalness={0.7} roughness={0.3} />
+      <Mat color={PALETTE.metal} ghost={reveal * 0.3} metalness={0.7} roughness={0.3} />
     </mesh>
     <mesh position={[0.45, -0.6, 0]}>
       <boxGeometry args={[1.2, 0.1, 0.6]} />
-      <PartMat color={PALETTE.metal} role="subject" reveal={reveal} metalness={0.7} roughness={0.3} />
+      <Mat color={PALETTE.metal} ghost={reveal * 0.3} metalness={0.7} roughness={0.3} />
     </mesh>
-    {/* IMU sensor on the plate: flashes when it detects the wrist moving */}
-    <mesh position={[0.75, -0.52, 0.18]}>
-      <boxGeometry args={[0.2, 0.06, 0.2]} />
-      <meshStandardMaterial color="#1f6d4f" emissive={PALETTE.level} emissiveIntensity={0.15 + imuPulse * 2.2} />
+    {/* IMU on the plate */}
+    <mesh position={RIG.imu.clone().sub(RIG.cameraCentre)}>
+      <boxGeometry args={[0.2 + imu * 0.08, 0.06, 0.2 + imu * 0.08]} />
+      <meshStandardMaterial color="#1f6d4f" emissive={PALETTE.level} emissiveIntensity={0.15 + imuPulse * 2.2 + imu * 0.8} />
     </mesh>
+    {/* sensing rings while the sensor is being explained */}
+    {imu > 0.01
+      ? [0, 1, 2].map((k) => {
+          const ph = (ring + k / 3) % 1;
+          return (
+            <mesh key={k} position={RIG.imu.clone().sub(RIG.cameraCentre).add(new THREE.Vector3(0, 0.05, 0))} rotation={[-Math.PI / 2, 0, 0]}>
+              <ringGeometry args={[0.14 + ph * 0.5, 0.165 + ph * 0.5, 32]} />
+              <meshBasicMaterial color={PALETTE.level} transparent opacity={imu * 0.8 * (1 - ph)} side={THREE.DoubleSide} depthTest={false} />
+            </mesh>
+          );
+        })
+      : null}
   </group>
 );
 
 export const GimbalModel: React.FC<{s: RigState}> = ({s}) => {
+  const C = chain(s);
   const r = s.reveal;
-  const glow = r * 0.6 + Math.min(1, Math.abs(s.motor) * 4) * 0.6 * s.arrows;
   const P = RIG.pivot;
-  const T = RIG.tiltAxis;
-  const C = RIG.cameraCentre;
+  const X = new THREE.Vector3(1, 0, 0);
+  const Y = new THREE.Vector3(0, 1, 0);
+  const Z = new THREE.Vector3(0, 0, 1);
+  const at = (m: THREE.Matrix4, v: THREE.Vector3) => v.clone().applyMatrix4(m);
+  const dir = (m: THREE.Matrix4, v: THREE.Vector3) => v.clone().transformDirection(m);
+  const lens = at(C.tilt, new THREE.Vector3(0.05, 1.2, 1.15));
+  const camFwd = dir(C.tilt, Z);
+  const camRight = dir(C.tilt, X);
+  const camCentre = at(C.tilt, RIG.cameraCentre);
   return (
     <group>
-      {/* everything held by the wrist pivots with the handle */}
-      <group position={P} rotation={[s.handle, 0, 0]}>
-        <group position={P.clone().negate()}>
-          <Hand />
-          {/* handle */}
-          <mesh position={[0, -2.0, 0]}>
-            <cylinderGeometry args={[0.33, 0.36, 2.5, 32]} />
-            <PartMat color={PALETTE.graphite} role="subject" reveal={r} roughness={0.7} />
-          </mesh>
-          <mesh position={[0, -0.85, 0.3]}>
-            <cylinderGeometry args={[0.07, 0.07, 0.08, 16]} />
-            <meshStandardMaterial color={PALETTE.metal} />
-          </mesh>
-          {/* pan motor (vertical axis) */}
-          <mesh position={[0, -0.5, 0]}>
-            <cylinderGeometry args={[0.45, 0.45, 0.5, 36]} />
-            <PartMat color={PALETTE.graphiteLight} role="context" reveal={r} />
-          </mesh>
-          {/* pan arm: up behind the camera */}
-          <mesh position={[0, -0.35, -0.55]}>
-            <boxGeometry args={[0.3, 0.2, 1.0]} />
-            <PartMat color={PALETTE.graphiteLight} role="context" reveal={r} />
-          </mesh>
-          <mesh position={[0, 0.4, -1.0]}>
-            <boxGeometry args={[0.28, 1.6, 0.22]} />
-            <PartMat color={PALETTE.graphiteLight} role="context" reveal={r} />
-          </mesh>
-          {/* roll motor (axis along the lens) */}
-          <mesh position={[0, 1.2, -1.0]} rotation={[Math.PI / 2, 0, 0]}>
-            <cylinderGeometry args={[0.4, 0.4, 0.34, 36]} />
-            <PartMat color={PALETTE.graphiteLight} role="context" reveal={r} />
-          </mesh>
-          {/* roll arm: sideways, then forward to the tilt motor */}
-          <mesh position={[0.62, 1.2, -1.0]}>
-            <boxGeometry args={[1.25, 0.24, 0.22]} />
-            <PartMat color={PALETTE.graphiteLight} role="context" reveal={r} />
-          </mesh>
-          <mesh position={[1.42, 1.2, -0.5]}>
-            <boxGeometry args={[0.2, 0.24, 1.0]} />
-            <PartMat color={PALETTE.graphiteLight} role="context" reveal={r} />
-          </mesh>
+      {/* handle link */}
+      <Link m={C.handle}>
+        <Hand />
+        <mesh position={[0, -2.0, 0]}>
+          <cylinderGeometry args={[0.33, 0.36, 2.5, 32]} />
+          <Mat color={PALETTE.graphite} roughness={0.7} />
+        </mesh>
+        <mesh position={[0, -0.85, 0.3]}>
+          <cylinderGeometry args={[0.07, 0.07, 0.08, 16]} />
+          <meshStandardMaterial color={PALETTE.metal} />
+        </mesh>
+        {/* pan motor stator */}
+        <mesh position={[0, -0.62, 0]}>
+          <cylinderGeometry args={[0.45, 0.45, 0.26, 36]} />
+          <Mat color={PALETTE.graphiteLight} ghost={r} focus={s.focus.pan} />
+        </mesh>
+      </Link>
 
-          <TiltMotor reveal={r} rotorRad={s.motor} glow={glow} />
-
-          {/* camera rotates about the tilt axis by the motor angle */}
-          <group position={C} rotation={[s.motor, 0, 0]}>
-            <CameraBody reveal={r} imuPulse={s.imuPulse} />
-          </group>
-
-          {/* handle axis (dashed): shows how much the wrist tilts */}
-          <DashedRod from={new THREE.Vector3(0, -3.6, 0)} to={new THREE.Vector3(0, 0.0, 0)} r={0.018} color={PALETTE.handleAxis} opacity={0.55 * s.arrows} />
-          {/* tilt axis line, drawn through the camera at the reveal */}
-          <Rod
-            from={new THREE.Vector3(T.x + 0.9, T.y, T.z)}
-            to={new THREE.Vector3(T.x + 0.9 - 3.3 * s.axisDraw, T.y, T.z)}
-            r={0.03}
-            color={PALETTE.focus}
-            opacity={Math.min(1, s.axisDraw * 2)}
-          />
-          {/* motor correction arc: rotates opposite to the wrist */}
-          <PitchArc centre={new THREE.Vector3(T.x + 0.45, T.y, T.z)} radius={0.72} startRad={Math.PI / 2 + s.handle} sweepRad={s.motor} color={PALETTE.focus} opacity={s.arrows} />
+      {/* pan link: rotor, pan arm, roll motor stator */}
+      <Link m={C.pan}>
+        <group position={[0, -0.36, 0]}>
+          <Motor r={0.45} h={0.22} rotor={0} ghost={r} focus={s.focus.pan} />
         </group>
-      </group>
+        <mesh position={[0, -0.32, -0.55]}>
+          <boxGeometry args={[0.3, 0.2, 1.0]} />
+          <Mat color={PALETTE.graphiteLight} ghost={r} focus={s.focus.pan * 0.3} />
+        </mesh>
+        <mesh position={[0, 0.4, -1.0]}>
+          <boxGeometry args={[0.28, 1.6, 0.22]} />
+          <Mat color={PALETTE.graphiteLight} ghost={r} />
+        </mesh>
+        <mesh position={[0, 1.2, -1.12]} rotation={[Math.PI / 2, 0, 0]}>
+          <cylinderGeometry args={[0.4, 0.4, 0.18, 36]} />
+          <Mat color={PALETTE.graphiteLight} ghost={r} focus={s.focus.roll} />
+        </mesh>
+      </Link>
 
-      {/* world-fixed references (not attached to the hand) */}
-      {/* wrist arc: angle between true vertical and the handle */}
-      <PitchArc centre={P.clone().add(new THREE.Vector3(0.45, 0, 0))} radius={1.15} startRad={Math.PI / 2} sweepRad={s.handle} color={PALETTE.handleAxis} opacity={s.arrows * 0.9} />
-      {/* lens direction: stays level because the motor cancels the wrist */}
-      <LensLevel s={s} />
+      {/* roll link: roll rotor, roll arm, tilt stator */}
+      <Link m={C.roll}>
+        <group position={[0, 1.2, -0.95]} rotation={[Math.PI / 2, 0, 0]}>
+          <Motor r={0.4} h={0.16} rotor={0} ghost={r} focus={s.focus.roll} />
+        </group>
+        <mesh position={[0.62, 1.2, -1.0]}>
+          <boxGeometry args={[1.25, 0.24, 0.22]} />
+          <Mat color={PALETTE.graphiteLight} ghost={r} focus={s.focus.roll * 0.3} />
+        </mesh>
+        <mesh position={[1.42, 1.2, -0.5]}>
+          <boxGeometry args={[0.2, 0.24, 1.0]} />
+          <Mat color={PALETTE.graphiteLight} ghost={r} />
+        </mesh>
+        <TiltStator reveal={r} focus={s.focus.tilt} />
+      </Link>
+
+      {/* tilt link: rotor + camera */}
+      <Link m={C.tilt}>
+        <TiltRotor reveal={r} focus={s.focus.tilt} />
+        <Camera reveal={r} imu={s.focus.imu} imuPulse={s.imuPulse} ring={s.imuRing} />
+      </Link>
+
+      {/* ── overlays (world space) ── */}
+      {/* axis lines */}
+      <Rod from={at(C.roll, new THREE.Vector3(2.15, 1.2, 0))} to={at(C.roll, new THREE.Vector3(2.15 - 3.3 * s.axis.tilt, 1.2, 0))} r={0.03} color={PALETTE.focus} opacity={Math.min(1, s.axis.tilt * 2)} />
+      <Rod from={at(C.pan, new THREE.Vector3(0, 1.2, -1.6))} to={at(C.pan, new THREE.Vector3(0, 1.2, -1.6 + 3.6 * s.axis.roll))} r={0.03} color={PALETTE.focus} opacity={Math.min(1, s.axis.roll * 2)} />
+      <Rod from={at(C.handle, new THREE.Vector3(0, -1.0, 0))} to={at(C.handle, new THREE.Vector3(0, -1.0 + 3.4 * s.axis.pan, 0))} r={0.03} color={PALETTE.focus} opacity={Math.min(1, s.axis.pan * 2)} />
+
+      {/* hand angle (white) vs motor correction (orange), per axis */}
+      <AxisArc centre={P.clone().add(new THREE.Vector3(0.45, 0, 0))} axis={X} ref={Y} radius={1.15} sweep={s.hand.pitch} color={PALETTE.hand} opacity={s.arcs.pitch * 0.9} />
+      <AxisArc centre={at(C.roll, RIG.tiltMotor).add(dir(C.roll, X).multiplyScalar(0.45))} axis={dir(C.roll, X)} ref={dir(C.roll, Y)} radius={0.72} sweep={s.motor.tilt} color={PALETTE.focus} opacity={s.arcs.pitch} />
+      <AxisArc centre={P.clone().add(new THREE.Vector3(0, 0, 0.5))} axis={Z} ref={Y} radius={1.15} sweep={s.hand.roll} color={PALETTE.hand} opacity={s.arcs.roll * 0.9} />
+      <AxisArc centre={at(C.pan, new THREE.Vector3(0, 1.2, -0.75))} axis={dir(C.pan, Z)} ref={dir(C.pan, Y)} radius={0.62} sweep={s.motor.roll} color={PALETTE.focus} opacity={s.arcs.roll} />
+      <AxisArc centre={at(C.handle, new THREE.Vector3(0, -0.85, 0))} axis={dir(C.handle, Y)} ref={dir(C.handle, Z)} radius={0.95} sweep={s.hand.yaw} color={PALETTE.hand} opacity={s.arcs.yaw * 0.9} />
+      <AxisArc centre={camCentre.clone().add(new THREE.Vector3(0, 0.75, 0))} axis={Y} ref={Z} radius={0.95} sweep={Math.atan2(camFwd.x, camFwd.z)} color={PALETTE.focus} opacity={s.arcs.yaw} />
+
+      {/* camera direction (stays level) and horizon (stays straight) */}
+      <Dashed from={lens.clone().addScaledVector(camFwd, 0.1)} to={lens.clone().addScaledVector(camFwd, 3.2)} r={0.022} color={PALETTE.level} opacity={s.level.forward} dash={0.18} />
+      <Dashed from={camCentre.clone().addScaledVector(camRight, -2.4).addScaledVector(camFwd, 1.25)} to={camCentre.clone().addScaledVector(camRight, 2.4).addScaledVector(camFwd, 1.25)} r={0.022} color={PALETTE.level} opacity={s.level.horizon} dash={0.18} />
     </group>
-  );
-};
-
-/** Level line out of the lens (world space, follows the camera position but not the wrist angle). */
-const LensLevel: React.FC<{s: RigState}> = ({s}) => {
-  const lensCentre = new THREE.Vector3(0.05, 1.2, 1.15);
-  // lens tip in world: rotate around tilt axis by motor, then around pivot by handle
-  const local = lensCentre.clone().sub(RIG.cameraCentre).applyAxisAngle(new THREE.Vector3(1, 0, 0), s.motor).add(RIG.cameraCentre);
-  const world = local.sub(RIG.pivot).applyAxisAngle(new THREE.Vector3(1, 0, 0), s.handle).add(RIG.pivot);
-  const dir = new THREE.Vector3(0, Math.sin(-s.cameraWorldPitch), Math.cos(s.cameraWorldPitch));
-  return (
-    <DashedRod from={world.clone().addScaledVector(dir, 0.1)} to={world.clone().addScaledVector(dir, 3.2)} r={0.022} color={PALETTE.level} opacity={s.arrows} dash={0.18} />
   );
 };

@@ -9,12 +9,11 @@ import {rigState, viewAt} from './rig';
 import type {GimbalProps} from './storyboard';
 import {SafeGuides} from '../../text/SafeGuides';
 
-/** Drives the default R3F camera from frame-derived values (same numbers `project()` uses for labels). */
-const FrameCamera: React.FC = () => {
+/** Drives the default R3F camera from the same frame-derived view that projects the labels. */
+const FrameCamera: React.FC<{p: GimbalProps}> = ({p}) => {
   const frame = useCurrentFrame();
-  const {durationInFrames} = useVideoConfig();
   const camera = useThree((st) => st.camera) as THREE.PerspectiveCamera;
-  const v = viewAt(frame, durationInFrames);
+  const v = viewAt(frame, p);
   useLayoutEffect(() => {
     camera.position.copy(v.position);
     camera.fov = v.fov;
@@ -27,28 +26,29 @@ const FrameCamera: React.FC = () => {
   return null;
 };
 
-const Scene: React.FC<GimbalProps> = (p) => {
+const Scene: React.FC<{p: GimbalProps}> = ({p}) => {
   const frame = useCurrentFrame();
   const s = rigState(frame, p);
   return (
     <>
-      <FrameCamera />
+      <FrameCamera p={p} />
       <ambientLight intensity={0.55} />
       <hemisphereLight args={['#dfe8ff', '#20242c', 0.6]} />
       <directionalLight position={[6, 8, 6]} intensity={2.2} />
       <directionalLight position={[-6, 3, -4]} intensity={0.9} color="#9fb8ff" />
-      <pointLight position={[2.6, 1.2, 0.5]} intensity={6 * s.reveal} distance={3} color="#ff9a40" />
+      <pointLight position={[2.6, 1.2, 0.5]} intensity={6 * s.focus.tilt} distance={3} color="#ff9a40" />
       <GimbalModel s={s} />
     </>
   );
 };
 
-export const GimbalTiltReel: React.FC<GimbalProps> = (p) => {
+export const GimbalFullReel: React.FC<GimbalProps> = (p) => {
   const {width, height} = useVideoConfig();
+  if ((p.cueFrames as Record<string, number>).reveal === undefined) return null; // metadata not loaded yet
   return (
     <AbsoluteFill style={{background: 'radial-gradient(120% 80% at 50% 42%, #1c2230 0%, #0b0d12 62%, #050609 100%)'}}>
       <ThreeCanvas width={width} height={height} linear={false} gl={{antialias: true, alpha: true}}>
-        <Scene {...p} />
+        <Scene p={p} />
       </ThreeCanvas>
       <GimbalTextLayer {...p} />
       {p.showGuides ? <SafeGuides /> : null}

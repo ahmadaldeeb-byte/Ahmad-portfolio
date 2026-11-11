@@ -81,6 +81,10 @@ animate per word or per line; per letter only via `splitArabicLetters` (ZWJ). Fo
    the recording: on-screen hook words land on the spoken words (`cueLeadFrames` = 2 frames early, the
    apple-motion VO rule), the reveal starts on `revealCue`, the apple-motion part label on `labelCue`,
    the mechanism follows, and the duration grows to fit the voice. Pilot: `src/episodes/gimbal/voiceSync.ts`.
+   Longer episodes (full ~30 s reel, several parts): drive every beat from an ordered list of cue
+   phrases, as in `src/episodes/gimbal/` (`cues` → `cueFrames` in `voiceSync.ts`; the rig, camera views,
+   labels and numbers all read `cueFrames`). Before a recording exists, estimate timings with
+   `node scripts/voiceover/estimate.mjs --text-file <script> --out vo/<slug>` (writes `.temp.words.json`).
 6. Review sound + motion together in Studio (`TextMotionPreviewVO`, `GimbalTiltReelVO`) before exporting.
 
 ### 7. Preview, then export

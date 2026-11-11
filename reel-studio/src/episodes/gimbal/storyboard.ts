@@ -2,69 +2,71 @@ import {z} from 'zod';
 import {ARABIC_FONTS} from '../../text/font-list';
 
 /**
- * Episode: «كيف الجيمبل بثبّت اتجاه الكاميرا لما تميل إيدك؟»
- * 8 s · 1080×1920 · 30 fps = 240 frames. Every number below is editable in Remotion Studio (props panel).
+ * Episode (full reel, ~30 s): «كيف الجيمبل بثبّت اتجاه الكاميرا لما تميل إيدك؟»
+ * 1080×1920 · 30 fps. Length and every beat come from the voice-over (calculateMetadata in voiceSync.ts):
+ * the real recording's words.json when it exists, otherwise the committed temporary estimate.
  *
- * Mechanism (checked): a 3-axis handheld gimbal has brushless motors on pan, roll and tilt axes. An IMU
- * on the camera plate measures the camera's angle; a controller drives each motor in the opposite
- * direction of the disturbance. When the wrist pitches the handle forward by θ, the tilt motor rotates
- * the camera plate by −θ about the tilt axis, so the camera's pitch in the world stays ~0. The motor
- * reacts a few milliseconds late — shown here as a 3-frame lag so cause → effect reads on screen.
+ * Mechanism (checked): a 3-axis handheld gimbal is a chain handle → pan motor → roll motor → tilt motor →
+ * camera, each a brushless motor. An IMU (gyro + accelerometer) on the camera plate measures the camera's
+ * attitude hundreds of times per second; the controller drives each motor opposite to the disturbance
+ * on its axis, so tilt (pitch) and roll stay level, and pan follows the hand smoothly (follow mode)
+ * instead of copying its jitter. Shown with a 3-frame sensor→motor lag so cause → effect reads.
+ *
+ * Script: scripts/voiceover/gimbal-full.txt
  */
-export const BEATS = [
-  {id: 'hook', from: 0, to: 62, visual: 'الجيمبل كامل بمنظور مائل، المقبض يتهزهز والكاميرا ثابتة', text: 'هوك سطرين كلمة بكلمة'},
-  {id: 'reveal', from: 54, to: 96, visual: 'باقي الأجزاء تصير شفافة، غطاء محرك الميل ينفتح، المحور يتلوّن ويتمدد عبر الكاميرا', text: 'تسمية «محور الميل» مع خط إشارة'},
-  {id: 'mechanism', from: 96, to: 196, visual: 'المقبض يميل 20° لقدام ثم لورا؛ محرك الميل يلف بالعكس؛ خط أفق العدسة يبقى أفقي', text: 'رقم 20° + سطر شرح'},
-  {id: 'payoff', from: 196, to: 240, visual: 'الكاميرا ثابتة، المقبض يرجع للوضع الطبيعي', text: 'سطر النتيجة'},
-] as const;
+export const GIMBAL_FPS = 30;
+
+/** Spoken cue phrases, searched in this order in the voice-over (each after the previous one). */
+export const CUE_IDS = ['reveal', 'tiltLabel', 'sensor', 'tilt', 'roll', 'rollRight', 'rollLeft', 'pan', 'panMove', 'payoff', 'outro'] as const;
+export type CueId = (typeof CUE_IDS)[number];
+/** absolute frames of every cue + 'end' (last spoken word) — derived from the words file */
+export type CueFrames = Record<CueId | 'end', number>;
+
+export const BEATS: {id: string; cue: CueId | 'start'; visual: string; text: string}[] = [
+  {id: 'hook', cue: 'start', visual: 'الجيمبل كامل بمنظور مائل، المقبض يتهزهز والكاميرا ثابتة', text: 'الهوك كلمة بكلمة على الصوت'},
+  {id: 'reveal', cue: 'reveal', visual: 'عند «هون»: الأجزاء تصير شفافة وغطاء محرك الميل ينفتح', text: '—'},
+  {id: 'tiltLabel', cue: 'tiltLabel', visual: 'محور الميل يتلوّن ويتمدد عبر الكاميرا', text: 'تسمية «محور الميل»'},
+  {id: 'sensor', cue: 'sensor', visual: 'الحسّاس على قاعدة الكاميرا يومض بإشارات متتالية', text: 'تسمية «الحسّاس»'},
+  {id: 'tilt', cue: 'tilt', visual: 'المقبض يميل 20° لقدّام ومحرك الميل يلف الكاميرا 20° لورا', text: 'رقم 20°'},
+  {id: 'roll', cue: 'roll', visual: 'الكاميرا تلف لمنظر أمامي، محرك اللف يتلوّن ومحوره على خط العدسة', text: 'تسمية «محور اللف»'},
+  {id: 'rollMove', cue: 'rollRight', visual: 'الإيد تميل يمين ثم شمال، خط الأفق يضل مستقيم', text: '—'},
+  {id: 'pan', cue: 'pan', visual: 'منظر علوي، محرك الدوران يتلوّن', text: 'تسمية «محور الدوران»'},
+  {id: 'panMove', cue: 'panMove', visual: 'الإيد تلف 35° مع رجفة، الكاميرا تلحقها بنعومة', text: '—'},
+  {id: 'payoff', cue: 'payoff', visual: 'المحركات الثلاثة ومحاورها ملوّنة مع بعض', text: 'رقم 3'},
+  {id: 'outro', cue: 'outro', visual: 'الإيد ترتجف على المحاور الثلاثة، الكاميرا ثابتة تمامًا', text: '«لقطة ثابتة / بإيد بتهتز»'},
+];
+
+const cueSchema = z.object(Object.fromEntries(CUE_IDS.map((c) => [c, z.string()])) as Record<CueId, z.ZodString>);
 
 export const gimbalSchema = z.object({
   font: z.enum(ARABIC_FONTS),
-  // hook
+  // text
   hook: z.array(z.string()),
-  hookFrom: z.number().int().min(0),
-  hookFrames: z.number().int().min(10),
   hookCapPct: z.number().min(1).max(12),
   hookY: z.number().min(0).max(100),
-  // part label
-  label: z.string(),
-  labelFrom: z.number().int().min(0),
-  labelFrames: z.number().int().min(10),
+  labels: z.object({tilt: z.string(), sensor: z.string(), roll: z.string(), pan: z.string()}),
   labelCapPct: z.number().min(1).max(12),
-  labelX: z.number().min(0).max(100),
-  labelY: z.number().min(0).max(100),
-  // number
-  counterTo: z.number(),
-  counterSuffix: z.string(),
-  counterCaption: z.array(z.string()),
-  counterX: z.number().min(0).max(100),
-  counterFrom: z.number().int().min(0),
-  counterFrames: z.number().int().min(10),
+  tiltCounter: z.object({to: z.number(), suffix: z.string(), caption: z.array(z.string())}),
+  axesCounter: z.object({to: z.number(), suffix: z.string(), caption: z.array(z.string())}),
   counterCapPct: z.number().min(1).max(20),
+  counterX: z.number().min(0).max(100),
   counterY: z.number().min(0).max(100),
-  // payoff
   outro: z.array(z.string()),
-  outroFrom: z.number().int().min(0),
-  outroFrames: z.number().int().min(10),
-  // mechanism timing
-  revealFrom: z.number().int().min(0),
-  tiltFrom: z.number().int().min(0),
+  // motion
+  tiltDeg: z.number(),
+  rollDeg: z.number(),
+  panDeg: z.number(),
   tiltRampFrames: z.number().int().min(4),
   correctionLagFrames: z.number().int().min(0).max(10),
-  // voice-over (ElevenLabs): '' = no voice. Path under public/ without extension; needs <path>.mp3 + <path>.words.json
+  // voice-over: public/<voiceover>.mp3 + .words.json (recorded) or .temp.words.json (estimate)
   voiceover: z.string(),
   voiceFrom: z.number().int().min(0),
-  /** spoken word that starts the reveal */
-  revealCue: z.string(),
-  /** spoken phrase that brings in the part label */
-  labelCue: z.string(),
-  /** type lands this many frames BEFORE the spoken word (apple-motion VO.typeLeadFrames = 2) */
   cueLeadFrames: z.number().int().min(0).max(10),
-  /** derived by calculateMetadata from the words file (frames, relative to the hook start) */
+  cues: cueSchema,
+  // derived by calculateMetadata (shown in Studio, recomputed on every load)
+  cueFrames: z.record(z.string(), z.number()),
   hookWordStarts: z.array(z.number()),
-  /** derived: 'recorded' = real mp3 + timings, 'temp' = estimated timings, no audio yet */
-  voiceStatus: z.enum(['none', 'temp', 'recorded']),
-  // preview helpers
+  voiceStatus: z.enum(['temp', 'recorded']),
   showGuides: z.boolean(),
 });
 
@@ -72,44 +74,40 @@ export type GimbalProps = z.infer<typeof gimbalSchema>;
 
 export const gimbalDefaults: GimbalProps = {
   font: 'IBM Plex Sans Arabic',
-  hook: ['إيدك بتميل…', 'والكاميرا لأ. كيف؟'],
-  hookFrom: 0,
-  hookFrames: 62,
+  hook: ['ليش الكاميرا بتضل ثابتة', 'وإنت بتميل المقبض؟'],
   hookCapPct: 3.4,
-  hookY: 12.5,
-  label: 'محور الميل',
-  labelFrom: 64,
-  labelFrames: 132,
+  hookY: 13.5,
+  labels: {tilt: 'محور الميل', sensor: 'الحسّاس', roll: 'محور اللف', pan: 'محور الدوران'},
   labelCapPct: 2.5,
-  labelX: 86,
-  labelY: 16,
-  counterTo: 20,
-  counterSuffix: '°',
-  counterCaption: ['المحرك بيلفّ', 'عكس إيدك'],
-  counterX: 20,
-  counterFrom: 96,
-  counterFrames: 56,
+  tiltCounter: {to: 20, suffix: '°', caption: ['المحرك بيلفّ', 'عكس إيدك']},
+  axesCounter: {to: 3, suffix: '', caption: ['محاور ومحركات', 'وحسّاس واحد']},
   counterCapPct: 6,
+  counterX: 20,
   counterY: 50,
-  outro: ['بيقيس الميل…', 'وبيعاكسه فورًا'],
-  outroFrom: 198,
-  outroFrames: 42,
-  revealFrom: 54,
-  tiltFrom: 96,
+  outro: ['لقطة ثابتة', 'بإيد بتهتز'],
+  tiltDeg: 20,
+  rollDeg: 12,
+  panDeg: 35,
   tiltRampFrames: 28,
   correctionLagFrames: 3,
-  voiceover: '',
+  voiceover: 'vo/gimbal-full',
   voiceFrom: 6,
-  revealCue: 'هون',
-  labelCue: 'محور الميل',
   cueLeadFrames: 2,
+  cues: {
+    reveal: 'هون',
+    tiltLabel: 'محور الميل',
+    sensor: 'حسّاس',
+    tilt: 'عشرين',
+    roll: 'محور اللفّ',
+    rollRight: 'يمين',
+    rollLeft: 'شمال',
+    pan: 'محور الدوران',
+    panMove: 'بينعّم',
+    payoff: 'تلات محاور',
+    outro: 'والنتيجة',
+  },
+  cueFrames: {},
   hookWordStarts: [],
-  voiceStatus: 'none',
+  voiceStatus: 'temp',
   showGuides: false,
 };
-
-/** Hook used with the voice-over: the spoken question, shown word by word on the speech. */
-export const VO_HOOK = ['ليش الكاميرا بتضل ثابتة', 'وإنت بتميل المقبض؟'];
-
-export const GIMBAL_FPS = 30;
-export const GIMBAL_FRAMES = 240;

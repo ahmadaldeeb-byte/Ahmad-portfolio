@@ -13,8 +13,9 @@ npm run new-episode -- --slug pressure-cooker --topic "كيف طنجرة الض�
 ## Compositions
 | id | what |
 |---|---|
-| `TextMotionPreview` | hook + part label + number of the gimbal episode, without WebGL, with reel safe zones and the projected moving-part silhouette. Same components and same props as the reel. |
-| `GimbalTiltReel` | pilot: «كيف الجيمبل بثبّت اتجاه الكاميرا لما تميل إيدك؟» — 8 s, 240 frames |
+| `GimbalTiltReelVO` | **full reel (~30 s)** «كيف الجيمبل بثبّت اتجاه الكاميرا لما تميل إيدك؟» — tilt, sensor, roll, pan, payoff, timed on the voice-over |
+| `TextMotionPreviewVO` | the full reel's text + voice without WebGL: live silhouette of the moving parts, safe zones, TEMP badge while timings are estimated |
+| `GimbalTiltReel` / `TextMotionPreview` | approved 8 s pilot, frozen in `src/episodes/gimbal-pilot/` |
 | `<Name>Reel` / `<Name>TextPreview` | added per episode by `npm run new-episode` |
 
 Every text, font, size and timing is a prop (zod schema) — edit it in the Studio props panel.
@@ -48,6 +49,19 @@ scripts/new-episode.mjs  scaffolder
 | `animated-svg` | `omkamal/animated-diagrams-skill` | files installed; needs `bash .claude/skills/animated-svg/scripts/setup.sh` (npm deps + Chrome for HyperFrames) |
 | motion pack (15) | `stanleystaw/Motion-design-Stanley`, via `npx skills add` | installed; `reel-export` rules applied to the MP4 |
 | Blender | — | not installed: no Blender in this environment |
+
+## Full reel: voice-over timing
+Script to record: `scripts/voiceover/gimbal-full.txt` (hook unchanged + tilt, sensor, roll, pan, payoff).
+Until the recording exists the reel runs on `public/vo/gimbal-full.temp.words.json`
+(`node scripts/voiceover/estimate.mjs --text-file scripts/voiceover/gimbal-full.txt --out vo/gimbal-full`).
+Drop in the recording and align it (MP3 or WAV):
+```bash
+npm run vo -- align --audio <rec.mp3|rec.wav> --text-file scripts/voiceover/gimbal-full.txt --out vo/gimbal-full
+```
+That writes `public/vo/gimbal-full.mp3` + `.words.json`; `calculateMetadata` (`src/episodes/gimbal/voiceSync.ts`) then
+re-times everything on the real speech: reveal on «هون», label on «محور الميل», sensor on «حسّاس», 20° on «عشرين»,
+roll on «محور اللفّ» / «يمين» / «شمال», pan on «محور الدوران» / «بينعّم», 3 on «تلات محاور», payoff on «والنتيجة».
+Cue phrases are props (`cues`), searched in order. The TEMP badge goes and the audio plays as soon as the file is there.
 
 ## Voice-over (ElevenLabs)
 ```bash

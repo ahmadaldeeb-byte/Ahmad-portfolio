@@ -1,8 +1,8 @@
 import React from 'react';
 import {AbsoluteFill, useCurrentFrame} from 'remotion';
-import {GimbalTextLayer} from './episodes/gimbal/GimbalTextLayer';
-import {MovingZone} from './episodes/gimbal/MovingZone';
-import type {GimbalProps} from './episodes/gimbal/storyboard';
+import {GimbalTextLayer} from './episodes/gimbal-pilot/GimbalTextLayer';
+import {MovingZone} from './episodes/gimbal-pilot/MovingZone';
+import type {GimbalProps} from './episodes/gimbal-pilot/storyboard';
 import {SafeGuides} from './text/SafeGuides';
 
 /** Mobile-size preview of the episode's typography (hook, part label, number) without the WebGL scene.
