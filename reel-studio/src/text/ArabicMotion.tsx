@@ -33,7 +33,8 @@ export const ArabicHook: React.FC<
       color={color}
       fontFamily={arabicStack(font)}
       dir="rtl"
-      maxWidthPct={84}
+      x={46} // centre of the reel safe zone (5%..87%)
+      maxWidthPct={76}
       style={{lineHeight: 1.45}}
     />
   </Sequence>

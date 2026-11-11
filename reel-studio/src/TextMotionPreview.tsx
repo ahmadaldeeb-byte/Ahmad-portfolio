@@ -17,6 +17,11 @@ export const TextMotionPreview: React.FC<GimbalProps> = (p) => {
       <div style={{position: 'absolute', left: 24, bottom: 18, color: '#86868b', fontFamily: 'monospace', fontSize: 26}}>
         f {frame} · {(frame / 30).toFixed(2)}s
       </div>
+      {p.voiceStatus === 'temp' ? (
+        <div style={{position: 'absolute', right: 24, bottom: 18, color: '#ffb15c', fontFamily: 'monospace', fontSize: 26}}>
+          TEMP VO TIMING · no audio yet
+        </div>
+      ) : null}
     </AbsoluteFill>
   );
 };

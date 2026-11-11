@@ -11,10 +11,16 @@ import {GIMBAL_FRAMES, type GimbalProps} from './storyboard';
  * Every derived value is written back into props, so Studio shows (and lets you override) them.
  */
 export const gimbalMetadata: CalculateMetadataFunction<GimbalProps> = async ({props}) => {
-  if (!props.voiceover) return {durationInFrames: GIMBAL_FRAMES, props: {...props, hookWordStarts: []}};
+  if (!props.voiceover) return {durationInFrames: GIMBAL_FRAMES, props: {...props, hookWordStarts: [], voiceStatus: 'none' as const}};
   const fps = 30;
-  const res = await fetch(staticFile(`${props.voiceover}.words.json`));
-  if (!res.ok) throw new Error(`voice-over timings not found: public/${props.voiceover}.words.json`);
+  // real recording first; until it exists, fall back to the committed estimated timings (no audio)
+  let voiceStatus: 'recorded' | 'temp' = 'recorded';
+  let res = await fetch(staticFile(`${props.voiceover}.words.json`));
+  if (!res.ok) {
+    voiceStatus = 'temp';
+    res = await fetch(staticFile(`${props.voiceover}.temp.words.json`));
+  }
+  if (!res.ok) throw new Error(`voice-over timings not found: public/${props.voiceover}.words.json (or .temp.words.json)`);
   const vo = (await res.json()) as VoWords;
   const w = vo.words;
   const at = (sec: number) => props.voiceFrom + Math.round(sec * fps);
@@ -42,6 +48,6 @@ export const gimbalMetadata: CalculateMetadataFunction<GimbalProps> = async ({pr
 
   return {
     durationInFrames,
-    props: {...props, hookFrames, hookWordStarts, revealFrom, labelFrom, labelFrames, tiltFrom, counterFrom, counterFrames, outroFrom},
+    props: {...props, voiceStatus, hookFrames, hookWordStarts, revealFrom, labelFrom, labelFrames, tiltFrom, counterFrom, counterFrames, outroFrom},
   };
 };

@@ -6,6 +6,7 @@
 //   npm run vo -- add --public-owner <id> --voice <id> --name "<name>"   # add a library voice to My Voices
 //   npm run vo -- design --description-file scripts/voiceover/voice-design.txt --text-file <txt> [--model <ttv model>]
 //   npm run vo -- save-design --generated <generated_voice_id> --name "<name>" --description-file <txt>
+//   npm run vo -- align --audio <uploaded.mp3> --text-file scripts/voiceover/gimbal-hook.txt --out vo/gimbal-hook
 //   npm run vo -- tts --voice <voice_id> --text-file scripts/voiceover/gimbal-hook.txt --out vo/gimbal-hook [--model auto]
 //
 // tts writes public/<out>.mp3 + public/<out>.words.json (word start/end in seconds) — the episode reads
@@ -75,6 +76,17 @@ const forcedAlign = async (mp3Path, text) => {
 };
 
 const commands = {
+  /** uploaded MP3 → <out>.mp3 + <out>.words.json via ElevenLabs forced alignment */
+  async align() {
+    const text = readText('text');
+    const out = path.join(root, 'public', opt.out || 'vo/voiceover');
+    const src = path.resolve(root, opt.audio);
+    if (path.resolve(`${out}.mp3`) !== src) fs.copyFileSync(src, `${out}.mp3`);
+    const words = await forcedAlign(`${out}.mp3`, text);
+    fs.writeFileSync(`${out}.words.json`, JSON.stringify({text, source: 'uploaded mp3 + forced alignment', words}, null, 1));
+    console.log(`→ public/${opt.out}.mp3 + .words.json`);
+    for (const w of words) console.log(`  ${w.start.toFixed(2)}–${w.end.toFixed(2)}  ${w.word}`);
+  },
   async models() {
     const models = await call('GET', '/v1/models');
     for (const m of models)

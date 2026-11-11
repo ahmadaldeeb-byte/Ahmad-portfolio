@@ -62,6 +62,8 @@ export const gimbalSchema = z.object({
   cueLeadFrames: z.number().int().min(0).max(10),
   /** derived by calculateMetadata from the words file (frames, relative to the hook start) */
   hookWordStarts: z.array(z.number()),
+  /** derived: 'recorded' = real mp3 + timings, 'temp' = estimated timings, no audio yet */
+  voiceStatus: z.enum(['none', 'temp', 'recorded']),
   // preview helpers
   showGuides: z.boolean(),
 });
@@ -74,7 +76,7 @@ export const gimbalDefaults: GimbalProps = {
   hookFrom: 0,
   hookFrames: 62,
   hookCapPct: 3.4,
-  hookY: 13,
+  hookY: 12.5,
   label: 'محور الميل',
   labelFrom: 64,
   labelFrames: 132,
@@ -102,6 +104,7 @@ export const gimbalDefaults: GimbalProps = {
   labelCue: 'محور الميل',
   cueLeadFrames: 2,
   hookWordStarts: [],
+  voiceStatus: 'none',
   showGuides: false,
 };
 

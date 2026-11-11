@@ -59,6 +59,9 @@ npm run vo -- tts --voice <voice_id> --text-file scripts/voiceover/gimbal-hook.t
 npm run studio                                           # TextMotionPreviewVO / GimbalTiltReelVO
 npm run render:gimbal-vo                                 # → out/gimbal-tilt-vo.mp4
 ```
+Uploaded MP3 instead: `npm run vo -- align --audio <file.mp3> --text-file scripts/voiceover/gimbal-hook.txt --out vo/gimbal-hook`.
+Until `public/vo/gimbal-hook.words.json` exists, the VO compositions run on `gimbal-hook.temp.words.json`
+(estimated timings, no audio, a TEMP badge in the preview) and switch to the recording automatically.
 The key is read from `ELEVENLABS_API_KEY` (or injected by the cloud-session proxy). With a voice-over, the hook
 words follow the speech, the reveal starts on «هون» and the label «محور الميل» lands on the spoken phrase
 (`src/episodes/gimbal/voiceSync.ts`); cue words, lead frames and voice offset are props.
