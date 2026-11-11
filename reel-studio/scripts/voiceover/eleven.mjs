@@ -6,7 +6,7 @@
 //   npm run vo -- add --public-owner <id> --voice <id> --name "<name>"   # add a library voice to My Voices
 //   npm run vo -- design --description-file scripts/voiceover/voice-design.txt --text-file <txt> [--model <ttv model>]
 //   npm run vo -- save-design --generated <generated_voice_id> --name "<name>" --description-file <txt>
-//   npm run vo -- align --audio <rec.mp3|rec.wav> [--engine whisper|eleven] [--model small] --text-file scripts/voiceover/gimbal-hook.txt --out vo/gimbal-hook
+//   npm run vo -- align --audio <uploaded.mp3|.wav> --text-file scripts/voiceover/gimbal-hook.txt --out vo/gimbal-hook
 //   npm run vo -- tts --voice <voice_id> --text-file scripts/voiceover/gimbal-hook.txt --out vo/gimbal-hook [--model auto]
 //
 // tts writes public/<out>.mp3 + public/<out>.words.json (word start/end in seconds) — the episode reads
@@ -78,24 +78,20 @@ const forcedAlign = async (mp3Path, text) => {
 const commands = {
   /** uploaded MP3 → <out>.mp3 + <out>.words.json via ElevenLabs forced alignment */
   async align() {
-    // local Whisper (default when .venv has faster-whisper), or ElevenLabs forced alignment (--engine eleven)
-    const venvPy = path.join(root, '.venv/bin/python');
-    const engine = opt.engine || (fs.existsSync(venvPy) ? 'whisper' : 'eleven');
-    if (engine === 'whisper') {
-      const {spawnSync} = await import('node:child_process');
-      const a = ['scripts/voiceover/whisper_align.py', '--audio', opt.audio, '--out', opt.out || 'vo/voiceover', '--model', opt.model || 'small'];
-      if (opt['text-file']) a.push('--text-file', opt['text-file']);
-      else a.push('--text', opt.text);
-      const r = spawnSync(venvPy, a, {cwd: root, stdio: 'inherit'});
-      if (r.status !== 0) throw new Error('whisper align failed');
-      return;
-    }
     const text = readText('text');
     const out = path.join(root, 'public', opt.out || 'vo/voiceover');
     const src = path.resolve(root, opt.audio);
-    if (path.resolve(`${out}.mp3`) !== src) fs.copyFileSync(src, `${out}.mp3`);
+    fs.mkdirSync(path.dirname(out), {recursive: true});
+    if (/\.mp3$/i.test(src)) {
+      if (path.resolve(`${out}.mp3`) !== src) fs.copyFileSync(src, `${out}.mp3`);
+    } else {
+      // WAV (or any other format ffmpeg reads) -> MP3 for Remotion's <Audio>
+      const {spawnSync} = await import('node:child_process');
+      const r = spawnSync('ffmpeg', ['-loglevel', 'error', '-y', '-i', src, '-c:a', 'libmp3lame', '-q:a', '2', `${out}.mp3`], {stdio: 'inherit'});
+      if (r.status !== 0) throw new Error(`ffmpeg could not convert ${opt.audio}`);
+    }
     const words = await forcedAlign(`${out}.mp3`, text);
-    fs.writeFileSync(`${out}.words.json`, JSON.stringify({text, source: 'uploaded mp3 + forced alignment', words}, null, 1));
+    fs.writeFileSync(`${out}.words.json`, JSON.stringify({text, source: `uploaded ${path.extname(src).slice(1)} + ElevenLabs forced alignment`, words}, null, 1));
     console.log(`→ public/${opt.out}.mp3 + .words.json`);
     for (const w of words) console.log(`  ${w.start.toFixed(2)}–${w.end.toFixed(2)}  ${w.word}`);
   },

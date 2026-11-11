@@ -77,9 +77,6 @@ animate per word or per line; per letter only via `splitArabicLetters` (ZWJ). Fo
    listen to the previews in `public/vo/design/`, then `save-design --generated <id> --name "<name>"`.
 4. `npm run vo -- tts --voice <voice_id> --text-file <hook.txt> --out vo/<slug>-hook` writes the mp3 and
    `<slug>-hook.words.json` (word start/end from ElevenLabs timestamps, forced alignment as fallback).
-   Recording supplied as a file (MP3/WAV): `npm run vo:setup` once, then
-   `npm run vo -- align --audio <file> --text-file <hook.txt> --out vo/<slug>-hook` (local faster-whisper,
-   approved-text alignment + pause snapping). Check the printed cue starts and the `match` score.
 5. Set `voiceover: 'vo/<slug>-hook'` and the cue props. `calculateMetadata` re-times the episode on
    the recording: on-screen hook words land on the spoken words (`cueLeadFrames` = 2 frames early, the
    apple-motion VO rule), the reveal starts on `revealCue`, the apple-motion part label on `labelCue`,
