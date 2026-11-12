@@ -1,3 +1,5 @@
+import {useContext} from 'react';
+import {CleanFrame} from '../../text/clean';
 import React from 'react';
 import {Sequence} from 'remotion';
 import {KineticText} from '../../apple-motion';
@@ -5,7 +7,7 @@ import {arabicStack, type ArabicFont} from '../../text/fonts';
 import {INK} from '../../text/ArabicMotion';
 
 /** A big value (year, number, range) with an Arabic caption under it — apple-motion KineticText. */
-export const Fact: React.FC<{
+const FactInner: React.FC<{
   font: ArabicFont;
   from: number;
   to: number;
@@ -53,3 +55,5 @@ export const Fact: React.FC<{
     ) : null}
   </Sequence>
 );
+
+export const Fact: typeof FactInner = (p) => (useContext(CleanFrame) ? null : <FactInner {...p} />);

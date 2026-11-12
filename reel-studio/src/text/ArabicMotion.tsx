@@ -1,5 +1,7 @@
 // Arabic wrappers around apple-motion's KineticText / Counter. Used by BOTH the reels and
 // TextMotionPreview, so what you approve in the preview is exactly what renders in the reel.
+import {useContext} from 'react';
+import {CleanFrame} from './clean';
 import React from 'react';
 import {AbsoluteFill, interpolate, Sequence, useCurrentFrame} from 'remotion';
 import {Counter, KineticText, type KineticTextProps} from '../apple-motion';
@@ -15,7 +17,7 @@ export const INK = {
 type Common = {font: ArabicFont; from: number; durationInFrames: number};
 
 /** Hook / payoff line(s): word-by-word entry (Arabic words stay joined), short fade-out. */
-export const ArabicHook: React.FC<
+const ArabicHookInner: React.FC<
   Common & {lines: string[]; capHeightPct: number; y: number; entry?: KineticTextProps['entry']; color?: string; wordStarts?: number[]}
 > = ({font, from, durationInFrames, lines, capHeightPct, y, entry = 'perWord', color = INK.text, wordStarts}) => (
   <Sequence from={from} durationInFrames={durationInFrames} name="Hook" layout="none">
@@ -44,7 +46,7 @@ export const ArabicHook: React.FC<
  * Part label pinned to a point on the model: anchor dot → leader line (draws on) → label slides up
  * under a mask. The label sits at (x%, y%) away from the moving part; only the thin leader touches it.
  */
-export const PartLabel: React.FC<
+const PartLabelInner: React.FC<
   Common & {
     text: string;
     capHeightPct: number;
@@ -108,7 +110,7 @@ const Leader: React.FC<{
 };
 
 /** Big number (apple-motion Counter) with an Arabic caption line under it. */
-export const ArabicNumber: React.FC<
+const ArabicNumberInner: React.FC<
   Common & {to: number; suffix: string; caption: string[]; capHeightPct: number; x: number; y: number; rollFrames: number; captionCapPct?: number}
 > = ({font, from, durationInFrames, to, suffix, caption, capHeightPct, x, y, rollFrames, captionCapPct = 2.4}) => (
   <Sequence from={from} durationInFrames={durationInFrames} name="Number" layout="none">
@@ -146,3 +148,9 @@ export const ArabicNumber: React.FC<
     />
   </Sequence>
 );
+
+export const ArabicHook: typeof ArabicHookInner = (p) => (useContext(CleanFrame) ? null : <ArabicHookInner {...p} />);
+
+export const PartLabel: typeof PartLabelInner = (p) => (useContext(CleanFrame) ? null : <PartLabelInner {...p} />);
+
+export const ArabicNumber: typeof ArabicNumberInner = (p) => (useContext(CleanFrame) ? null : <ArabicNumberInner {...p} />);

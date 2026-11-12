@@ -1,3 +1,5 @@
+import {useContext} from 'react';
+import {CleanFrame} from '../../text/clean';
 import React from 'react';
 import {AbsoluteFill, Easing, getRemotionEnvironment, Img, interpolate, Sequence, staticFile, useCurrentFrame, useVideoConfig} from 'remotion';
 import {Audio} from '@remotion/media';
@@ -27,7 +29,7 @@ const Fade: React.FC<{len: number; fadeIn: number; fadeOut: number; children: Re
 };
 
 /** Small pill tag (RTL), e.g. «الصورة الأصلية» or «إعادة بناء». */
-export const Tag: React.FC<{text: string; font: ArabicFont; tone?: 'archive' | 'rebuild' | 'temp'; x?: number; y?: number}> = ({text, font, tone = 'rebuild', x = 5, y = 7.6}) => {
+const TagInner: React.FC<{text: string; font: ArabicFont; tone?: 'archive' | 'rebuild' | 'temp'; x?: number; y?: number}> = ({text, font, tone = 'rebuild', x = 5, y = 7.6}) => {
   const bg = tone === 'archive' ? 'rgba(245,232,200,0.92)' : tone === 'temp' ? 'rgba(255,177,92,0.95)' : 'rgba(20,24,32,0.72)';
   const fg = tone === 'archive' ? '#2a1d0c' : tone === 'temp' ? '#1a1206' : '#e8ecf2';
   return (
@@ -69,7 +71,7 @@ export const ArchivePhoto: React.FC<{
         style={{position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: fit, objectPosition: fit === 'cover' ? `${px}% ${py}%` : '50% 50%', scale: String(s), transformOrigin: `${px}% ${py}%`, filter: invert ? 'invert(1)' : undefined}}
       />
       {tag ? <Tag text={label} font={font} tone="archive" /> : null}
-      <div style={{position: 'absolute', left: '6%', right: '6%', top: '11.2%', color: 'rgba(232,236,242,0.72)', fontFamily: 'Inter, Arial, sans-serif', fontSize: 22, textAlign: 'left', direction: 'ltr'}}>{credit}</div>
+      <div style={{display: useContext(CleanFrame) ? 'none' : undefined, position: 'absolute', left: '6%', right: '6%', top: '11.2%', color: 'rgba(232,236,242,0.72)', fontFamily: 'Inter, Arial, sans-serif', fontSize: 22, textAlign: 'left', direction: 'ltr'}}>{credit}</div>
     </AbsoluteFill>
   );
 };
@@ -102,3 +104,5 @@ export const VoiceBadge: React.FC<{status: 'temp' | 'recorded'; font: ArabicFont
   if (!getRemotionEnvironment().isStudio) return null;
   return <Tag text="الصوت المعتمد — حميد" font={font} tone="archive" x={58} y={95} />;
 };
+
+export const Tag: typeof TagInner = (p) => (useContext(CleanFrame) ? null : <TagInner {...p} />);
