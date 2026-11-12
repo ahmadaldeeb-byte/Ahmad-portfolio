@@ -10,6 +10,7 @@ import {GimbalFullReel} from './episodes/gimbal/GimbalTiltReel';
 import {gimbalDefaults, gimbalSchema} from './episodes/gimbal/storyboard';
 import {gimbalMetadata} from './episodes/gimbal/voiceSync';
 import {TextMotionPreviewVO} from './episodes/gimbal/TextMotionPreviewVO';
+import {GimbalCover} from './episodes/gimbal/GimbalCover';
 import {CameraHistory} from './series';
 // @episodes-imports (scripts/new-episode.mjs inserts imports above this line)
 
@@ -22,6 +23,7 @@ export const Root: React.FC = () => (
     <Composition id="TextMotionPreview" component={TextMotionPreview} defaultProps={{...pilotDefaults, showGuides: true}} {...pilot} />
     <Folder name="Episodes">
       <Composition id="GimbalTiltReelVO" component={GimbalFullReel} defaultProps={gimbalDefaults} {...full} />
+      <Composition id="GimbalCover" component={GimbalCover} defaultProps={gimbalDefaults} {...full} />
       <Composition id="GimbalTiltReel" component={GimbalTiltReel} defaultProps={pilotDefaults} {...pilot} />
       <CameraHistory />
       {/* @episodes-compositions (scripts/new-episode.mjs inserts compositions above this line) */}

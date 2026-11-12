@@ -35,13 +35,21 @@ export const makeThumbnail =
             <Ep {...p} />
           </Freeze>
         </CleanFrame.Provider>
+        <CoverOverlay cover={cover} font={font} />
+      </AbsoluteFill>
+    );
+  };
+
+/** Headline, chip and badge drawn over a cover picture (shared by the series and the gimbal reel). */
+export const CoverOverlay: React.FC<{cover: Pick<Cover, 'line1' | 'line2' | 'chip' | 'ep'> & {badge?: string}; font: string}> = ({cover, font}) => (
+  <>
         {/* contrast for the headline (top) and a soft vignette */}
         <AbsoluteFill style={{background: 'linear-gradient(rgba(5,6,9,0.92) 0%, rgba(5,6,9,0.75) 26%, rgba(5,6,9,0) 46%, rgba(5,6,9,0) 70%, rgba(5,6,9,0.55) 100%)'}} />
         <AbsoluteFill style={{boxShadow: 'inset 0 0 220px rgba(0,0,0,0.65)'}} />
         {/* series badge */}
         <div dir="rtl" style={{position: 'absolute', top: 150, right: 70, display: 'flex', alignItems: 'center', gap: 16, fontFamily: font, fontWeight: 700, fontSize: 40, color: '#e8ecf2'}}>
           <span style={{background: ORANGE, color: '#14100a', borderRadius: 14, padding: '6px 18px', fontSize: 40}}>{cover.ep}</span>
-          <span>الكاميرا من جوّا</span>
+          <span>{cover.badge ?? 'الكاميرا من جوّا'}</span>
         </div>
         {/* headline */}
         <div dir="rtl" style={{position: 'absolute', top: 250, left: 60, right: 60, fontFamily: font, fontWeight: 700, lineHeight: 1.18, textAlign: 'right'}}>
@@ -52,6 +60,5 @@ export const makeThumbnail =
         <div style={{position: 'absolute', top: 640, right: 70, padding: '10px 30px', borderRadius: 999, border: `4px solid ${ORANGE}`, color: ORANGE, fontFamily: font, fontWeight: 700, fontSize: 56, direction: 'rtl', background: 'rgba(7,8,10,0.55)'}}>
           {cover.chip}
         </div>
-      </AbsoluteFill>
-    );
-  };
+  </>
+);
